@@ -83,7 +83,7 @@ const config = {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
-            label: '筆記本',
+            label: '書櫃',
           },
           {to: '/blog', label: '動態', position: 'left'},
           {

@@ -1,6 +1,5 @@
 ---
 title: Git 安裝與使用
-sidebar_position: 2
 ---
 ### Windows 環境
 直接從官網下載安裝檔即可。  

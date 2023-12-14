@@ -1,6 +1,5 @@
 ---
 title: VScode 安裝與環境建置
-sidebar_position: 3
 ---
 ### 安裝 Visual Studio Code
 [VScode 下載](https://code.visualstudio.com/)  
