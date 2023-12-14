@@ -1,11 +1,35 @@
-### 安裝 Git
+---
+title: Git 安裝與使用
+sidebar_position: 2
+---
+### Windows 環境
+直接從官網下載安裝檔即可。  
 [Git 安裝檔下載](https://git-scm.com/)  
 
-下載完，按照[開始 - 初次設定 Git](https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git) 進行設定。最主要需要設定使用者名稱與電子郵件：
+### Mac
+:::note
+雖然同樣可以直接下載安裝，但下面這方法聽說較好，我也沒試過，先記錄下來
+:::
+1. 安裝 Homebrew
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+2. 等待安裝，直到 `Press RETURN to continue or any other key to abort` 出現，按下`Enter`。
+3. 繼續等待安裝，直到出現`Installation successful!`。
+4. 測試 Homebrew 是否正確安裝：`brew --version`。
+5. 安裝 Git
+```bash
+brew install git
+```
+
+### 初次設定 Git
+下載完，可以先用 `git --version` 確認是否安裝成功。  
+按照[開始 - 初次設定 Git](https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git) 進行設定。最主要需要設定使用者名稱與電子郵件：
 ```git
 git config --global user.name "Jeremy"
 git config --global user.email jeremy@example.com
 ```
+可以用 `git config --list` 確認資訊。
 
 ### 使用 Git
 要在專案中使用 Git，要先在專案中建立本地儲存庫：

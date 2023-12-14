@@ -65,6 +65,12 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       // Replace with your project's social card
+      docs: {
+        sidebar: {
+          autoCollapseCategories: true,
+          hideable: true,
+        },
+      },
       image: 'img/docusaurus-social-card.jpg',
       navbar: {
         title: 'CodeFictionist',
@@ -81,7 +87,7 @@ const config = {
           },
           {to: '/blog', label: '動態', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/ChungYingHo',
             label: 'GitHub',
             position: 'right',
           },
@@ -91,12 +97,20 @@ const config = {
         style: 'dark',
         links: [
           {
-            title: 'Docs',
+            title: 'Markdown',
             items: [
               {
-                label: 'Tutorial',
-                to: '/docs/intro',
+                label: 'Markdown website',
+                href: 'https://markdown.tw/'
               },
+              {
+                label: 'Emoji',
+                href: 'https://gist.github.com/rxaviers/7360908'
+              },
+              {
+                label: 'Prism',
+                href: 'https://prismjs.com/#supported-languages'
+              }
             ],
           },
           {
@@ -125,12 +139,12 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/ChungYingHo',
               },
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} CodeFictionist. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,

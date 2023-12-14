@@ -1,11 +1,35 @@
+---
+title: Node.js 安裝與基礎操作
+sidebar_position: 1
+---
 ### Node.js 簡介
 Node.js 是一個 JavaScript 的執行環境，讓 JavaScript 可以跳脫瀏覽器而在電腦上執行，達到構建前、後端的應用。
 
-### Node Version Manager (nvm)
-nvm 是用來管理 Node.js 的版本。  
+### Node Version Manager - Windows
 Windows 系統的 nvm 點[這裡](https://github.com/coreybutler/nvm-windows/releases)找到最新版本的 `nvm-setup.zip`。注意安裝路徑下不能出現中文或空白。
+
+### Node Version Manager - Mac
+Mac 要安裝 Xcode Cli 才能安裝 nvm。
+1. 先確認是否已經有 Xcode Cli。
+```bash
+xcode-select -p
+```
+2. 如果沒有，則安裝：
+```bash
+xcode-select --install
+```
+3. 安裝 nvm：
+```bash
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+```
+4. 重新開啟終端機，執行 `command -v nvm` 確認是否正確安裝。
+:::tip
+可以到[這裡](https://github.com/nvm-sh/nvm)看官網指令
+:::
+
+### nvm 安裝之後
 接著按照下列步驟：
-```powershell title="terminal"
+```bash title="terminal"
 # 確定 nvm 是否正確安裝
 nvm version
 
