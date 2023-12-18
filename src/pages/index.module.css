@@ -4,15 +4,24 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  height: calc(100vh - 3.75rem);
+  padding: 8rem 0;
   text-align: center;
   position: relative;
   overflow: hidden;
+  background-image: url(/static/img/main-page.jpg);
+  background-size: cover;
+}
+
+.subTitle{
+  color: white;
+  font-size: 1rem;
 }
 
 @media screen and (max-width: 996px) {
   .heroBanner {
     padding: 2rem;
+    height: fit-content;
   }
 }
 
@@ -20,4 +29,55 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+
+/* about page */
+.container{
+  height: calc(100vh - 3.75rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.img{
+  height: 80%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
+.subContainer{
+  width: 50%;
+}
+
+.subContainer h1{
+  margin: 0 auto;
+  text-align: center;
+  color: #0077B6;
+}
+
+.subContainer p{
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.subContainer h3{
+  text-align: center;
+  font-size: 500;
+  color: #b95756;
+}
+
+@media screen and (max-width: 996px) {
+  .container {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
+
+  .subContainer {
+    width: 100%;
+  }
 }

@@ -80,6 +80,11 @@ const config = {
         },
         items: [
           {
+            to: '/about',
+            position: 'left',
+            label: '關於',
+          },
+          {
             type: 'docSidebar',
             sidebarId: 'tutorialSidebar',
             position: 'left',
