@@ -1,17 +1,17 @@
 ---
 title: VScode 安裝與環境建置
 ---
-### 安裝 Visual Studio Code
+## 安裝 Visual Studio Code
 [VScode 下載](https://code.visualstudio.com/)  
 下載完後執行安裝檔，照著裡面的操作一路推過去即可。
 
-### 更改終端機預設
+## 更改終端機預設
 預設是 `PowerShell`，個人偏好 `Git Bash`，可以在 VScode 左下角找到設定 (齒輪標記) 進行預設更改。  
 
 在搜尋欄輸入 `terminal default`，沒意外可以看到 `Terminal › Integrated › Default Profile: Windows` 的選項，改成 Git Bash 即可。
 
 
-### 安裝插件
+## 安裝插件
 可以安裝一下 VScode 插件幫忙作業。  
 1. [Chinese (Traditional) Language Pack for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=MS-CEINTL.vscode-language-pack-zh-hant)：把 VScode 變中文。
 2. [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner)：一鍵執行程式碼。

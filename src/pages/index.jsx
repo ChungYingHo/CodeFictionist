@@ -10,7 +10,7 @@ function HomepageHeader() {
   return (
     <header className={styles.heroBanner}>
       <div className="container">
-        <Heading as="h1" className="hero__title" style={{color: 'white'}}>
+        <Heading as="h1" className={styles.title}>
           {siteConfig.title}
         </Heading>
         <p className={styles.subTitle}>

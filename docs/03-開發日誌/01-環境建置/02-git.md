@@ -1,11 +1,11 @@
 ---
 title: Git 安裝與使用
 ---
-### Windows 環境
+## Windows 環境
 直接從官網下載安裝檔即可。  
 [Git 安裝檔下載](https://git-scm.com/)  
 
-### Mac
+## Mac
 :::note
 雖然同樣可以直接下載安裝，但下面這方法聽說較好，我也沒試過，先記錄下來
 :::
@@ -21,7 +21,7 @@ title: Git 安裝與使用
 brew install git
 ```
 
-### 初次設定 Git
+## 初次設定 Git
 下載完，可以先用 `git --version` 確認是否安裝成功。  
 按照[開始 - 初次設定 Git](https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git) 進行設定。最主要需要設定使用者名稱與電子郵件：
 ```git
@@ -30,7 +30,7 @@ git config --global user.email jeremy@example.com
 ```
 可以用 `git config --list` 確認資訊。
 
-### 使用 Git
+## 使用 Git
 要在專案中使用 Git，要先在專案中建立本地儲存庫：
 ```git
 git init​
@@ -49,7 +49,7 @@ git commit -m "Your commit message"
 git status​
 ```
 
-### 推到 GitHub 上
+## 推到 GitHub 上
 當已經在 GitHub 上建好一個儲存庫：
 ```git
 git remote add origin https://github.com/{user-name}/{repo-name}.git
@@ -59,10 +59,10 @@ git push -u origin main
 關於這一串指令，GitHub 在剛創完 repo 會自行產生，複製即可。  
 在第一次執行完畢後，往後如果有程式碼變動要再推到遠端儲存庫來你只需要輸入`git push`。
 
-### 下載 GitHub 上的專案
+## 下載 GitHub 上的專案
 ```git
 git clone https://github.com/{owner-name}/{project-name}.git
 ```
 
-### .gitignore
+## .gitignore
 關於那些不想讓 Git 紀錄的檔案，比如一大包的 `node_moules` 資料夾、含有私人隱私資訊 (比如資料庫連線字串) 的 `.env` 檔案，可以在專案下建立一個 `.gitignore` 檔案，裡面填入不要 Git 紀錄的檔案。

@@ -2,7 +2,7 @@
 title: Valid Parentheses (Stack)
 sidebar_position: 1
 ---
-### 題目要求
+## 題目要求
 >**Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.**
 
 合格字串要求：  
@@ -48,7 +48,7 @@ function isValid(s: string): boolean {
 
 以上程式通過部了第 79 個測試 `(([]){})` ，。上面的程式會給出 `false` 的答案，但預期其實是 `true`，這是因為少考慮了綜合第一個與第二個條件的第三條件。
 
-### 換個思維思考
+## 換個思維思考
 條件滿足：
 1. 遇到左括號，預期會有一個匹配的右括號。
 2. 遇到第二個左括號，要預期當第二個左括號有閉合的右括號後再往後找匹配第一個左括號的右括號。

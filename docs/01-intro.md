@@ -1,7 +1,7 @@
 ---
 title: README
 ---
-### 關於書櫃
+## 關於書櫃
 就是一個放筆記和小說的地方。
 
 關於筆記，會記筆記表示我`已經學過`這些技術，是我個人的學習的總結，包括我的思路整理、踩過的坑、覺得自己會忘記的東西。整體來說，筆記有一大部分是寫給未來的我自己看的，所以筆記其實滿私人、滿帶個人色彩風格的。
@@ -14,15 +14,17 @@ title: README
 2. [Mike 老師的 YT](https://www.youtube.com/channel/UC7ArpUezGLX-dZ0FTS_jVMQ)
 3. [卡斯伯的 Blog](https://www.casper.tw/)
 
-### 分類
+## 分類
 書櫃的主要分類有 5 個，前面 4 個跟程式有關，就算不是寫 code 也會是相關的知識，而最後一個純粹是興趣。我順便在這裡做一下 check list 來說明預計要放的內容 (也順便提醒自己要做這些專案:relieved:) 以及現有的分類。
 1. 程式語言：
     - [ ] HTML/CSS
     - [x] JavaScript
     - [x] TypeScript
     - [x] Python
+    - [x] SQL
 2. 開發日誌：
     - [x] 環境建置
+    - [x] CodeFictionist (Docusaurus)
     - [ ] Simple Twitter 重構 (Maybe Next.js + Firebase)
     - [ ] 上班偷聊天 (WebSocket)
     - [ ] 私人微平台 (PWA)
@@ -30,7 +32,7 @@ title: README
     - [ ] Vue3
     - [ ] React
     - [ ] Vue3-openlayers
-    - [ ] PWA
+    - [x] PWA
     - [ ] 資訊安全
 4. 演算法：
     - [x] LeetCode
