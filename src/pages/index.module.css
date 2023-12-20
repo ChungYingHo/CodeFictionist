@@ -22,10 +22,18 @@
   font-size: 1rem;
 }
 
+.logo{
+  margin: 0 auto;
+  width: 15vw;
+}
+
 @media screen and (max-width: 996px) {
-  .heroBanner {
+  /* .heroBanner {
     padding: 2rem;
     height: fit-content;
+  } */
+  .logo{
+    width: 50vw;
   }
 }
 

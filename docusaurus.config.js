@@ -48,6 +48,8 @@ const config = {
           //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
+          blogSidebarTitle: 'All posts',
+          blogSidebarCount: 'ALL',
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
@@ -100,55 +102,55 @@ const config = {
       },
       footer: {
         style: 'dark',
-        links: [
-          {
-            title: 'Markdown',
-            items: [
-              {
-                label: 'Markdown website',
-                href: 'https://markdown.tw/'
-              },
-              {
-                label: 'Emoji',
-                href: 'https://gist.github.com/rxaviers/7360908'
-              },
-              {
-                label: 'Prism',
-                href: 'https://prismjs.com/#supported-languages'
-              }
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/ChungYingHo',
-              },
-            ],
-          },
-        ],
+        // links: [
+        //   {
+        //     title: 'Markdown',
+        //     items: [
+        //       {
+        //         label: 'Markdown website',
+        //         href: 'https://markdown.tw/'
+        //       },
+        //       {
+        //         label: 'Emoji',
+        //         href: 'https://gist.github.com/rxaviers/7360908'
+        //       },
+        //       {
+        //         label: 'Prism',
+        //         href: 'https://prismjs.com/#supported-languages'
+        //       }
+        //     ],
+        //   },
+        //   {
+        //     title: 'Community',
+        //     items: [
+        //       {
+        //         label: 'Stack Overflow',
+        //         href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+        //       },
+        //       {
+        //         label: 'Discord',
+        //         href: 'https://discordapp.com/invite/docusaurus',
+        //       },
+        //       {
+        //         label: 'Twitter',
+        //         href: 'https://twitter.com/docusaurus',
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     title: 'More',
+        //     items: [
+        //       {
+        //         label: 'Blog',
+        //         to: '/blog',
+        //       },
+        //       {
+        //         label: 'GitHub',
+        //         href: 'https://github.com/ChungYingHo',
+        //       },
+        //     ],
+        //   },
+        // ],
         copyright: `Copyright © ${new Date().getFullYear()} CodeFictionist. Built with Docusaurus.`,
       },
       prism: {
