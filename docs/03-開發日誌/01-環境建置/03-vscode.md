@@ -1,5 +1,6 @@
 ---
 title: VScode 安裝與環境建置
+tags: [初始環境建立, vscode]
 ---
 ## 安裝 Visual Studio Code
 [VScode 下載](https://code.visualstudio.com/)  

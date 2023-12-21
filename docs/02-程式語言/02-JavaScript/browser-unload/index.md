@@ -1,5 +1,6 @@
 ---
 title: JavaScript 實作關閉瀏覽器時觸發警告
+tags: [javascript, beforeunload]
 ---
 ## 功能要求
 1. 使用者離開瀏覽器跳出彈出視窗。

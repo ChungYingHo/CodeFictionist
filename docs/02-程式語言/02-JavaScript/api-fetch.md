@@ -1,0 +1,186 @@
+---
+title: 常用的四種串 API 方式
+tags: [javascript, api]
+---
+## 範例 API 與前置作業
+1. [RANDOM USER GENERATOR](https://randomuser.me/)
+2. 基本架構：
+```html title='HTML'
+<div class="container">
+        <button id='find'>Random User</button>
+        <div id='show'></div>
+</div>
+```
+```js title='JavaScript'
+// JavaScript
+const find = document.querySelector("#find")
+const show = document.querySelector("#show")
+let apiUrl = 'https://randomuser.me/api/'
+
+let name = ''
+let img = ''
+let email = ''
+```
+
+## Ajax
+全名 `Asynchronous JavaScript and XML`，是最早最早串接 API 的方法，而 Ajax 的出現開始讓網頁實現非同步請求，可以說現在的 API 串接方法都奠基在 Ajax 上。但它也因為是最老的，所以相對也是最複雜的。
+
+具體步驟有四個：  
+1. 建立 XMLHttpRequest 物件。
+2. 開啟一個請求。
+3. 送出請求。
+4. 拿到回應後需要瀏覽器做什麼。
+```js title='AJAX'
+const ajaxFunc = ()=>{
+    // 以 XMLHttpRequest 物件的方法抓取資料
+    xhr = new XMLHttpRequest()
+    // 開啟一個請求，這裡使用 GET，true 為非同步的意思
+    xhr.open('GET',apiUrl, true)
+    // 送出請求
+    xhr.send()
+
+    xhr.onload = function () {
+        if(xhr.status === 200){
+            let data = JSON.parse(this.responseText)
+            console.log(data)
+            let user = data.results[0]
+            name = `${user.name.first} ${user.name.last}`
+            img = user.picture.large
+            email = user.email
+            show.innerHTML = `<h3>${name}</h3>
+                <img src=${img}>
+                <p>${email}</p>`
+        }else{
+            console.error(error)
+        }
+    }
+}
+
+find.addEventListener('click',()=>{
+    ajaxFunc()
+})
+```
+:::info
+在 `onload` 的部分，仔細觀察 `console.log(data)` 的內容跟 RANDOM USER GENERATOR 網站中介紹的一不一樣。
+:::
+
+## jQuery Ajax
+使用 jQuery 函式庫提供的 Ajax 方法，它簡化了非同步請求的程式碼。但因為它必須使用到 jQuery，所以必須先把它載入到專案中。
+```html title='HTML'
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+```
+```js title='JavaScript-jQuery AJAX'
+const jAjaxFunc = ()=>{
+    $.ajax({
+        url: apiUrl,
+        type: 'GET',
+        dataType: 'json',
+        success: function (data) {
+            let user = data.results[0]
+            name = `${user.name.first} ${user.name.last}`
+            img = user.picture.large
+            email = user.email
+
+            show.innerHTML =
+                `<h3>${name}</h3>
+                <img src=${img}>
+                <p>${email}</p>`
+        },
+        error: function (error) {
+            console.error(error)
+        }
+    })
+}
+
+find.addEventListener('click', ()=>{
+    jAjaxFunc()
+})
+```
+可以看到使用 jQuery Ajax 必須提供：  
+1. url：我要向誰請求。
+2. type：請求方法。
+3. dataType：請求資料類型。
+4. success：請求資料成功時該幹嘛。
+5. error：請求資料失敗時該幹嘛。
+
+## Fetch API
+作為相對年輕的 API 串接方法，它是基於 Promise 語法的 API 串接方式，變得更簡潔、更好讀了。
+```js title='Fetch'
+const fetchFunc = ()=>{
+    fetch(apiUrl)
+    .then(response => response.json())
+    .then(data =>{
+        console.log(data)
+        let user = data.results[0]
+        name = `${user.name.first} ${user.name.last}`
+        img = user.picture.large
+        email = user.email
+
+        show.innerHTML = `
+            <h3>${name}</h3>
+            <img src=${img}>
+            <p>${email}</p>`
+    })
+    .catch(error => console.log(error))
+}
+
+find.addEventListener('click', ()=>{
+    fetchFunc()
+})
+```
+
+## Axios
+:::warning
+Fetch API 會需要我們手動進行 JSON 解析，所以需要 `response.json()`，而 Axios 會直接幫我們解析 JSON。  
+同時 Axios 預設也會自動處理所有的 HTTP 狀態，包括錯誤的狀態，所以平心而論，Axios 還是提供了比較多的便利功能。
+:::
+```js title='Axios'
+const axiosFunc = ()=>{
+    axios
+    .get(apiUrl)
+    .then((response) => {
+        console.log(response.data)
+        let user = response.data.results[0];
+        name = `${user.name.first} ${user.name.last}`;
+        img = user.picture.large;
+        email = user.email;
+        show.innerHTML =
+            `<h3>${name}</h3>
+            <img src=${img}>
+            <p>${email}</p>`;
+    })
+    .catch((error) => console.log(error));
+}
+
+find.addEventListener('click', ()=>{
+    axiosFunc()
+})
+```
+
+***
+:::info
+*關於不把 `show.innerHTML` 寫在事件監聽器裡，而是寫在 API 的串接函式中這件事**  
+```js
+// 原本的寫法
+​find.addEventListener('click', ()=>{
+    axiosFunc()
+})
+
+// 更改後的寫法
+find.addEventListener('click', ()=>{
+    axiosFunc()
+    show.innerHTML =
+            `<h3>${name}</h3>            
+             <img src=${img}>            
+             <p>${email}</p>`
+})
+```
+使用下面更改後的寫法，會發現在第一次點擊按鈕時並沒有畫面跑出來，但第二次之後的點擊就有了，為什麼？  
+其實這裡跟非同步機制有關，下面更改後的寫法當我們點擊按鈕時的確會先觸發 `axiosFunc`，但是要注意，`axiosFuc` 帶著的實際上是一個`非同步`請求，所以他不會去阻塞後續程式碼的執行，所以當 `show.innerHTML` 執行時，name、img、email 實際上是還沒被賦值的。
+:::
+
+## 參考資料
+1. [JavaScript 初心者筆記: AJAX - 從遠端即時撈取資料](https://ithelp.ithome.com.tw/articles/10222165)
+2. [Ajax - 以 GET 方法串接 API 資料 ( 以 JSON 為例 )](https://ithelp.ithome.com.tw/articles/10251803)
+3. [使用 jQuery的 $.Ajax() 技術和介接api吧!](https://ithelp.ithome.com.tw/articles/10226692)
+4. [axios](https://github.com/axios/axios#example)

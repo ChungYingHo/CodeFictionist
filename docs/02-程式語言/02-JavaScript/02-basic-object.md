@@ -1,5 +1,6 @@
 ---
 title: Object (物件) 基本操作
+tags: [javascript, object]
 ---
 ## 建立新的物件
 ```js

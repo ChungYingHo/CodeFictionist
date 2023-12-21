@@ -1,6 +1,6 @@
 ---
 title: Array (陣列) 基礎操作
-sidebar_position: 1
+tags: [javascript, array]
 ---
 ## 先創個陣列
 ```js

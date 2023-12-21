@@ -1,5 +1,6 @@
 ---
 title: CSS-position
+tags: [css, position]
 ---
 ## position: relative
 `relative` 的效果在尚未設定 top, bottom, left, right 時看起來是跟 `static` 差不多的，但也就是剛剛提到的 `relative` 可以透過設定 top, bottom, left, right 來相對地調整其原先的位置。

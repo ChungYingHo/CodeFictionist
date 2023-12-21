@@ -1,5 +1,6 @@
 ---
 title: Node.js 安裝與基礎操作
+tags: [初始環境建立, node]
 ---
 ## Node.js 簡介
 Node.js 是一個 JavaScript 的執行環境，讓 JavaScript 可以跳脫瀏覽器而在電腦上執行，達到構建前、後端的應用。

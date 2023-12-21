@@ -1,6 +1,6 @@
 ---
 title: PWA 基本概念
-sidebar_position: 1
+tags: [pwa]
 ---
 ## Progressive Web App (PWA) 背景
 PWA 的核心是在於 `progressive (漸進式)` 這個詞，主旨核心是根據使用者設備能力`逐步`增強使用者體驗或者也可以說使網站`逐步`漸進提升為具有 app 的優點。

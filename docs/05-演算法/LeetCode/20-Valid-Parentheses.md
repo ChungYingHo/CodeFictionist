@@ -1,6 +1,6 @@
 ---
 title: Valid Parentheses (Stack)
-sidebar_position: 1
+tags: [leetcode, stack]
 ---
 ## 題目要求
 >**Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.**

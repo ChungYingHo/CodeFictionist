@@ -1,5 +1,6 @@
 ---
-title: Basic SQL
+title: SQL 基礎語法-1
+tags: [sql]
 ---
 ## SQL 練習網站
 1. [MySQL Online](https://paiza.io/en/projects/new?language=mysql)

@@ -73,12 +73,12 @@ const config = {
           hideable: true,
         },
       },
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/fulllogo.jpg',
       navbar: {
         title: 'CodeFictionist',
         logo: {
           alt: 'My Site Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo.png',
         },
         items: [
           {

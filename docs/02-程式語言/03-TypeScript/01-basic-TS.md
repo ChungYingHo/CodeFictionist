@@ -1,6 +1,6 @@
 ---
 title: Basic TypeScript
-sidebar_position: 1
+tags: [typescript]
 ---
 
 ## TypeScript 起手式

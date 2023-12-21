@@ -1,5 +1,6 @@
 ---
-title: Python for everybody - Month1
+title: Python for everybody - Basic Python
+tags: [python]
 ---
 ### 安裝 Python
 :::info
@@ -135,5 +136,5 @@ for i in range(1, 6):
     print(i)
 ```
 
-### 參考資料
-1. [Programming for Everybody (Getting Started with Python)](https://www.coursera.org/learn/python/home/week/1)
+## 參考資料
+1. [Programming for Everybody](https://www.coursera.org/specializations/python)

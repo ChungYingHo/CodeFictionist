@@ -17,7 +17,7 @@ title: README
 ## 分類
 書櫃的主要分類有 5 個，前面 4 個跟程式有關，就算不是寫 code 也會是相關的知識，而最後一個純粹是興趣。我順便在這裡做一下 check list 來說明預計要放的內容 (也順便提醒自己要做這些專案:relieved:) 以及現有的分類。
 1. 程式語言：
-    - [ ] HTML/CSS
+    - [x] HTML/CSS
     - [x] JavaScript
     - [x] TypeScript
     - [x] Python
