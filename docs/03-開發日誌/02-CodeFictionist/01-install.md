@@ -54,7 +54,7 @@ const config = {
 2. Select scopes 選 `repo:status` 跟 `public_repo` 權限。
 3. 複製好 token。
 4. 前往專案 repo > Settings > Secrets > Actions > New repository secret，把剛剛複製的 token 貼上。
-5. 前往專案 (vscode)，在根目錄下新增一個 `.github` 資料夾，在裡面再建立一個 `workflows` 資料夾，裡面再建立一個 `deploy.yml` 自動佈署腳本。
+5. 前往專案 (vscode)，在根目錄下新增一個 `.github` 資料夾，在裡面再建立一個 `workflows` 資料夾，裡面再建立一個 `deploy.yml` 自動佈署腳本以及一個測試腳本 `test-deploy.yml`。
 6. 腳本內容如下：
 ```js title='deploy.yml'
 name: Deploy to GitHub Pages
@@ -64,31 +64,54 @@ on:
     branches:
       - action
 
+permissions:
+  contents: write
+
 jobs:
-  build-and-deploy:
+  deploy:
+    name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 18
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
-
-      - name: Build
+        run: npm ci
+      - name: Build website
         run: npm run build
 
-      - name: Deploy
-        run: |
-          GIT_USER=chungyingho npm run deploy
-        env:
-          DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.DEPLOY_SECRET }}
+          publish_dir: ./build
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+```
+```js title='test-deploy.yml'
+name: Test deployment
+
+on:
+  pull_request:
+    branches:
+      - action
+
+jobs:
+  test-deploy:
+    name: Test deployment
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+      - name: Test build website
+        run: npm run build
 ```
