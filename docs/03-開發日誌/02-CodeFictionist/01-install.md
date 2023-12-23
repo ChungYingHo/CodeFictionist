@@ -50,4 +50,45 @@ const config = {
 5. 打包、佈署。
 
 ## 自動部屬
-1. 
+1. GitHub settings > Developer settings > Personal access tokens > Tokens(classic) > Generate new token
+2. Select scopes 選 `repo:status` 跟 `public_repo` 權限。
+3. 複製好 token。
+4. 前往專案 repo > Settings > Secrets > Actions > New repository secret，把剛剛複製的 token 貼上。
+5. 前往專案 (vscode)，在根目錄下新增一個 `.github` 資料夾，在裡面再建立一個 `workflows` 資料夾，裡面再建立一個 `deploy.yml` 自動佈署腳本。
+6. 腳本內容如下：
+```js title='deploy.yml'
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - action
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy
+        run: |
+          GIT_USER=chungyingho npm run deploy
+        env:
+          DEPLOY_SECRET: ${{ secrets.DEPLOY_SECRET }}
+```
