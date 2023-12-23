@@ -9,7 +9,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'CodeFictionist',
-  tagline: 'Dinosaurs are cool',
+  tagline: '寫程式的小說家',
   favicon: 'img/favicon.ico',
 
   // Set the production url of your site here
