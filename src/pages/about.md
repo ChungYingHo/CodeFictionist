@@ -36,4 +36,4 @@
 我也不確定我未來對這份工作的熱忱會有多少，但最起碼，我現在有在寫 code 的時候都覺得上班時間特別快，這是件好事！  
 總而言之，只要我還在寫 code，CodeFictionist 的 Code 就不會換成其他詞！(還是其實大家想看的是 AgriFictionist :no_mouth:)
 
-![](../../static/img/avatar.JPG)
+![](../../static/img/avatar.jpg)
