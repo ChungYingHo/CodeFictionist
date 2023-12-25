@@ -11,6 +11,12 @@ tags: [初始環境建立, vscode]
 
 在搜尋欄輸入 `terminal default`，沒意外可以看到 `Terminal › Integrated › Default Profile: Windows` 的選項，改成 Git Bash 即可。
 
+## 自動儲存
+設定 > 經常使用的 > Files: Auto save > afterDelay
+
+## 單擊文件開啟新分頁 (預設情況下單擊會覆蓋)
+在 `settins.json` 添加：`"workbench.editor.enablePreview": false`。
+
 
 ## 安裝插件
 可以安裝一下 VScode 插件幫忙作業。  
