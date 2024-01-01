@@ -1,5 +1,5 @@
 ---
-title: Python for everybody - Basic Python
+title: py4e - Basic Python
 tags: [python]
 ---
 ### 安裝 Python

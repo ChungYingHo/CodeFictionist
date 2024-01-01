@@ -1,5 +1,5 @@
 ---
-title: Python for everybody - Data Structure
+title: py4e - Data Structure
 tags: [python, data structure]
 ---
 ## 字串 (String)
