@@ -1,0 +1,105 @@
+---
+title: 客製化 docusaurus
+tags: [blog, docusaurus]
+---
+
+## giscus 留言板
+優點：可以在 GitHub 統一管理留言，而且免費無廣告！  
+缺點：要留言要登入 GitHub 帳號。  
+[**giscus 文件**](https://giscus.app/zh-TW)
+
+1. 先照 giscus 文件上說的檢查：
+    * repo 是否已公開。
+    * 是否已在 GitHub 安裝 [giscus](https://github.com/apps/giscus) 應用程式。
+    * repo 是否已啟用 Discussions 功能。
+2. 回到 [giscus 文件](https://giscus.app/zh-TW)，填入自己 repo 的網址，giscus 會檢查是否滿足上述的條件，都滿足就會開放功能給予選取，之後會自動產生一段 code，大致像這樣：
+```html
+<script src="https://giscus.app/client.js"
+        data-repo="[在此輸入儲存庫名稱]"
+        data-repo-id="[在此輸入儲存庫 ID]"
+        data-category="[在此輸入分類名稱]"
+        data-category-id="[在此輸入分類 ID]"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-TW"
+        crossorigin="anonymous"
+        async>
+</script>
+```
+:::tip
+上面的`在此輸入...`不用真的輸入，在填完 repo 網址後，giscus 會自己產生。
+:::
+3. 回到專案，先安裝 `giscus/react` 套件：
+```bash
+npm i @giscus/react
+```
+4. 在 components 資料下中新增 comment 資料夾，建立 `index.js` 檔案：
+```jsx title='/components/comment/index.js'
+import Giscus from "@giscus/react";
+
+export default function Comment(){
+    return(
+        <div style={{paddingTop: 50}}>
+            <Giscus
+                id="comments"
+                repo="[在此輸入儲存庫名稱]"
+                repoId="[在此輸入儲存庫 ID]"
+                category="Announcements"
+                categoryId="[在此輸入分類 ID]"
+                mapping="pathname"
+                reactionsEnabled="1"
+                emitMetadata="0"
+                inputPosition="bottom"
+                theme="light"
+                lang="zh-TW"
+                loading="lazy"
+                />
+        </div>
+    )
+}
+```
+### 在部落格文章下添加留言板
+1. 以指令在 `/src/theme` 底下產生 BlogPostItem 資料夾。
+```bash
+npm run swizzle @docusaurus/theme-classic BlogPostItem -- --wrap
+```
+2. 將 BlogPostItem 的 `index.js` 更改如下：
+```jsx
+import React from 'react';
+import BlogPostItem from '@theme-original/BlogPostItem';
+import Comment from '../../components/comment';
+
+export default function BlogPostItemWrapper(props) {
+  return (
+    <>
+      <BlogPostItem {...props} />
+      <Comment/>
+    </>
+  );
+}
+```
+
+### 在 docs 文章下添加留言板
+1. 以指令在 `/src/theme` 底下產生 `DocItem` 資料夾跟 `Layout` 資料夾。
+```bash
+npm run swizzle @docusaurus/theme-classic DocItem/Layout -- --wrap
+```
+2. 將 /DocItem/Layout 的 `index.js` 更改如下：
+```jsx
+import React from 'react';
+import Layout from '@theme-original/DocItem/Layout';
+import Comment from '../../../components/comment';
+
+export default function LayoutWrapper(props) {
+  return (
+    <>
+      <Layout {...props} />
+      <Comment />
+    </>
+  );
+}
+```

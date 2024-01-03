@@ -31,6 +31,7 @@ tags: [初始環境建立, vscode]
 9. [Better Comments](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)：讓註解變得鮮明易於辨識。
 10. [Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)：在寫 CSS 的色碼時可以直接看到顏色。
 11. [Material Icon Theme](https://marketplace.visualstudio.com/items?itemName=PKief.material-icon-theme)：為專案中的檔案加上鮮明的圖示。
+12. [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)：可以在 markdown 上畫美麗的圖表。
 
 接下來四個是隨著程式語言或開發框架不同而需要安裝的：  
 1. [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)：可以在 VScode 上寫 Python。

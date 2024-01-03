@@ -2,7 +2,9 @@
 title: 上傳資料顯示進度
 tags: [HTML, javascript, axios, input, drag]
 ---
-> Drag & Drop api 尚待了解
+:::note
+Drag & Drop api 尚待了解
+:::
 
 ## 功能與解析
 在不使用其他專門套件下，為上傳檔案添加上傳進度顯示。  
