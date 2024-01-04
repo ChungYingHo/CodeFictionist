@@ -8,8 +8,25 @@ tags: [blog, docusaurus]
 3. [markdown 表情符號](https://gist.github.com/rxaviers/7360908)
 4. [markdown 程式碼區塊支援語言表](https://prismjs.com/#supported-languages)
 
-## markdown 使用圖表
+## markdown 縮放式區塊
+<details>
+<summary>Example</summary>
+
+Here is an example
+</details>
+```markdown
+<details>
+<summary>Example</summary>
+
+Here is an example
+</details>
+```
 :::info
+記得 `<summary></summary>` 下面要空一行。
+:::
+
+## markdown 使用圖表
+:::tip
 [Mermaid 官方文件](https://mermaid.js.org/intro/)  
 [VScode 插件](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)
 :::

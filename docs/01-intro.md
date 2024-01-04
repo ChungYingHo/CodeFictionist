@@ -25,7 +25,8 @@ title: README
 2. 開發日誌：
     - [x] 環境建置
     - [x] CodeFictionist (Docusaurus)
-    - [ ] Simple Twitter 重構 (Maybe Next.js + Firebase)
+    - [ ] PLANTAE Taiwan (Nuxt.js + Firebase)
+    - [ ] Simple Twitter 重構 (Maybe Next.js)
     - [ ] 上班偷聊天 (WebSocket)
     - [ ] 私人微平台 (PWA)
 3. 筆記本：
@@ -33,6 +34,7 @@ title: README
     - [ ] React
     - [ ] Vue3-openlayers
     - [x] PWA
+    - [x] 綜合筆記
     - [ ] 資訊安全
 4. 演算法：
     - [x] LeetCode

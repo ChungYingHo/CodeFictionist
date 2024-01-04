@@ -1,5 +1,5 @@
 ---
-title: JavaScript 實作關閉瀏覽器時觸發警告
+title: 關閉瀏覽器時觸發警告
 tags: [javascript, beforeunload]
 ---
 ## 功能要求
