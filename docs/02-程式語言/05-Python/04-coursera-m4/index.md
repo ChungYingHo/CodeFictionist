@@ -72,6 +72,83 @@ showCountry(chiron) # France
 showCountry(taycan) # Germany
 ```
 
+## SQLite
+### Install SQLite
+:::info
+[SQLite](https://sqlitebrowser.org/dl/)
+:::
+記得安裝時要勾選新增到桌面或應用程式列，不然會找不到。
+
+### Create Table
+```sql
+CREATE TABLE Ages ( 
+  name VARCHAR(128), 
+  age INTEGER
+)
+```
+
+### Add Data
+```sql
+DELETE FROM Ages;
+INSERT INTO Ages (name, age) VALUES ('Morgan', 39);
+INSERT INTO Ages (name, age) VALUES ('Eveline', 20);
+INSERT INTO Ages (name, age) VALUES ('Eshal', 31);
+INSERT INTO Ages (name, age) VALUES ('Mackenzie', 39);
+INSERT INTO Ages (name, age) VALUES ('Sinem', 28);
+```
+
+### 基本操作
+將 name 和 age 欄位組合成一個新的十六進制字串，並按照這個字串的值對結果進行排序。
+```sql
+SELECT hex(name || age) AS X FROM Ages ORDER BY X
+```
+
+### SQLite in Python
+```py
+import sqlite3
+
+# 與 SQLite 資料庫建立聯繫並建立 cursor 才可以在資料庫中查詢
+conn = sqlite3.connect('sql-work-01.sqlite')
+cur = conn.cursor()
+
+# 先刪除可能存在的表格
+cur.execute('DROP TABLE IF EXISTS Counts')
+
+# 建立 Counts 表格
+cur.execute('''
+CREATE TABLE Counts (org TEXT, count INTEGER)''')
+
+fname = 'mbox.txt'
+fh = open(fname)
+for line in fh:
+    if not line.startswith('From: '): continue
+    pieces = line.split()
+    email = pieces[1]
+    # 從email中提取組織部分（即域名）
+    org = email.split('@')[1]
+    # `?` 表示佔位符，是讓後面的 email 變數代入的
+    cur.execute('SELECT count FROM Counts WHERE org = ? ', (org,))
+    # 從查詢結果中獲取一行數據
+    row = cur.fetchone()
+    # 如果email不存在，則插入新記錄
+    if row is None:
+        cur.execute('''INSERT INTO Counts (org, count)
+                VALUES (?, 1)''', (org,))
+    # 如果email存在，則更新count值加1
+    else:
+        cur.execute('UPDATE Counts SET count = count + 1 WHERE org = ?',
+                    (org,))
+    # 將查詢語句和更新語句的結果都提交到資料庫中
+    conn.commit()
+
+sqlstr = 'SELECT org, count FROM Counts ORDER BY count DESC LIMIT 10'
+# 印出前 10 個結果的 email 和 count 值
+for row in cur.execute(sqlstr):
+    print(str(row[0]), row[1])
+
+cur.close()
+```
+
 ## 參考資料
 1. [Programming for Everybody](https://www.coursera.org/specializations/python)
 2. [物件導向(Object Oriented Programming)概念](https://totoroliu.medium.com/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91-object-oriented-programming-%E6%A6%82%E5%BF%B5-5f205d437fd6)

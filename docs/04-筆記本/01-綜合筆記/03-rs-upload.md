@@ -1,0 +1,290 @@
+---
+title: 上傳監聽進度 (without axios)
+tags: [fetch, ReadableStream, Nuxt3]
+---
+## 關於不使用 axios
+基於 Nuxt3 提供了自己打 API 的方式 (`useFectch`、`$fetch`)，開發團隊也建議使用他們的方法就好，不用特意引入 axios 套件，因此監聽上傳檔案進度這件事就得換個方法。關於這個議題至今依舊在 GitHub 與 StackOverflow 是熱門的討論。
+:::info
+有關如何用 axios 監聽上傳進度，看[這篇](./02-axios-upload/index.md)
+:::
+在不使用套件下，現代打 API 普遍使用 fetch，但 fetch 其實不支援上傳進度的監聽。普遍解法是回歸傳統 AJAX 使用 XMLHttpRequest 發送請求，xhr 本身支援監聽上傳進度，基本上 axios 底層邏輯也是使用 xhr。但回歸 AJAX 顯然與現代網頁開發背道而馳。
+
+在這篇 [StackOverflow 討論](https://stackoverflow.com/questions/52422662/how-to-get-file-upload-progress-with-fetch-and-whatwg-streams/52860605#52860605)中有提到 Google 開始支援原生 fetch 的 streaming uploads，對於監聽上傳進度貌似是個解方。
+
+```js
+const fileStream = formData.get(fileObj.file.name).stream().getReader()
+console.log('fileStream', fileStream)
+const totalSize = fileObj.file.size
+let uploaded = 0
+
+const rs = new ReadableStream({
+    async pull(ctrl){
+    const result = await fileStream.read()
+    console.log('Read:', result)
+    if(result.done){
+        ctrl.close()
+        return
+    }
+    uploaded += result.value.byteLength
+    fileObj.progress = (uploaded / totalSize) * 100
+    console.log('uploaded', uploaded)
+    ctrl.enqueue(result.value)
+    }
+})
+
+useFetch('https://httpbin.org/post', {
+    method: 'POST',
+    body: rs,
+    duplex: 'half',
+})
+```
+其原理是建立一個 `ReadableStream` 來讀取上傳檔案的數據，並透過 `pull` 來控制數據的讀取和流動。  
+關於解釋，chatGPT 提供了一個不錯的解釋：
+> 當可讀流需要新的數據時，它會調用 `pull` 方法。在 `pull` 方法中，首先從文件流中讀取一部分數據，並檢查是否已經讀取完整個文件。如果還有更多數據需要讀取，則將讀取到的數據放入數據流中，以便後續操作可以處理它們。如果已經讀取完整個文件，則關閉數據流，結束數據的讀取。
+
+:::tip
+關於取消 POST，這裡可以使用 `AbortController`，詳見完整程式碼。
+:::
+
+<details>
+<summary>完整程式碼 (UI: Vuetify)</summary>
+
+```js
+<script setup>
+const state = reactive({
+    files: [],
+    uploading: false,
+    isDragOver: false,
+})
+
+// imput file
+const handleFileChange = (event) => {
+  state.uploading = true
+  state.files = Array.from(event.target.files).map((file) => ({
+    file,
+    progress: 0,
+    // highlight-next-line
+    abortController: new AbortController()
+  }))
+}
+
+// drag and drop
+const handleIsDrag = () => {
+    state.isDragOver = true
+}
+
+const handleDrop = (event) => {
+    state.isDragOver = false
+    state.uploading = true
+    const files = Array.from(event.dataTransfer.files).map((file) => ({
+    file,
+    progress: 0,
+    // highlight-next-line
+    abortController: new AbortController()
+    }));
+
+    state.files = files
+}
+
+// cancel upload
+const cancelUpload = (fileObj) => {
+    const fileIndex = state.files.findIndex((file) => file === fileObj);
+
+    if (fileIndex !== -1) {
+        // highlight-next-line
+        fileObj.abortController.abort()
+    }
+}
+
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+
+    // highlight-start
+    //  todo ReadableStream
+    const fileStream = formData.get(fileObj.file.name).stream().getReader()
+    console.log('fileStream', fileStream)
+    const totalSize = fileObj.file.size
+    let uploaded = 0
+    
+    const rs = new ReadableStream({
+      async pull(ctrl){
+        const result = await fileStream.read()
+        console.log('Read:', result)
+        if(result.done){
+          ctrl.close()
+          return
+        }
+        uploaded += result.value.byteLength
+        fileObj.progress = (uploaded / totalSize) * 100
+        console.log('uploaded', uploaded)
+        ctrl.enqueue(result.value)
+      }
+    })
+
+    try {
+      console.time('useFetch:')
+      await useFetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: rs,
+        duplex: 'half',
+        signal: fileObj.abortController.signal
+      })
+      console.timeEnd('useFetch:')
+      // highlight-end
+    } catch (error) {
+      console.error('Upload error', error);
+    }
+}
+
+const uploadFiles = () => {
+    if(state.files.length === 0){
+      alert('No selected file!')
+      return
+    }else{
+      const uploadPromises = state.files.map(uploadFile)
+      Promise.all(uploadPromises)
+      .then(() => {
+        alert('All done')
+      })
+      .catch((error) => {
+        console.error(error)
+        alert('Something error ><')
+      })
+      .finally(() => {
+        state.uploading = false
+        state.files = []
+      })
+    }
+}
+</script>
+
+<template>
+    <div class="container">
+      <div
+        @dragenter.prevent="handleIsDrag"
+        @dragover.prevent="handleIsDrag"
+        @dragleave.prevent="handleIsDrag"
+        @drop.prevent="handleDrop"
+        class="drop-area"
+        :class="{ 'drag-over': state.isDragOver }"
+        >
+        <label class="input-label">
+          <input type="file" @change="handleFileChange" multiple/>
+          <span>+</span>
+        </label>
+      </div>
+      <button @click="uploadFiles">Upload</button>
+      <div v-if="state.uploading">
+        <div v-for="(fileObj, index) in state.files" :key="index" class="progress">
+          <p>{{ fileObj.file.name }}</p>
+          <v-progress-linear
+            rounded
+            color="primary"
+            v-model="fileObj.progress"
+            height="25px"
+            class="linebar">
+            <strong>{{ Math.ceil(fileObj.progress) }}%</strong>
+          </v-progress-linear>
+          <button @click="() => cancelUpload(fileObj)" class="cancel">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+</template>
+
+<style scoped>
+.container{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 25px;
+  height: 80vh;
+  width: 100%;
+  padding: 1rem;
+}
+
+.drop-area {
+  width: 15vw;
+  height: 20vh;
+  border: 2px dashed #ccc;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-over {
+  border-color: #2196F3;
+  background-color: #E3F2FD;
+}
+
+.input-label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(225, 225, 225, 0.6);
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  cursor: pointer;
+
+  input{
+    display: none;
+  }
+  span{
+    font-size: 3rem;
+    font-weight: 500;
+  }
+}
+
+button{
+  padding: 0.5rem;
+  border-radius: 25px;
+  background-color: lightblue;
+  font-size: 1rem;
+}
+
+.progress{
+  width: 45vw;
+  margin-top: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
+
+  p{
+    grid-column: 1/2;
+    align-self: center;
+  }
+  .linebar{
+    grid-column: 2/3;
+    align-self: center;
+  }
+}
+
+.cancel{
+  width: 60%;
+  border-radius: 25px;
+  padding: 0.5rem;
+  background-color: pink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 3/4;
+  align-self: center;
+  justify-self: end;
+}
+</style>
+```
+</details>
+:::warning
+一切看似很美好，但我實際用同一個 50 mb 的檔案做測試，從請求結束到 server 發回 response，`ReadableStream` 花費時間大概是 axios 的 4 倍，值不值得使用是一件可以討論的事，畢竟還是可以在 Nuxt3 中用 axios。
+:::
+## 參考資料
+1. [How to get File upload progress with fetch() and WhatWG streams](https://stackoverflow.com/questions/52422662/how-to-get-file-upload-progress-with-fetch-and-whatwg-streams/52860605#52860605)
+2. [从 Fetch 到 Streams —— 以流的角度处理网络请求](https://juejin.cn/post/6844904029244358670)
+3. [Support Request / Response progress #45](https://github.com/unjs/ofetch/issues/45)
+4. [How can I show a progress indicator for uploading a file using Nuxt3 built-in $fetch (ohmyfetch)?](https://stackoverflow.com/questions/73811890/how-can-i-show-a-progress-indicator-for-uploading-a-file-using-nuxt3-built-in-f)

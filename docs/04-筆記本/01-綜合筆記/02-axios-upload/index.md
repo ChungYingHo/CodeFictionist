@@ -1,5 +1,5 @@
 ---
-title: 上傳資料顯示進度
+title: 檔案上傳 (feat. axios)
 tags: [HTML, javascript, axios, input, drag]
 ---
 :::warning
@@ -11,6 +11,15 @@ tags: [HTML, javascript, axios, input, drag]
 ## 功能與解析
 在不使用其他專門套件下，為上傳檔案添加上傳進度顯示。  
 解法可以使用 axios 套件內部的 `onUploadProgress` 來直接處理上傳進度。
+```js
+axios.post('https://httpbin.org/post', formData, {
+  // highlight-start
+  onUploadProgress: (progressEvent) => {
+    state.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+  },
+  // highlight-end
+})
+```
 
 ## 以 vue3 實作
 :::info
@@ -28,7 +37,6 @@ const state = reactive({
   files: null,
   progress: 0,
   uploading: false,
-  formData: new FormData()
 })
 
 const handleFileChange = (event) => {
@@ -36,7 +44,7 @@ const handleFileChange = (event) => {
   state.files = event.target.files
 }
 
-const uploadFile = async() => {
+const uploadFile = () => {
   if(!state.files){
     alert('No selected file!')
     return
@@ -52,7 +60,7 @@ const uploadFile = async() => {
     }
     // highlight-end
 
-    await axios.post('https://httpbin.org/post', formData, {
+    axios.post('https://httpbin.org/post', formData, {
       // highlight-start
       onUploadProgress: (progressEvent) => {
         state.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
@@ -251,8 +259,22 @@ const upload = () => {
 
 ### 取消單一檔案 POST 事件
 使用 axios 提供的 `Cancel Token`。  
-因為要獨立取消，所以每個檔案都要有自己的 Cancel Token。
+```js
+const cancelTokenSource = axios.CancelToken.source()
+await axios.post('https://httpbin.org/post', formData, {
+  onUploadProgress: (progressEvent) => {
+    fileObj.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+  },
+  // highlight-start
+  // 添加第三個參數
+  cancelToken: cancelTokenSource.token
+  // highlight-end
+})
 
+// 取消函式可以綁在按鈕上
+const cancelUpload = (fileObj) => cancelTokenSource.cancel('cancel upload')
+```
+下方完整 code，因為要獨立取消，所以每個檔案都要有自己的 Cancel Token。
 <details>
 <summary>完整程式碼</summary>
 
