@@ -162,6 +162,32 @@ dd if=/dev/urandom of=largefile2 bs=1M count=75
 實際上流程如下：
 1. 使用者一次傳入多個檔案。
 2. 前端賦予他們每個一個獨自的進度，並各自發送 POST。
+```js
+const handleFileChange = (event) => {
+  state.uploading = true
+  // 使用 Array.from 將 FileList 轉換為陣列，再將每個檔案包裝成包含進度的物件
+  state.files = Array.from(event.target.files).map((file) => ({
+    file,
+    progress: 0,
+  }))
+}
+
+const uploadFile = async (fileObj) => {
+  const formData = new FormData()
+  // 使用 append 把檔案塞進要 POST 的 formData
+  formData.append(fileObj.file.name, fileObj.file)
+
+  try {
+    await axios.post('https://httpbin.org/post', formData, {
+      onUploadProgress: (progressEvent) => {
+        fileObj.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+      },
+    })
+  } catch (error){
+    console.log(error)
+  }
+}
+```
 
 <details>
 <summary>完整程式碼</summary>
@@ -410,6 +436,34 @@ const upload = () => {
 2. `dragover`：持續在元素上拖曳時觸發。
 3. `dragleave`：拖曳離開元素時觸發。
 4. `drop`：放下拖曳的元素 (檔案) 時觸發。
+```js title='<script setup>'
+const handleIsDrag = () => {
+    state.isDragOver = true
+}
+
+const handleDrop = (event) => {
+    state.isDragOver = false
+    state.uploading = true
+    const files = Array.from(event.dataTransfer.files).map((file) => ({
+    file,
+    progress: 0,
+    }));
+
+    // 將文件添加到 state.files 中
+    state.files = files
+}
+```
+```html title='HTML structure'
+<div
+  @dragenter.prevent="handleIsDrag"
+  @dragover.prevent="handleIsDrag"
+  @dragleave.prevent="handleIsDrag"
+  @drop.prevent="handleDrop"
+  class="drop-area"
+  :class="{ 'drag-over': state.isDragOver }"
+  >
+</div>
+```
 
 <details>
 <summary>完整程式碼</summary>
@@ -542,8 +596,91 @@ button{
 
 ![](./drag-1.png)
 
-## 做個含點擊觸發選擇視窗也可以拖拉的樣式
+## 進階綜合實作
+:::tip
 此實作以 [Vuetify](https://vuetifyjs.com/zh-Hans/) 作為 UI framework，目的很單純，只是為了進度條的渲染。
+:::
+1. 可以點擊選擇檔案，也可以拖曳選擇檔案。
+2. 可以取消上傳。
+3. 每次 POST 請求只有 5 個，一個執行完畢就立馬遞補一個檔案進來上傳。
+```js
+const uploadFiles = async () => {
+    if (state.files.length === 0) {
+      alert('No selected file!')
+      return
+    }
+
+    const maxConcurrentUploads = 5
+    let currentIndex = 0
+    let completedUploads = 0
+
+    const uploadFileAndNext = async (file) => {
+      try {
+        await uploadFile(file);
+      } catch (error) {
+        console.error(error);
+        // 上傳失敗時的處理邏輯
+      } finally {
+        // 無論上傳成功或失敗，都增加已完成的上傳數
+        completedUploads++;
+
+        // 當上傳結束後，遞補新的檔案進行 POST
+        if (currentIndex < state.files.length) {
+          const nextFile = state.files[currentIndex++];
+          uploadFileAndNext(nextFile)
+        }
+
+        // 如果所有檔案都已上傳完成，顯示提示
+        if (completedUploads === state.files.length) {
+          alert('All done')
+          state.uploading = false
+          state.files = []
+        }
+      }
+    }
+
+    // 初始化同時運行的 POST
+    const uploadPromises = []
+    for (let i = 0; i < maxConcurrentUploads && i < state.files.length; i++) {
+      const file = state.files[currentIndex++]
+      uploadPromises.push(uploadFileAndNext(file))
+    }
+
+    // 等待所有 POST 完成
+    await Promise.all(uploadPromises)
+}
+```
+4. 前端上傳完成後只在網頁顯示 95%，一直到 response 回來才跳 100%。
+```js
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+    for(let pair of formData.entries()) {
+      console.log(pair[0]+', '+pair[1]);
+    }
+    // highlight-next-line
+    let response
+
+    try {
+      console.time('axios:')
+      response = await axios.post('https://httpbin.org/post', formData, {
+          onUploadProgress: (progressEvent) => {
+            const loaded = progressEvent.loaded
+            const total = progressEvent.total
+            // highlight-next-line
+            const uploadPercentage = response ? 100 : Math.round((loaded * 95) / total)
+            fileObj.progress = uploadPercentage
+          },
+          cancelToken: fileObj.cancelTokenSource.token
+      })
+      console.timeEnd('axios:')
+      // highlight-next-line
+      fileObj.progress = 100
+    } catch (error) {
+    console.error('Upload error', error);
+    }
+}
+```
 
 <details>
 <summary>完整程式碼</summary>
@@ -558,46 +695,6 @@ const state = reactive({
     uploading: false,
     isDragOver: false,
 })
-
-const uploadFile = async (fileObj) => {
-    const formData = new FormData()
-    formData.append(fileObj.file.name, fileObj.file)
-    for(let pair of formData.entries()) {
-      console.log(pair[0]+', '+pair[1]);
-    }
-
-    try {
-    await axios.post('https://httpbin.org/post', formData, {
-        onUploadProgress: (progressEvent) => {
-        fileObj.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-        },
-        cancelToken: fileObj.cancelTokenSource.token
-    })
-    } catch (error) {
-    console.error('Upload error', error);
-    }
-}
-
-const uploadFiles = () => {
-    if(state.files.length === 0){
-      alert('No selected file!')
-      return
-    }else{
-      const uploadPromises = state.files.map(uploadFile)
-      Promise.allSettled(uploadPromises)
-      .then(() => {
-        alert('All done')
-      })
-      .catch((error) => {
-        console.error(error)
-        alert('Something error ><')
-      })
-      .finally(() => {
-        state.uploading = false
-        state.files = []
-      })
-    }
-}
 
 // imput file
 const handleFileChange = (event) => {
@@ -633,6 +730,79 @@ const cancelUpload = (fileObj) => {
   if (fileIndex !== -1) {
     state.files[fileIndex].cancelTokenSource.cancel('cancel upload')
   }
+}
+
+// upload
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+    for(let pair of formData.entries()) {
+      console.log(pair[0]+', '+pair[1]);
+    }
+    let response
+
+    try {
+      console.time('axios:')
+      response = await axios.post('https://httpbin.org/post', formData, {
+          onUploadProgress: (progressEvent) => {
+            const loaded = progressEvent.loaded
+            const total = progressEvent.total
+            const uploadPercentage = response ? 100 : Math.round((loaded * 95) / total)
+            fileObj.progress = uploadPercentage
+          },
+          cancelToken: fileObj.cancelTokenSource.token
+      })
+      console.timeEnd('axios:')
+      fileObj.progress = 100
+    } catch (error) {
+    console.error('Upload error', error);
+    }
+}
+
+const uploadFiles = async () => {
+    if (state.files.length === 0) {
+      alert('No selected file!')
+      return
+    }
+
+    const maxConcurrentUploads = 5
+    let currentIndex = 0
+    let completedUploads = 0
+
+    const uploadFileAndNext = async (file) => {
+      try {
+        await uploadFile(file);
+      } catch (error) {
+        console.error(error);
+        // 上傳失敗時的處理邏輯
+      } finally {
+        // 無論上傳成功或失敗，都增加已完成的上傳數
+        completedUploads++;
+
+        // 當上傳結束後，遞補新的檔案進行 POST
+        if (currentIndex < state.files.length) {
+          const nextFile = state.files[currentIndex++];
+          uploadFileAndNext(nextFile)
+        }
+
+        // 如果所有檔案都已上傳完成，顯示提示
+        if (completedUploads === state.files.length) {
+          alert('All done')
+          state.uploading = false
+          state.files = []
+        }
+      }
+    }
+
+    // 初始化同時運行的 POST
+    const uploadPromises = []
+    for (let i = 0; i < maxConcurrentUploads && i < state.files.length; i++) {
+      const file = state.files[currentIndex++]
+      uploadPromises.push(uploadFileAndNext(file))
+    }
+
+    // 等待所有 POST 完成
+    await Promise.all(uploadPromises)
 }
 </script>
 
@@ -757,8 +927,35 @@ button{
 </style>
 ```
 </details>
+<details>
+<summary>一次建立多個測試檔案</summary>
 
+1. 建立一個 `generate_file.sh` 文件，貼上下列指令：
+```bash
+#!/bin/bash
 
+# 設定要生成的檔案數量
+num_files=20
+
+# 設定檔案大小的範圍（以 MB 為單位）
+min_size=10
+max_size=30
+
+# 生成檔案
+for ((i=1; i<=$num_files; i++)); do
+  # 隨機決定檔案大小
+  file_size=$(shuf -i $min_size-$max_size -n 1)
+  # 生成檔案內容
+  file_content=$(dd if=/dev/urandom of="file_${i}_${file_size}MB.txt" bs=1M count=$file_size status=none)
+  echo "Generated: file_${i}_${file_size}MB.txt"
+done
+```
+2. 終端機執行：
+```bash
+bash generate_file.sh
+```
+</details>
+![](./advanced.jpg)
 
 
 ## 參考資料
