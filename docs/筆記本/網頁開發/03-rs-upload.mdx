@@ -5,7 +5,7 @@ tags: [fetch, ReadableStream, Nuxt3]
 ## 關於不使用 axios
 基於 Nuxt3 提供了自己打 API 的方式 (`useFectch`、`$fetch`)，開發團隊也建議使用他們的方法就好，不用特意引入 axios 套件，因此監聽上傳檔案進度這件事就得換個方法。關於這個議題至今依舊在 GitHub 與 StackOverflow 是熱門的討論。
 :::info
-有關如何用 axios 監聽上傳進度，看[這篇](./02-axios-upload/index.md)
+有關如何用 axios 監聽上傳進度，看[這篇](./axios-upload)
 :::
 在不使用套件下，現代打 API 普遍使用 fetch，但 fetch 其實不支援上傳進度的監聽。普遍解法是回歸傳統 AJAX 使用 XMLHttpRequest 發送請求，xhr 本身支援監聽上傳進度，基本上 axios 底層邏輯也是使用 xhr。但回歸 AJAX 顯然與現代網頁開發背道而馳。
 
