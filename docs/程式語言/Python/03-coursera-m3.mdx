@@ -54,13 +54,13 @@ mysock.close()
 ```
 下圖為 `Python for everybody` 課程影片截圖，用繪圖的方式方常快速理解 socket 和上述程式碼在網路溝通中扮演的角色。
 
-![](./socket01.png "Socket work (Picture from video of Python for everybody)")
+![](../../../static/docs-img/python/socket01.png "Socket work (Picture from video of Python for everybody)")
 
 ## Unicode
 ### ASCII
 早期常用的字符編碼方式，以 128 個數字聯繫了 26 個大寫字母、26 個小寫字母、10 個數字、標點符號、控制字符等。每個字符都有一個唯一的 7 位二進制編碼，這樣的設計使得 ASCII 字符可以直接映射到一個字節（byte，8 位）的二進制數據中。
 
-![](./ASCII.png)
+![](../../../static/docs-img/python/ASCII.png)
 
 :::tip
 這也說明了為什麼 `print('H' < 'h')` 會得到 `True`，因為代表 h 的數字是 104，大於 H 的 72。
@@ -74,7 +74,7 @@ print(ord('H'))
 解決 ASCII 無法儲存其他語系字符的問題。`UTF-8` 是現在常用的編碼方式。  
 下圖解釋了為何上述程式碼需要進行 `encode` 和 `decode`。
 
-![](./unicode.png)
+![](../../../static/docs-img/python/unicode.png)
 
 ## Urllib + BeautifulSoup
 Urllib 是 Python 的一個標準庫，專門用來爬取網頁資源。  

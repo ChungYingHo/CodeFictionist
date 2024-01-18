@@ -150,7 +150,7 @@ button{
 dd if=/dev/urandom of=largefile bs=1M count=50
 dd if=/dev/urandom of=largefile2 bs=1M count=75
 ```
-![](./upload-1.png)
+![](../../../static/docs-img/網頁開發/upload-1.png)
 
 :::warning
 如果要檢查 POST 出去是否有內容，不能使用 `console.log(formData)`，會得到空物件，但實際上 `append` 是有運作的。
@@ -281,7 +281,7 @@ const upload = () => {
 ```
 </details>
 
-![](./upload-2.png)
+![](../../../static/docs-img/網頁開發/upload-2.png)
 
 ### 取消單一檔案 POST 事件
 使用 axios 提供的 `Cancel Token`。  
@@ -424,10 +424,10 @@ const upload = () => {
 </details>
 
 
-![](./upload-3.png)
+![](../../../static/docs-img/網頁開發/upload-3.png)
 
 可以從開發者工具中觀察到 POST 請求被取消：
-![](./cancel.png)
+![](../../../static/docs-img/網頁開發/cancel.png)
 
 ## 拖曳式上傳資料
 拖曳式上傳不使用 HTML 的 `<input>` 來放入檔案，而是使用 `Drag & Drop api` 來實現檔案的上傳。  
@@ -594,7 +594,7 @@ button{
 ```
 </details>
 
-![](./drag-1.png)
+![](../../../static/docs-img/網頁開發/drag-1.png)
 
 ## 進階綜合實作
 :::tip
@@ -955,7 +955,7 @@ done
 bash generate_file.sh
 ```
 </details>
-![](./advanced.jpg)
+![](../../../static/docs-img/網頁開發/advanced.jpg)
 
 
 ## 參考資料
