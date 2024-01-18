@@ -83,15 +83,21 @@ const config = {
           {
             to: '/about',
             position: 'left',
-            label: '關於',
+            label: 'About',
           },
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'programSidebar',
             position: 'left',
-            label: '書櫃',
+            label: 'Programming',
           },
-          {to: '/blog', label: '動態', position: 'left'},
+          {
+            type: 'docSidebar',
+            sidebarId: 'novelSidebar',
+            position: 'left',
+            label: 'Novel',
+          },
+          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/ChungYingHo',
             label: 'GitHub',
