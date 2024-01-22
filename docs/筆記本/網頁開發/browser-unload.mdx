@@ -46,7 +46,7 @@ onBeforeUnmount(()=>{
 
 ## 實作清空 localstorage
 1. 先手動在加入一組 key-value ("a":"b") 在 localstorage 中。
-![](../../../static/docs-img/網頁開發/localstorage-set.jpg)
+![](./assets/localstorage-set.jpg)
 2. 實際關閉網頁後再打開，觀察 localstorage 中是否仍存有這筆數據 (理論上要有)。
 3. `handleReset` 函式加入下述這段：
 ```js
@@ -89,7 +89,7 @@ function handleReset(event){
 }
 ```
 3. 實際關閉網頁後再進入，觀察 localstorage 是否有存入一組 email。
-![](../../../static/docs-img/網頁開發/localstorage-email.jpg)
+![](./assets/localstorage-email.jpg)
 
 :::info
 MDN 提示 `beforeunload` 不一定會被偵測到，建議改用 `visibilitychange`
