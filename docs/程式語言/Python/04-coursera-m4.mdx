@@ -197,7 +197,7 @@ CREATE TABLE Track (
 
 
 fname = 'Library.xml'
-# 查找函式，詳見以下註記
+# 查找函式
 def lookup(d, key):
     found = False
     for child in d:
@@ -260,9 +260,6 @@ rows = cur.fetchall()
 for row in rows:
     print(row)
 ```
-:::danger
-先放著，我之後補充
-:::
 
 ## 參考資料
 1. [Programming for Everybody](https://www.coursera.org/specializations/python)
