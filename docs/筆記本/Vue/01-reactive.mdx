@@ -1,0 +1,178 @@
+---
+title: Vue3 - 專案建立與響應式資料
+tags: [vue3]
+---
+## Create a Vue3 project
+1. Run the code below in the terminal:
+```powershell
+npm create vue@latest
+```
+2. `cd` into the project path, run the instruction below:
+```powershell
+npm install
+```
+3. Type `npm run dev`, you can now see the vue3 website run on the browser.
+
+## Syntax
+Vue3 has the powerful syntax - composition api, it's very different with the options api of Vue2, but you still can write options api in Vue3 (not recommend).
+
+```html title='composition api'
+<script setup>
+	/** put all your methods and variables here **/
+</script>
+
+<template>
+  /** the HTML structure **/
+</template>
+
+<style scoped>
+ /** css style, use `scope` let the css command only work in this component  **/​
+</style>
+```
+
+### Text Interpolation
+In the template, if there have a variable you want to render, use `{{...}}`, like below:
+```html
+<span>Message: {{ msg }}</span>
+```
+
+### Raw HTML
+If your variable contains HTML content, you should not use `{{...}}` since it will treat the variable's content as plain text.  
+Instead, you should use the `v-html` directive to insert HTML content：
+```html
+// rawHtml = <span style="color: red">This should be red.</span>
+<p>Using v-html directive: <span v-html="rawHtml"></span></p>
+```
+
+### Attribute Bindings
+If you want to binding a variable on the attribute, use `v-bind`. For example:
+```html
+<h1 v-bind:class="{addColor: changed}">I will change my color</h1>
+```
+Here means: when changed is `true`, this `<h1>` will add a class name `addColor`.  
+You can use a shorthand for `v-bind` as shown below:
+```html
+<h1 :class="{addColor: changed}">I will change my color</h1>
+```
+
+:::info
+There are many directives in Vue. For example:  
+1. `v-for`:  This is a loop used to create multiple elements.
+2. `v-if` or `v-show`: These are used to conditionally display elements.
+3. `v-on`:  This is used to bind an event handler.
+:::
+
+## Reactivity Fundamentals
+Reactivity is a crucial concept in Vue.  
+We use `useState` to manage reactive data in React. However, in Vue3, it use `ref`, `reactive` and `computed` for this purpose.
+
+### ref
+It can store any type of data.  
+However, when storing objects or arrays that require reactive properties, reactive is often preferred.
+
+Note that when accessing the value of a ref in `<script setup>`, you should append .value to it.  
+However, in `<template>`, you can directly use `{{ref}}` to access the value without .value.
+```html
+<script setup>
+  import { ref } from 'vue';
+  const num = ref(0)
+  const changeNum = () => num.value += 1
+</script>
+
+<template>
+  <h1>{{ num }}</h1>
+  {/* these two lines of code do the same thing */}
+  <button @click="changeNum">Add one</button>
+  <button @click="num++">Add one</button>
+</template>
+```
+
+:::warning
+Please use `const` to declare a `ref`. Do not use `let` or `var`!
+:::
+
+### reactive
+When accessing properties of a reactive object, unlike with `ref`, there's no need to append `.value`.
+```html
+<script setup>
+  import { reactive } from 'vue';
+  const people2 = reactive({
+    name: 'Jeremy',
+    gender: 'Male',
+    age: 20
+  })
+
+  const changePeople2 = () => {
+    people2.name = 'Lucy'
+    console.log('people2 changed')
+  }
+</script>
+
+<template>
+  <h1>{{ people2.name }} / {{ people2.gender }}</h1>
+  <button @click="changePeople2">Change!</button>
+</template>
+```
+:::info
+### Difference between `ref` and `reactive`
+Not just if you need to append `.value` or not.  
+When a `ref` is used to store an object, deep changes within the object's properties might not be detected by `watch`, as ref is primarily designed to track direct assignments to its value.  
+In contrast, an object made reactive with `reactive` can more effectively track changes to its internal properties.
+
+But, if you add the third parameter `deep: true` when using `watch` to observe a `ref` object, `watch` will be able to detect changes within the properties of the `ref` object. This is because adding `deep: true` enables `watch` to perform deep observation.
+
+```html
+watch(people1, () => {
+  console.log('something changed')
+}, {deep : true})
+```
+:::
+
+### computed
+In Vue, `computed` is a method used to define reactive properties that can be computed.  
+Computed properties automatically recalculate their value when the data they depend on changes.  
+This is particularly useful for complex logic that needs to update automatically based on certain data.
+```html title='Before use computed'
+<script setup>
+  import { ref } from 'vue';
+  const num1 = ref(1)
+  const num2 = ref(2)
+</script>
+
+<template>
+  <h1>Num1: {{ num1 }}</h1>
+  <h1>Num2: {{ num2 }}</h1>
+  <h1>Num1 + Num2 = {{ num1 + num2 }}</h1>
+</template>
+```
+
+```html title='After use computed'
+<script setup>
+  import { ref, computed } from 'vue';
+  const num1 = ref(1)
+  const num2 = ref(2)
+
+  const numPlus = computed(()=>{
+    return num1.value  + num2.value
+  })
+</script>
+
+<template>
+  <h1>Num1: {{ num1 }}</h1>
+  <h1>Num2: {{ num2 }}</h1>
+  <h1>Num1 + Num2 = {{ numPlus }}</h1>
+</template>
+```
+You can see after we use `computed`, we put all the logic into `<script setup>`.
+
+:::info
+### Difference between method and computed
+1. `computed` only works when the reactive data changes.
+2. You cannot pass any parameters to `computed`.
+3. By default, `computed` only has a `getter`.
+:::
+
+## Reference
+1. [Vue.js](https://cn.vuejs.org/guide/quick-start.html)
+2. [Vue3 + Vite 快速上手 Get Startrd EP1 - 初探 Vite 專案 / Vue3 初學者應該要先知道的東西 / 剛開始寫 Composition API 會犯的錯誤 !](https://www.youtube.com/watch?v=rNQIA0Fe9KQ)
+3. [Vue3 + Vite 快速上手 Get Startrd EP2 - 定義資料 ref、reactive、computed 深度探討](https://www.youtube.com/watch?v=gJF5Cf2fz1A)
