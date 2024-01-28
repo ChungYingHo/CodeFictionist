@@ -16,42 +16,42 @@ npm install
 ## Syntax
 Vue3 has the powerful syntax - composition api, it's very different with the options api of Vue2, but you still can write options api in Vue3 (not recommend).
 
-```html title='composition api'
+```xml title='composition api'
 <script setup>
-	/** put all your methods and variables here **/
+  <!-- put all your methods and variables here -->
 </script>
 
 <template>
-  /** the HTML structure **/
+  <!-- the HTML structure -->
 </template>
 
 <style scoped>
- /** css style, use `scope` let the css command only work in this component  **/​
+ <!-- css style, use `scope` let the css command only work in this component ​ -->
 </style>
 ```
 
 ### Text Interpolation
 In the template, if there have a variable you want to render, use `{{...}}`, like below:
-```html
+```xml
 <span>Message: {{ msg }}</span>
 ```
 
 ### Raw HTML
 If your variable contains HTML content, you should not use `{{...}}` since it will treat the variable's content as plain text.  
 Instead, you should use the `v-html` directive to insert HTML content：
-```html
-// rawHtml = <span style="color: red">This should be red.</span>
+```xml
+<!-- rawHtml = <span style="color: red">This should be red.</span> -->
 <p>Using v-html directive: <span v-html="rawHtml"></span></p>
 ```
 
 ### Attribute Bindings
 If you want to binding a variable on the attribute, use `v-bind`. For example:
-```html
+```xml
 <h1 v-bind:class="{addColor: changed}">I will change my color</h1>
 ```
 Here means: when changed is `true`, this `<h1>` will add a class name `addColor`.  
 You can use a shorthand for `v-bind` as shown below:
-```html
+```xml
 <h1 :class="{addColor: changed}">I will change my color</h1>
 ```
 
@@ -72,7 +72,7 @@ However, when storing objects or arrays that require reactive properties, reacti
 
 Note that when accessing the value of a ref in `<script setup>`, you should append .value to it.  
 However, in `<template>`, you can directly use `{{ref}}` to access the value without .value.
-```html
+```xml
 <script setup>
   import { ref } from 'vue';
   const num = ref(0)
@@ -93,7 +93,7 @@ Please use `const` to declare a `ref`. Do not use `let` or `var`!
 
 ### reactive
 When accessing properties of a reactive object, unlike with `ref`, there's no need to append `.value`.
-```html
+```xml
 <script setup>
   import { reactive } from 'vue';
   const people2 = reactive({
@@ -121,7 +121,7 @@ In contrast, an object made reactive with `reactive` can more effectively track 
 
 But, if you add the third parameter `deep: true` when using `watch` to observe a `ref` object, `watch` will be able to detect changes within the properties of the `ref` object. This is because adding `deep: true` enables `watch` to perform deep observation.
 
-```html
+```xml
 watch(people1, () => {
   console.log('something changed')
 }, {deep : true})
@@ -132,7 +132,7 @@ watch(people1, () => {
 In Vue, `computed` is a method used to define reactive properties that can be computed.  
 Computed properties automatically recalculate their value when the data they depend on changes.  
 This is particularly useful for complex logic that needs to update automatically based on certain data.
-```html title='Before use computed'
+```xml title='Before use computed'
 <script setup>
   import { ref } from 'vue';
   const num1 = ref(1)
@@ -146,7 +146,7 @@ This is particularly useful for complex logic that needs to update automatically
 </template>
 ```
 
-```html title='After use computed'
+```xml title='After use computed'
 <script setup>
   import { ref, computed } from 'vue';
   const num1 = ref(1)
