@@ -162,6 +162,15 @@ const config = {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
       },
+      // algolia configuration
+      algolia: {
+        appId: 'ZV6HOT2R5J',
+        apiKey: '4472657f32f08a869713bfedfdba900f',
+        indexName: 'codefictionist',
+
+        // Optional: see doc section below
+        contextualSearch: true,
+      },
     }),
     markdown: {
       mermaid: true,

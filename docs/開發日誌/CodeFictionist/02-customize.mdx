@@ -191,3 +191,20 @@ navbar: {
   ],
 },
 ```
+
+## 新增網頁搜索
+使用官方推薦 [algolia](https://docsearch.algolia.com/) 服務。
+
+1. 前往 algolia 官網進行申請。
+2. 等待 algolia 審核回覆。
+3. 收到回覆後，內部會有 algolia 給的專屬於自己網站的 API key 等資訊，按照下列進行配置：
+```js
+themeConfig: {
+  algolia: {
+    apiKey: 'YOUR_API_KEY',
+    indexName: 'YOUR_INDEX_NAME',
+    contextualSearch: true,
+    // 往下可以繼續添加
+  },
+},
+```
