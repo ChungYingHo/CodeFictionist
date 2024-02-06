@@ -1,0 +1,187 @@
+---
+title: Vue3 - Pinia 管理資料
+tags: [vue3, pinia]
+---
+## Why Pinia?
+Using Pinia for state management in Vue.js applications offers a unified and manageable approach to share data across multiple components. While props, emit, and provide/inject mechanisms are suitable for parent-child component communication, they can become cumbersome when dealing with complex data sharing needs.
+
+Pinia provides a centralized store to facilitate data sharing among any components, simplifying cross-component communication and enhancing maintainability, especially in large-scale applications.
+
+## How to use Pinia?
+When creating a Vue project, you have the option to use Pinia for state management. If selected, upon project initialization, a stores directory will be automatically created under the /src folder to house state management files.
+
+Additionally, Pinia will be automatically imported in the main.js file, allowing for its use throughout the application.
+
+```js
+import './assets/main.css'
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import App from './App.vue'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.mount('#app')
+```
+
+:::info
+For existing Vue projects wishing to adopt Pinia for state management, Pinia can be added by installing it via npm or yarn. After installation, manual modifications to main.js or main.ts (depending on project configuration) are required to import and activate Pinia.
+
+```powershell
+npm install pinia
+```
+:::
+
+## What is store?
+In a new project, a **counter.js** file is typically created by default under the `/src/stores` directory as an example of a store.
+
+Stores are responsible for storing states and logic that can be globally accessed. In other words, they can contain data, computed properties, and methods.
+
+To define a store, you must first import `defineStore` from pinia.  
+The naming convention usually starts with **use** followed by the main purpose of the store and ends with **Store**. 
+
+`defineStore` accepts two parameters: the first one is the store ID, which can be the name without the "use" prefix; the second is an arrow function that contains the data or logic to be stored.
+
+Let's take a closer look at the example provided by Pinia in the project:
+
+```js
+import { ref, computed } from 'vue'
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+  function increment() {
+    count.value++
+  }
+
+  return { count, doubleCount, increment }
+})
+```
+
+## Access the data inside a store
+To access the data or logic inside a store, we can directly import the required store into a component and assign its content to a variable (typically named with a 'Store' suffix, like xxStore). Afterwards, this variable can be used within the component to access the data or logic contained in xxStore.
+
+```xml title='App.vue'
+<script setup>
+import {useCounterStore} from '@/stores/counter'
+const store = useCounterStore()
+</script>
+
+<template>
+  <h1>{{ store.count }}</h1>
+  <button @click="store.increment">Add</button>
+</template>
+```
+
+## Deconstruction of a store
+The deconstruction of a store depends on whether you're extracting data or methods. For methods, direct deconstruction can be used. However, for reactive data (including computed properties), it's necessary to use `storeToRefs` to extract them in order to preserve their reactivity. Here's an example from the official documentation.
+
+```xml title='App.vue'
+<script setup>
+import { storeToRefs } from 'pinia'
+import {useCounterStore} from '@/stores/counter'
+
+const store = useCounterStore()
+const {count, doubleCount} = storeToRefs(store)
+const {increment} = store
+</script>
+
+<template>
+  <h1>{{ count }}</h1>
+  <button @click="increment">Add</button>
+</template>
+```
+
+## Reset the statement of store
+We can define a `$reset` method in our store to reset its state. This allows for an easy way to revert the store back to its initial state.
+
+```js title='Counter.js'
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+  function increment() {
+    count.value++
+  }
+  //  add a reset method
+  const $reset = () => count.value = 0
+
+  return { count, doubleCount, increment, $reset }
+})
+```
+
+```xml title='App.vue'
+<script setup>
+import {useCounterStore} from '@/stores/counter'
+
+const store = useCounterStore()
+</script>
+
+<template>
+  <h1>{{ store.count }}</h1>
+  <button @click="store.increment">Add</button>
+  <button @click="store.$reset">Reset to 0</button>
+</template>
+```
+
+## Modify the state
+Managing and modifying the state within a Pinia store can be approached in several ways, each with its use cases and considerations.  
+Here's an explanation and some linguistic adjustments for the methods you've mentioned:
+1. Direct modification (Not recommended): Although straightforward, directly modifying the store's state from outside components is generally discouraged. This approach bypasses Vue's reactivity system, potentially leading to situations where the UI does not update to reflect changes immediately.
+```xml
+<button @click="store.count++">Add</button>
+```
+2. Modification through methods: This is a more recommended approach, especially when the logic for changing the state is complex. It maintains the encapsulation and maintainability of operations.
+```xml
+<button @click="store.increment()">Increase</button>
+```
+3. Using the `$patch` method: The `$patch` method allows for a more declarative way of updating multiple states within the store, which is particularly useful for scenarios requiring bulk state updates.
+```js
+const addCount = () => {
+  store.$patch((state) => {
+    state.count++
+  })
+}
+```
+```xml
+<button @click="addCount">Increase</button>
+```
+
+##  Listen to state changes
+It is possible to use `watch`, but Pinia offers its own method for this purpose, called `$subscribe`.
+
+The `$subscribe` method accepts two parameters: one for the mutation and another for the object to observe. When logging the mutation to the console, it reveals three key properties:  
+1. type: Indicates how the data change was made.
+2. storeId: Identifies the current store.
+3. events: Details the specific data changes within the state.
+
+This feature allows developers to reactively listen to state changes within their Pinia stores, providing a more integrated and Pinia-centric way of handling state changes compared to the generic Vue watch utility.
+
+```js title='$subscribe'
+store.$subscribe((mutation, state) =>{
+  console.log('Something changed!')
+})
+```
+```js title='watch'
+watch(store, state =>{
+  console.log(`watch here`, state)
+}, {deep : true})
+```
+
+## Listen to action(method) change
+Just like observing data changes, Vue can use `$onAction` to monitor the invocation of actions. For instance, to track the execution time of the increment function:
+```js
+store.$onAction(({ name, after }) => {
+  if (name === 'increment') {
+    const startTime = Date.now();
+
+    after(() => {
+      console.log(
+        `Finished "${name}" after ${
+          Date.now() - startTime
+        }ms.`
+      );
+    });
+  }
+})
+```
