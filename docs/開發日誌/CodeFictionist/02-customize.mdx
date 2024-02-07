@@ -193,18 +193,30 @@ navbar: {
 ```
 
 ## 新增網頁搜索
-使用官方推薦 [algolia](https://docsearch.algolia.com/) 服務。
+採 [@easyops-cn/docusaurus-search-local](https://github.com/easyops-cn/docusaurus-search-local?tab=readme-ov-file)。
 
-1. 前往 algolia 官網進行申請。
-2. 等待 algolia 審核回覆。
-3. 收到回覆後，內部會有 algolia 給的專屬於自己網站的 API key 等資訊，按照下列進行配置：
-```js
-themeConfig: {
-  algolia: {
-    apiKey: 'YOUR_API_KEY',
-    indexName: 'YOUR_INDEX_NAME',
-    contextualSearch: true,
-    // 往下可以繼續添加
-  },
-},
+1. 先安裝插件
+```powershell
+npm install --save @easyops-cn/docusaurus-search-local
 ```
+2. 前往 **docusaurus.config.js** 添加下列內容：
+```js
+const config = {
+  themes: [
+    [
+      "@easyops-cn/docusaurus-search-local",
+      {
+        hashed: true,
+        language: ["en", "zh"],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
+    ],
+  ],
+}
+```
+3. `npm run build` 即可搜索。
+
+
+## 參考資源
+1. [在 Docusaurus 新增搜尋功能](https://jimhuang.dev/docusaurus/search-local/)

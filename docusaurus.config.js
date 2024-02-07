@@ -162,20 +162,22 @@ const config = {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
       },
-      // algolia configuration
-      algolia: {
-        appId: 'ZV6HOT2R5J',
-        apiKey: '4472657f32f08a869713bfedfdba900f',
-        indexName: 'codefictionist',
-
-        // Optional: see doc section below
-        contextualSearch: true,
-      },
     }),
     markdown: {
       mermaid: true,
     },
-    themes: ['@docusaurus/theme-mermaid'],
+    themes: [
+      '@docusaurus/theme-mermaid',
+      [
+        "@easyops-cn/docusaurus-search-local",
+        {
+          hashed: true,
+          language: ["en", "zh"],
+          highlightSearchTermsOnTargetPage: true,
+          explicitSearchResultPath: true,
+        },
+      ],
+    ],
 };
 
 export default config;
