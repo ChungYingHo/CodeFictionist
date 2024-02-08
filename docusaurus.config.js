@@ -39,6 +39,10 @@ const config = {
       'classic',
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
+        gtag: {
+          trackingID: 'G-PCHB061PKF',
+          anonymizeIP: true,
+        },
         docs: {
           sidebarPath: './sidebars.js',
           // Please change this to your repo.
