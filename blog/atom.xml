@@ -24,7 +24,7 @@
 <p>目前用下來，對日常使用 (回訊息、寫文章) 來說的確挺方便的，但對於軟體工程師來說還是得切成英文會比較便於使用。主要原因在於許多對軟體工程師而言相當熟悉的英文單詞對於華碩智慧輸入法而言是分辨不出來的。比如說網頁開發大家一定都會常打的的 <code>npm install</code>，如果用華碩智慧輸入法打會變成這樣：<code>n暈install</code>。<br>
 <!-- -->還有一點就是工程師常用 markdown 語法寫文件，當要使用程式碼區塊時會使用 <strong>```</strong> 來標示，但 <strong>`</strong> 在華碩智慧輸入法中是開啟特殊符號小鍵盤，這是一些對技術開發人員而言比較沒那麼友善的地方。但總體而言，華碩智慧輸入法體感還是相當不錯、方便使用的輸入法。</p>
 <p>喔，話說，這大概是我大爆炸的一週收穫的小確幸吧 - 獲得一個機械式鍵盤傳承以及一個好用的輸入法！</p>
-<p><img loading="lazy" src="https://codefictionist.com/assets/images/asus-edit-b91dd81764b05ad31857a2cf32074d87.png" width="1575" height="760" class="img_ev3q"></p>]]></content>
+<p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/asus-edit-b91dd81764b05ad31857a2cf32074d87.png" width="1575" height="760" class="img_ev3q"></p>]]></content>
         <author>
             <name>Chung-Ying</name>
             <uri>https://github.com/ChungYingHo</uri>
@@ -43,7 +43,7 @@
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="基本原則就是抗通膨">基本原則就是抗通膨<a href="https://codefictionist.com/blog/%E4%BA%BA%E7%94%9F%E5%AF%A6%E7%94%A8%E5%95%86%E5%AD%B8%E9%99%A2#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%89%87%E5%B0%B1%E6%98%AF%E6%8A%97%E9%80%9A%E8%86%A8" class="hash-link" aria-label="Direct link to 基本原則就是抗通膨" title="Direct link to 基本原則就是抗通膨">​</a></h2>
 <p>這是一個大通膨時代，你我都有感覺，現在的幣值跟爸媽那時代大相逕庭。<br>
 <!-- -->在台灣，111 年受雇群眾的薪資中位數落在年薪 51.8 萬元，換算月薪大概是 4.3 萬元。 (見下圖，來自行政院主計總處)</p>
-<p><img loading="lazy" src="https://codefictionist.com/assets/images/%E5%8F%B0%E7%81%A3%E5%B9%B3%E5%9D%87%E8%96%AA%E8%B3%87-3f8af9ee5e3d32c129eed8171d6a8455.png" width="1555" height="775" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/%E5%8F%B0%E7%81%A3%E5%B9%B3%E5%9D%87%E8%96%AA%E8%B3%87-3f8af9ee5e3d32c129eed8171d6a8455.png" width="1555" height="775" class="img_ev3q"></p>
 <p>誒好，現在年輕人大學剛畢業，除非你剛好就是那些天選科系，一畢業就進入科技大廠、外商、醫生，不然新鮮人通常也都領不到這個價格，甚至我有一些工作幾年的朋友現在也還在 3 開頭。唉，一直漲的物價，但不見漲的薪資。</p>
 <p>台灣的 CPI (不嚴謹地說就是通膨率) 在去年落在 2.24%，而台灣公告的活期存款利率或活期儲蓄存款利率是 0.58% 跟 0.7%，瞧，薪資已經不怎麼漲了，若還把錢傻傻地全部存銀行，等著被通膨幹掉吧！</p>
 <p>所以理財的最基本的原則就是幹掉通膨！(不是月薪高的人就不用幹掉通膨喔！會賺錢不代表會理財啊！)</p>
@@ -188,7 +188,7 @@
 <!-- -->Cloudways 的 UX 做得極好，彷彿生怕多一個步驟你就會不想架站一樣，當點擊了 <code>Start Free</code> 之後，後面就是照著步驟來的的事了。<br>
 <!-- -->基本上，全部做完，你就得到一個 wordpress 後台和網站了。</li>
 </ol>
-<p><img loading="lazy" src="https://codefictionist.com/assets/images/cloudways-56aeaa400be11e944422dcb8441adab2.png" width="1600" height="714" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/cloudways-56aeaa400be11e944422dcb8441adab2.png" width="1600" height="714" class="img_ev3q"></p>
 <div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span>warning</div><div class="admonitionContent_BuS1"><p>Cloudways 提供三天免費，但還是建議先去設定信用卡，以免你之後很愛它，決定繼續用下去，結果三天到了扣不了款，所有東西一夕之間化為烏有。</p></div></div>
 <ol start="2">
 <li>在 <a href="https://www.gandi.net/zh-Hant" target="_blank" rel="noopener noreferrer">ganti.net</a> 買了一個網址，對，就是現在這個部落格的網址。</li>
@@ -200,7 +200,7 @@
 <div class="theme-admonition theme-admonition-tip admonition_xJq3 alert alert--success"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 12 16"><path fill-rule="evenodd" d="M6.5 0C3.48 0 1 2.19 1 5c0 .92.55 2.25 1 3 1.34 2.25 1.78 2.78 2 4v1h5v-1c.22-1.22.66-1.75 2-4 .45-.75 1-2.08 1-3 0-2.81-2.48-5-5.5-5zm3.64 7.48c-.25.44-.47.8-.67 1.11-.86 1.41-1.25 2.06-1.45 3.23-.02.05-.02.11-.02.17H5c0-.06 0-.13-.02-.17-.2-1.17-.59-1.83-1.45-3.23-.2-.31-.42-.67-.67-1.11C2.44 6.78 2 5.65 2 5c0-2.2 2.02-4 4.5-4 1.22 0 2.36.42 3.22 1.19C10.55 2.94 11 3.94 11 5c0 .66-.44 1.78-.86 2.48zM4 14h5c-.23 1.14-1.3 2-2.5 2s-2.27-.86-2.5-2z"></path></svg></span>tip</div><div class="admonitionContent_BuS1"><p>在 Cloudways 中，基本上 Domain Management 跟 SSL Certificate 都只有在一開始架站時會進去。<br>
 <!-- -->其他如 wordpress 後台、wordpress 帳密、IP 位置，都在 <code>Access Details</code>。</p></div></div>
 <p>基本上，上述步驟都完成，你就能擁有一個 wordpress 部落格了！</p>
-<p><img loading="lazy" src="https://codefictionist.com/assets/images/wordpress-f6dff02846794c0a227fb218999a37d7.png" width="1600" height="724" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/wordpress-f6dff02846794c0a227fb218999a37d7.png" width="1600" height="724" class="img_ev3q"></p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="你以為成本只有架站">你以為成本只有架站？<a href="https://codefictionist.com/blog/wordpress#%E4%BD%A0%E4%BB%A5%E7%82%BA%E6%88%90%E6%9C%AC%E5%8F%AA%E6%9C%89%E6%9E%B6%E7%AB%99" class="hash-link" aria-label="Direct link to 你以為成本只有架站？" title="Direct link to 你以為成本只有架站？">​</a></h2>
 <p>到現在有一個很陽春的 wordpress 網站出現，可以來算一下一年的成本大概是多少。</p>
 <ol>
