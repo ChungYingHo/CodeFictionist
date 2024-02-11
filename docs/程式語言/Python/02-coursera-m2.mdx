@@ -89,6 +89,17 @@ for i in dic:
         maxEmail = i
 print(maxEmail, maxNum)
 ```
+:::tip 
+### set
+python 中有一種資料格式跟字典很像，同樣是以 **{}** 定義，稱為 `set`。  
+```py
+fruit_set = {'apple', 'banana', 'orange'}
+
+# {'banana', 'orange', 'apple'}
+print(fruit_set)
+```
+`set` 跟 `dictionary` 的差異在於 `set` 是一個無序且唯一的集合，其中的元素不能重複 (這點跟 `dictionary` 每個 key 必須為唯一一樣)，它的存在主要用於快速資料查找。而且 set 中的元素只能通過迭代來訪問，因為它沒有索引，所以無法使用如 `fruit_set[0]` 之類的方式取值。
+:::
 
 ## 元組 (tuples)
 元組最大的特性就是不可修改，這種只能讀而無法修改的特性可以儲存那些怕更動到的資料。字典中的 `items` 方法回傳的 key-value pair 就是元組。
