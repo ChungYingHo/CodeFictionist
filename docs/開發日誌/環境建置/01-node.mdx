@@ -2,31 +2,36 @@
 title: Node.js 安裝與基礎操作
 tags: [初始環境建立, node]
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 ## Node.js 簡介
 Node.js 是一個 JavaScript 的執行環境，讓 JavaScript 可以跳脫瀏覽器而在電腦上執行，達到構建前、後端的應用。
 
 ## nvm
-### Node Version Manager - Windows
-Windows 系統的 nvm 點[這裡](https://github.com/coreybutler/nvm-windows/releases)找到最新版本的 `nvm-setup.zip`。注意安裝路徑下不能出現中文或空白。
-
-### Node Version Manager - Mac
-Mac 要安裝 Xcode Cli 才能安裝 nvm。
-1. 先確認是否已經有 Xcode Cli。
-```bash
-xcode-select -p
-```
-2. 如果沒有，則安裝：
-```bash
-xcode-select --install
-```
-3. 安裝 nvm：
-```bash
-curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
-```
-4. 重新開啟終端機，執行 `command -v nvm` 確認是否正確安裝。
-:::tip
-可以到[這裡](https://github.com/nvm-sh/nvm)看官網指令
-:::
+### 安裝 nvm
+<Tabs>
+  <TabItem value="windows" label="Windows" default>
+    Windows 系統的 nvm 點[這裡](https://github.com/coreybutler/nvm-windows/releases)找到最新版本的 `nvm-setup.zip`。注意安裝路徑下不能出現中文或空白。
+  </TabItem>
+  <TabItem value="mac" label="Mac">
+    Mac 要安裝 Xcode Cli 才能安裝 nvm。可以到[這裡](https://github.com/nvm-sh/nvm)看 nvm 官網指令。  
+    個人那天拿到一台 Mac 有短暫試過安裝 nvm，雖有成功安裝，但一直無法執行，所以以下只是紀錄。
+    1. 先確認是否已經有 Xcode Cli。
+    ```bash
+    xcode-select -p
+    ```
+    2. 如果沒有，則安裝：
+    ```bash
+    xcode-select --install
+    ```
+    3. 安裝 nvm：
+    ```bash
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+    ```
+    4. 重新開啟終端機，執行 `command -v nvm` 確認是否正確安裝。
+  </TabItem>
+</Tabs>
 
 ### nvm 安裝之後
 接著按照下列步驟：
@@ -56,13 +61,18 @@ node -v​
 4. 前往該路徑，會有一個 `unins***.exe` 的執行檔，直接執行解安裝。
 :::
 
-### Windows - 安裝 Volta
-1. [Volta 官網](https://docs.volta.sh/guide/getting-started)點擊下載安裝檔。
-
-### Mac - 安裝 Volta
-```bash
-curl https://get.volta.sh | bash
-```
+### 安裝 Volta
+<Tabs>
+  <TabItem value="windows" label="Windows" default>
+    [Volta 官網](https://docs.volta.sh/guide/getting-started)點擊下載安裝檔。
+  </TabItem>
+  <TabItem value="mac" label="Mac">
+    Mac 其實我還沒真正試過。
+    ```bash
+    curl https://get.volta.sh | bash
+    ```
+  </TabItem>
+</Tabs>
 
 ### 安裝全域預設的 Node.js 版本
 :::info

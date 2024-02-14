@@ -61,8 +61,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
+  // highlight-start
+    // 改成自己要部署的分支
     branches:
       - action
+  // highlight-end
 
 permissions:
   contents: write
@@ -96,8 +99,11 @@ name: Test deployment
 
 on:
   pull_request:
+  // highlight-start
+    // 改成自己要部署的分支
     branches:
       - action
+  // highlight-end
 
 jobs:
   test-deploy:

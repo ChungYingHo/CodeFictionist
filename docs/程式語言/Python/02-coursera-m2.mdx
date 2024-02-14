@@ -34,8 +34,59 @@ for line in fh:
     print(lh)
 ```
 
+<details>
+<summary>綜合練習 (Meta f2e course)</summary>
+
+1. 讀取文件
+```py
+def read_file(file_name):
+    with open(file_name, 'r') as file:
+        f_content = file.read()
+        print(f_content)
+        return f_content
+```
+2. 讀取文件並把每行作為一個元素存成 list
+```py
+def read_file_into_list(file_name):
+    with open(file_name, 'r') as file:
+        f_list = file.readlines()
+        return f_list
+```
+3. 新增 B 文件並寫入 A 文件的第一行
+```py
+def write_first_line_to_file(file_contents, output_filename):
+    with open(output_filename, 'w') as file:
+        first_line = file_contents.splitlines()[0] + '\n'
+        file.write(first_line)
+```
+4. 只存取文件偶數行
+```py
+def read_even_numbered_lines(file_name):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+        even_lines = []
+        counts = 0
+        for line in lines:
+            counts += 1
+            if counts % 2 == 0:
+                even_lines.append(line)
+        return even_lines
+```
+5. 反轉文件清單
+```py
+def read_file_in_reverse(file_name):
+    with open(file_name, 'r') as file:
+        lines = file.readlines()
+        lines.reverse()
+        return lines
+```
+</details>
+
 ## 列表 (List)
 用 JavaScript 的思維想就是陣列，基本操作跟字串大差不差，但列表中的元素可以直接修改，字串不行。
+```py title='list'
+list_example = [1, 2, 3, 4, 5]
+```
 
 1. `lst["start" : "end"]`：索引或裁切，這個同樣適用於字串。
 2. `max`、`min`、`sum`：取列表的最大、最小或值得總和。
@@ -103,6 +154,9 @@ print(fruit_set)
 
 ## 元組 (tuples)
 元組最大的特性就是不可修改，這種只能讀而無法修改的特性可以儲存那些怕更動到的資料。字典中的 `items` 方法回傳的 key-value pair 就是元組。
+```py title='tuple'
+tuple_example = (1, 2, 3, 4, 5)
+```
 
 以下為一個簡單的範例，這裡在最後用 `items` 把字典拆成元組並透過 `sorted` 進行排序：
 ```py
@@ -124,3 +178,4 @@ for k, v  in ls:
 
 ## 參考資料
 1. [Programming for Everybody](https://www.coursera.org/specializations/python)
+2. [Meta Back-End Developer Professional Certificate](https://www.coursera.org/professional-certificates/meta-back-end-developer)

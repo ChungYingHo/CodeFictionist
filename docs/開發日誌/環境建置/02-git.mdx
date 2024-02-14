@@ -2,25 +2,29 @@
 title: Git 安裝與使用
 tags: [初始環境建立, git]
 ---
-## Windows 環境
-直接從官網下載安裝檔即可。  
-[Git 安裝檔下載](https://git-scm.com/)  
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-## Mac
-:::note
-雖然同樣可以直接下載安裝，但下面這方法聽說較好，我也沒試過，先記錄下來
-:::
-1. 安裝 Homebrew
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-2. 等待安裝，直到 `Press RETURN to continue or any other key to abort` 出現，按下`Enter`。
-3. 繼續等待安裝，直到出現`Installation successful!`。
-4. 測試 Homebrew 是否正確安裝：`brew --version`。
-5. 安裝 Git
-```bash
-brew install git
-```
+## Git 安裝
+<Tabs>
+  <TabItem value="windows" label="Windows" default>
+    [Git 安裝檔下載](https://git-scm.com/)。
+  </TabItem>
+  <TabItem value="mac" label="Mac">
+    Mac 安裝可能會等很久，需耐心等待。
+    1. 安裝 Homebrew
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+    2. 等待安裝，直到 `Press RETURN to continue or any other key to abort` 出現，按下`Enter`。
+    3. 繼續等待安裝，直到出現`Installation successful!`。
+    4. 測試 Homebrew 是否正確安裝：`brew --version`。
+    5. 安裝 Git
+    ```bash
+    brew install git
+    ```
+  </TabItem>
+</Tabs>
 
 ## 初次設定 Git
 下載完，可以先用 `git --version` 確認是否安裝成功。  
