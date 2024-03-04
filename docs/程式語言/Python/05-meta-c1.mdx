@@ -1,0 +1,52 @@
+---
+title: Meta b2e - Module 與 Test
+tags: [python]
+---
+## Module
+模組可以包含函數、類和變數，也可以包含可執行的程式碼。使用模組可以幫助把程式碼組織成不同的部分，以便重用和管理。
+
+### import
+在其他 python 檔案中，要引用 module 中的變數或函式是使用 `import`，如：
+```py title='Import example'
+# 引入整個 module
+import mymodule
+
+# 引入 module 中特定項目
+from mymodule import myfunction, MyClass
+
+# 導入所有項目
+from mymodule import *
+```
+以實際例子來看：
+```py title='mymodule.py'
+def greet(name):
+    print(f"Hello, {name}!")
+```
+```py title='index.py'
+import mymodule
+
+# "Hello, World!"
+mymodule.greet("World")
+```
+:::tip
+上述例子使用 `print(f"Hello, {name}!")`，其中 `f` 叫做 f-string (字面量格式化字符串)，它允許我們在字串中代入變數。  
+熟悉 JavaScript 的可以想像這個 f-string 就相當於 Template literals (即雙反引號 **``**)。
+:::
+
+### reload
+`reload` 用在重新加載之前已經加載的 module。  
+主要應用在程式運行中時，修改了 module 中的內容，但不希望重新運行程式時使用。
+
+```py
+from importlib import reload
+# highlight-next-line
+reload(mymodule)
+
+mymodule.greet("World")
+```
+
+## Test
+### 測試種類
+
+## 參考資料
+1. [Meta Back-End Developer Professional Certificate](https://www.coursera.org/professional-certificates/meta-back-end-developer)

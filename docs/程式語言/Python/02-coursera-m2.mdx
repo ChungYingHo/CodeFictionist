@@ -19,6 +19,20 @@ print(pos, textLen)
 print(text[pos : textLen].strip())
 ```
 
+:::tip
+Python 並未提供字串反轉的方法，但可以透過 `[]` 裁切來達到字串反轉：
+```python title='Reverse string'
+str = '12345'
+
+new_str = str[::-1]
+
+# '12345'
+print(str)
+# '54321'
+print(new_str)
+```
+:::
+
 ## 文件 (File)
 Python 可以讀取文件，以下範例為使用課程提供之純文字文件作範例，如果想自己練習的話，可以自己建一支 txt 檔案。  
 
@@ -174,6 +188,71 @@ for line in fh:
 ls = sorted(dic.items())
 for k, v  in ls:
     print(k, v)
+```
+
+## Comprehension (推導式)
+基本語法是 `[expression for item in iterable if condition]` (以 List comprehension 為例)：
+    * expression：可以是運算式，也可以是 item 本身。
+    * item：代表了 iterable 中的當前元素，在 expression 中被引用。
+    * iterable：一個可以進行迭代的對象。
+    * condition：當 condition 為真（True）時，相應的 item 才會被處理。
+```py title='Example'
+doubled_evens = [i * 2 for i in range(10) if i % 2 == 0]
+
+# [0, 4, 8, 12, 16]
+print(doubled_evens)
+```
+### List comprehension
+```python title='Without comprehension'
+doubled_numbers = []
+for i in range(10):
+    doubled_numbers.append(i * 2)
+```
+```python title='List comprehension'
+doubled_numbers = [i * 2 for i in range(10)]
+
+# [0, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+print(doubled_numbers)
+```
+
+### Dictionary comprehension
+```python title='Without comprehension'
+squares_dict = {}
+for i in range(5):
+    squares_dict[i] = i**2
+```
+```python title='List comprehension'
+squares_dict = {i: i**2 for i in range(5)}
+
+# {0: 0, 1: 1, 2: 4, 3: 9, 4: 16}
+print(squares_dict)
+```
+
+### Set comprehension
+```python title='Without comprehension'
+import math
+sqrt_set = set()
+for i in range(10):
+    sqrt_set.add(int(math.sqrt(i)))
+```
+```python title='List comprehension'
+import math
+sqrt_set = {int(math.sqrt(i)) for i in range(10)}
+
+# {0, 1, 2, 3}
+print(sqrt_set)
+```
+
+### Generator Expression
+類似於列表推導式的表達式，但它返回的是一個生成器（generator）對象而不是列表。  
+他的特點主要有兩項：  
+    * 惰性求值（Lazy Evaluation）：生成器表達式並不立即計算每個元素的值，它們只在迭代時才計算。這表示它可以用於非常大的數據。
+    * 節省內存：相比列表推導式，生成器表達式不會創建一個完整的列表來存儲所有元素，因此使用的內存更少。(但也因此無法獲得資料長度)
+```py
+squares_of_evens = (x**2 for x in range(10) if x % 2 == 0)
+
+for square in squares_of_evens:
+    print(square)
 ```
 
 ## 參考資料
