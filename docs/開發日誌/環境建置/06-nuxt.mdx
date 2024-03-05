@@ -95,8 +95,8 @@ module.exports = {
   trailingComma: 'none',
   bracketSpacing: true,
   arrowParens: "always",
-  vueIndentScriptAndStyle: true,
   bracketSameLine: false,
+  endOfLine: "auto",
   htmlFormat: "auto",
   javascriptFormat: "auto",
 }
@@ -127,7 +127,7 @@ pnpm install --save-dev stylelint stylelint-config-standard
 ```powershell
 pnpm install --save-dev stylelint-config-standard-scss stylelint-config-standard-vue stylelint-order postcss postcss-scss postcss-html
 ```
-3. 安裝 **nuxt.config.ts**：
+3. 安裝 **@nuxtjs/stylelint-module**：
 ```powershell
 pnpm add -D @nuxtjs/stylelint-module
 ```
@@ -259,6 +259,10 @@ module.exports = {
 :::
 :::tip
 安裝 [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint) 輔助開發。
+:::
+
+:::warning
+不論是 eslint、prettier、stylelint，我都有 ignore 一個 **dist** 資料夾，因為這個資料夾是編譯後的結果，不需要再檢查。
 :::
 
 ## 參考資料
