@@ -1,0 +1,271 @@
+---
+title: Vue3 - Nuxt3
+tags: [vue3, nuxt3]
+---
+## Nuxt3 專案建立
+見[這篇文章](../../開發日誌/環境建置/06-nuxt.mdx)。
+
+## Nuxt 環境基本介紹
+在初始 Nuxt 專案下會發現環境好像異常的空，比之前用 vite 建立專案少了一些資料夾，比如說 components 之類的。這不代表 Nuxt 沒有，但它選擇並不幫你預設建立，而是讓我們自己按照需求新增。  
+可以新增給 Nuxt 做判讀的資料夾可以參照[官網](https://nuxt.com/docs/guide/directory-structure/app)。
+
+以下為幾個專案很常用到的資料夾：
+1. **components**：存放元件的地方。
+2. **pages**：存放頁面的地方。
+3. **utils**：把常用的功能寫成一個函數共用儲存的地方。
+4. **assets**：用來存放需要打包的靜態檔案，諸如各式各樣 CSS、SCSS 或字型。
+5. **public**：用來存放那些不需要打包的靜態檔案，比如 favicon。
+6. **middleware**：路由中間件放置處，比如跳轉頁面時要先運行的身分驗證。
+
+### nuxt.config.ts
+這是 Nuxt 的設定檔，諸多功能或套件的配置都要在這裡進行。  
+以 pinia 舉例，在這裡就是設定 Nuxt 使用 pinia 並在每個檔案自動引入 `defineStore`、`definePiniaStore` 兩個方法。
+
+```ts
+export default defineNuxtConfig({
+  devtools: { enabled: true },
+  modules: [
+    [
+      "@pinia/nuxt",
+      {
+        autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+      },
+    ],
+  ],
+});
+```
+:::tip
+對於一些隱私設定，比如一些不想讓外人知道的 api 路徑，可以使用 `runtimeConfig` 做限制隱藏。
+```ts
+export default defineNuxtConfig({
+  runtimeConfig: {
+    // 只在伺服器可見
+    apiSecret: '/api/private',
+    // 伺服器或瀏覽器皆可見
+    public: {
+      apiBase: '/api'
+    }
+  }
+})
+```
+:::
+
+## Nuxt 的自動路由
+凡是放在 **pages** 的檔案，都會自動被 Nuxt 做成路由，這是很多人選擇直接使用 Nuxt 開發的原因，因為可以減去很多編輯 vue router 的繁瑣工作。  
+在 pages 中，通常會有一個 **index.vue**，他對應的路由就是 `/`。其它檔案的路由就依其名字而命名，比方說 **about.vue** 的路由會是 `/about`。
+
+這裡注意一點，不是在 pages 建立了檔案 Nuxt 就會做渲染，必須先在 **app.vue** 中做引入才能正確渲染：
+```xml
+<template>
+  <div>
+    <!-- highlight-next-line -->
+    <NuxtPage />
+  </div>
+</template>
+```
+
+### 動態路由
+在 Nuxt 玩動態路由只要把檔名用 **[ ]** 包起來即可，如 **[id].vue**。
+
+```xml title='官方範例'
+| pages/
+---| about.vue
+---| index.vue
+---| posts/
+-----| [id].vue
+```
+
+在 **template** 中只要使用 `$route.params.id` 即可取得動態路由資訊，而在 `<script setup>` 中要先引用 `useRoute`。
+
+```xml title='template'
+<template>
+    <h1>page: {{ $route.params.id }}</h1>
+</template>
+```
+
+```js title='<script setup'
+const route = useRoute()
+
+console.log(route.params.id)
+```
+
+### 巢狀路由
+簡單來說就是用資料夾一個套住一個，以官方範例來看，下列ru,5夠會產出 **/parent** 跟 **/parent/child** 兩個路由。
+
+```xml
+-| pages/
+---| parent/
+------| child.vue
+---| parent.vue
+```
+
+### 路由匹配
+先看 vue router 的路由匹配：
+```js
+{
+  path: '/about/:afterAbout',
+  component: AboutView
+},
+{
+  path: '/about/:afterAbout(\\d+)',
+  component: NotFound
+}
+```
+
+在 Nuxt 中則稍稍麻煩一點，需要使用 `definePageMeta` 中的 `validate` 來做匹配，假設我有個結構如下：
+```xml title='資料夾結構'
+-| pages/
+---| book/
+------| [id].vue
+---| book.vue
+```
+我要當 **id** 為數字時進到這一頁 (**/book/id**)，不然就連回 **/book**：
+```xml
+<script setup>
+const route = useRoute()
+
+<!-- highlight-start -->
+definePageMeta({
+  validate: async (route) => {
+    // 檢查id是否由數字組成
+    if(/^\d+$/.test(route.params.id)){
+        return true
+    }else{
+        return {path: `/books`}
+    }
+  }
+})
+<!-- highlight-end -->
+</script>
+
+<template>
+    <h1>{{ route.params.id }}</h1>
+</template>
+```
+
+## layouts
+會用到 layout 的情況就是複數頁面有共用的組件或排版樣式，比如說導覽列。  
+layouts 資料夾中，命名為 **default.vue** 的會是預設為全局 layout，只要在 **app.vue** 中給予 `<NuxtLayout>` 設定，就完成了一半的 layout 引用：
+
+```xml title='app.vue'
+<template>
+  <NuxtLayout>
+      <NuxtPage />
+  </NuxtLayout>
+</template>
+```
+
+然後必須在 layout 中，在想要套入其他頁面或元件的地方加一個 `<slot/>`：
+
+```xml title='default.vue'
+<template>
+      <div>
+          <slot />
+      </div>
+</template>
+```
+
+而如果今天有某特定頁面想引用一個特定的 layout，比如說登入、註冊頁面想套用同一個 layout (比如 **sign.vue**) 而不是 **default.vue**，我們可以在該頁面 `<script setup>` 中進行頁面設定：
+
+```xml
+<script setup lang="ts">
+definePageMeta({
+    layout: 'sign'
+})
+</script>
+```
+
+## 設定網站標頭
+1. 先到 **nuxt.config.ts** 中設定下列內容：
+
+```js
+export default defineNuxtConfig({
+  app: {
+    head: {
+      charset: 'utf-8',
+      viewport: 'width=device-width, initial-scale=1',
+    }
+  }
+})
+```
+2. **app.vue**，添加下面這這一段：
+```xml
+<script setup lang="ts">
+useHead({
+  title: '這裡是title',
+  meta: [
+    { name: 'description', content: '這是測試用網站' }
+  ],
+  bodyAttrs: {
+    class: 'test'
+  },
+  script: [ { innerHTML: 'console.log(`Hello world`)' } ]
+})
+</script>
+```
+
+## 轉場效果
+1. 先到 **nuxt.config.ts** 中設定下列內容：
+```js
+export default defineNuxtConfig({
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' }
+  }
+})
+```
+2. **app.vue**，添加下面這這一段：
+
+```xml
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}
+</style>
+```
+
+也可以僅針對一個頁面做轉場，比如進到 about 頁面才會有轉場效果，這時必須先在 **/page/about.vue** 中做設定：
+
+```xml
+<script setup lang="ts">
+definePageMeta({
+  pageTransition: {
+    name: 'rotate'
+  }
+})
+</script>
+```
+
+然後回 **app.vue** 添加樣式，記得使用剛剛定義的 **name**：
+
+```xml
+<style>
+.rotate-enter-active,
+.rotate-leave-active {
+  transition: all 0.4s;
+}
+.rotate-enter-from,
+.rotate-leave-to {
+  opacity: 0;
+  transform: rotate3d(1, 1, 1, 15deg);
+}
+</style>
+```
+
+## 數據獲取 (api)
+Nuxt 提供了三個方便獲得數據的方法：`useFetch`、`useAsyncData` 和 `$fetch`，推薦使用 `useFetch`。  
+
+依官網解說，`useFetch` 其實就是 `useAsyncData` 和 `$fetch` 的結合 ​：  
+> Indeed, useFetch(url) is nearly equivalent to useAsyncData(url, () => $fetch(url)) - it's developer experience sugar for the most common use case.
+
+```xml title='example'
+<script setup lang="ts">
+const { data: count } = await useFetch('/api/count')
+</script>
+```
+
