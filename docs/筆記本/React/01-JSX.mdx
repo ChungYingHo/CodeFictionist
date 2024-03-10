@@ -1,0 +1,92 @@
+---
+title: React - JSX
+tags: [react, jsx]
+---
+## JSX 是什麼？
+JSX 全名是 JavaScript XML，是一種 JavaScript 語法的擴展，它可以讓我們在 JavaScript 中撰寫像 HTML 一樣的語法，比如下面這行程式碼：
+```jsx
+<h1>Hello world</h1>
+```
+可以看到跟 HTML 無任何差異，但是這是在 JavaScript 中撰寫的程式碼。至還可以把使用 JSX 語法撰寫出的元件儲存在變數、物件或陣列之中：
+```jsx
+// Storage in a variable
+const navBar = <nav>I am a nav bar</nav>;
+
+// Storage in an object
+const myTeam = {
+  center: <li>Benzo Walli</li>,
+  powerForward: <li>Rasha Loa</li>,
+  smallForward: <li>Tayshaun Dasmoto</li>,
+  shootingGuard: <li>Colmar Cumberbatch</li>,
+  pointGuard: <li>Femi Billon</li>
+}
+```
+
+## 渲染 JSX 內容
+```jsx
+// Import React and createRoot first
+import React from "react";
+import { createRoot } from "react-dom/client";
+
+// Render a JSX expression
+const container = document.getElementById("container")
+const root = createRoot(container)
+root.render(<h1>Hello world</h1>)
+```
+
+## 在 JSX 中撰寫 JavaScript
+在 JSX  語法中，如果要引用變數或是要撰寫JavaScrip ，必須用 **{ }** 框起來：
+```jsx
+const name = ‘Jeremy’
+root.render(<h1>{name}</h1>)
+
+root.render(<h1>The sum is: {2+3}</h1>)
+```
+
+## 在 JSX 中撰寫條件式
+不幸的是，我們在 JSX 中並不能撰寫我們最熟悉的 `if-else` 條件式，我們只能用 `if-else` 包住 JSX  語法，但不能在JSX 語法中包 `if-else` 條件式，因此得改用 **Ternary operator** 或 **&&**。
+```jsx title="Ternary operator"
+const headline = (
+    <h1>
+        { age >= drinkingAge ? 'Buy Drink' : 'Do Nothing' }
+    </h1>
+)
+```
+```jsx title="&&"
+const tasty = (
+    <ul>
+        <li>Applesauce</li>
+        { age > 15 && <li>Brussels Sprouts</li> }
+        { age > 20 && <li>Oysters</li> }
+        { age > 25 && <li>Grappa</li> }
+    </ul>
+)
+root.render(tasty)
+```
+
+## 在 JSX 中撰寫迴圈
+在 JSX 中撰寫迴圈，我們可以使用 `map` 方法。
+```jsx
+const strings = ['Home', 'Shop', 'About Me']
+const listItems = strings.map(string => <li>{string}</li>)
+
+<ul>{listItems}</ul>
+```
+嚴謹一點來說，在 JSX 中寫迴圈會一併傳入 **key** 屬性，這是為了讓 React 更有效率的處理元件的更新，這個 **key** 屬性必須是唯一的，通常會使用資料的 **id**。
+```jsx
+<ul>
+    <li key="li-01">Example1</li>
+    <li key="li-02">Example2</li>
+    <li key="li-03">Example3</li>
+</ul>
+```
+
+## JSX 與事件監聽
+在 JSX 中撰寫事件監聽，我們可以使用 **on** 關鍵字，後面接著事件名稱，並且指定一個函式。
+```jsx
+function clickAlert() {
+    alert('You clicked this image!');
+}
+
+<img onClick={clickAlert} />
+```

@@ -269,3 +269,30 @@ const { data: count } = await useFetch('/api/count')
 </script>
 ```
 
+## 靜態網頁部署
+1. 按裝 **gh-pages**：
+```powershell
+npm i -D gh-pages
+```
+2. 修改 **nuxt.config.ts**：
+```ts
+export default defineNuxtConfig({
+  app: {
+    baseURL: process.env.NODE_ENV === 'production' ? '/your-github-repo/' : '/',
+    buildAssetsDir: '/static/'
+  }
+}
+```
+3. 在根目錄的 **public** 新增 **.nojekyll** 檔案。
+4. 在 **package.json** 中新增部署指令：
+```json
+"deploy": "gh-pages --dotfiles -d .output/public"
+```
+5. 部署：
+```powershell
+npm run generate
+npm run deploy
+```
+
+## 參考資料
+1. [Nuxt.js 3.x 將靜態網站部署到 GitHub Pages](https://clairechang.tw/2023/10/03/nuxt3/nuxt-v3-static-site-generation/)

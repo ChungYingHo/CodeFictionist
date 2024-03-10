@@ -2,9 +2,23 @@
 title: SQL 基礎語法-1
 tags: [sql]
 ---
-## SQL 練習網站
+:::info
+相關文章：
+1. [py4e - Using Databases](../Python/04-coursera-m4.mdx)
+:::
+
+## SQL 練習與教學網站
 1. [MySQL Online](https://paiza.io/en/projects/new?language=mysql)
 2. [SQLZoo](https://sqlzoo.net/wiki/SQL_Tutorial)
+3. [SQL語法教學](https://www.1keydata.com/tw/sql/sql.html)
+
+## 五大鍵
+1. **Super Key**：一個或多個欄位的組合，可以唯一識別一筆資料。
+2. **Candidate Key**：最小的 Super Key，也就是最少欄位的組合，可以唯一識別一筆資料。
+3. **Primary Key**：Candidate Key 中選擇一個當作主鍵，並且不可重複。
+4. **Alternate Key**：除了 Primary Key 以外的 Candidate Key。
+5. **Foreign Key**：另一個資料表的 Primary Key，用來建立資料表之間的關聯。
+
 
 ## 建立資料庫
 1. 建立資料庫，關鍵字是 `CREATE`。
@@ -15,6 +29,12 @@ CREATE DATABASE myDatabase
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 ```
+:::info
+刪除資料庫：
+```sql
+DROP DATABASE myDatabase;
+```
+:::
 
 ## 建立資料表
 建立一個資料表，必須要規範：  
@@ -44,7 +64,32 @@ CREATE TABLE `drinks` (
   PRIMARY KEY (`id`)
 );
 ```
-`int` 指的是存入整數，`varchar` 是存入字母、數字、特殊符號等文本數據，`unsigned` 是指只能存入非負整數，`NOT NULL` 表示必填。
+:::info
+|資料型態|說明|
+|---|---|
+|int|整數|
+|float|浮點數|
+|char|固定長度字串|
+|varchar|可變長度字串|
+|text|長字串|
+|date|日期|
+|time|時間|
+|datetime|日期時間|
+|timestamp|時間戳記|
+
+其他如 `unsigned`、`not null`、`auto_increment` 等是資料型態的修飾詞，分別代表非負整數、不可為空、自動增加。
+:::
+
+## 資料表的調整
+若要在建立好的表格上做調整，可以使用 `ALTER TABLE`。  
+舉例來說，我們要新增一個欄位 `category` 來記錄飲料的類別：
+```sql
+ALTER TABLE drinks ADD (category varchar(20) NOT NULL);
+```
+反之若要調整刪除欄位，則使用 `DROP`：
+```sql
+ALTER TABLE drinks DROP category;
+```
 
 ## SQL 的 CRUD
 ### 新增資料
@@ -73,9 +118,11 @@ WHERE `name` = '冰咖啡';
 ```
 
 ### 刪除資料
-使用 `DELETE` 的方法叫做硬刪除，是真的直接把資料從資料表中抹去，所以比較重要的資料會使用軟刪除。
-:::note
-待補充軟刪除部分
+:::info
+刪除表格中所有內容，使用 `TRUNCATE`：
+```sql
+TRUNCATE TABLE `drinks`;
+```
 :::
 ```sql
 DELETE FROM `drinks`
@@ -208,3 +255,10 @@ FROM `orders`
 GROUP BY `drinks_id`
 HAVING `total_sold` > 10;
 ```
+
+## 參考資料
+1. Alpha Camp
+2. [Meta Back-End Developer Professional Certificate](https://www.coursera.org/professional-certificates/meta-back-end-developer)
+
+
+

@@ -1,0 +1,237 @@
+---
+title: CSS-Scss
+tags: [css, scss]
+---
+## CSS 預處理器與 Scss
+CSS 預處理器本質是為了解決單純撰寫 CSS 在遇到大型專案時可能出現語法重複、可維護性與可讀性不佳的問題。而 Scss 就是現今前端主流的一項 CSS 預處理器。
+
+## 安裝 Scss
+```powershell
+# 安裝 Sass 套件
+​npm install sass
+
+# 看看安裝的位置以及版本，確認是否安裝成功
+​npx which sass 
+npx sass --version
+
+# 查看套件說明書
+npx sass --help​
+```
+
+## 使用 Scss
+1. 建立 **.scss** 檔案：
+```scss title='main.scss'
+$bg_color : #b3d9ff;
+$font_color : black;
+body{
+  background-color:$bg_color;
+  color: $font_color;
+}
+```
+2. 終端機輸入指令：
+```powershell
+npx sass main.scss output.css
+```
+
+即可發現同路徑下多了兩個檔案，其中 **output.css** 就是已經編譯過的檔案，當你打開它會發現剛剛在 **main.scss** 寫的樣式已經被轉成很熟悉的 CSS 樣式了：
+```css title='output.css'
+body {
+  background-color: #b3d9ff;
+  color: black;
+}
+```
+
+## 自動追蹤編譯
+### 單一檔案
+```powershell
+npx sass --watch main.scss:output.css
+```
+### 追蹤編譯整個資料夾下的檔案
+```powershell
+npx sass --watch scss_dir:css_dir
+```
+* **scss_dir**：存放 scss 檔案的資料夾，名字可自定義。
+* **css_dir**：存放編譯後 css 檔案的資料夾，名字可自定義。
+### 直接用 VScode 插件
+[Live Sass Compiler](https://marketplace.visualstudio.com/items?itemName=glenn2223.live-sass) 簡單易用。
+
+## 使用 Webpack 管理、編譯
+為什麼要用 Webpack？因為當專案內容日漸龐大時，Webpack 可以更快速地幫助編譯，然後打包成一包完整的檔案方便上線。
+
+:::info
+### Webpack 補充資訊
+1. [Webpack教學 (一) ：什麼是Webpack? 能吃嗎？](https://medium.com/i-am-mike/%E4%BB%80%E9%BA%BC%E6%98%AFwebpack-%E4%BD%A0%E9%9C%80%E8%A6%81webpack%E5%97%8E-2d8f9658241d)
+2. [Webpack 教學：模組打包工具的用途](https://tw.alphacamp.co/blog/webpack-introduction)
+:::
+
+1. 安裝需求套件：
+```powershell
+​npm install webpack webpack-cli mini-css-extract-plugin css-loader sass-loader
+```
+2. 設定 **webpack.config.js**，這裡參考之前在 Alpha camp 上課的設定：
+```js
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+module.exports = {
+  entry: './src/main.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.scss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
+      }
+    ]
+  },
+  plugins: [new MiniCssExtractPlugin()]
+}
+```
+* **entry**：指的是 webpack 的進入點，這裡會用 **main.js** 作為進入點。
+* **output**：打包後輸出的檔案相關設定。
+    * **dist**：打包後的檔案存放路徑。
+以上設定是指示所有以 **.scss** 為附檔名的檔案都會用 `mini-css-extract-plugin`、`css-loader` 及 `sass-loader` 來編譯。
+
+3. 到 **package.json** 檔案中，找到 **script** 部分加入這段：
+```json
+"build": "webpack --mode production"
+```
+4. 實作檔案編譯：
+```html title='index.html'
+<h1>Hello, Webpack Sass</h1>
+```
+```scss title='main.scss'
+$bg_color : #b3d9ff;
+$font_color : black;
+
+body {
+    background-color: $bg_color;
+
+    h1 {
+        color: $font_color
+    }
+}
+```
+```js title='main.js'
+import './scss/main.scss'
+console.log('JS loaded!')
+```
+```powershell title='終端機執行'
+npm run build
+```
+5. 回 **index.html** 引入打包後的兩個檔案：
+```html
+<head>
+    <!-- ... -->
+    <link rel="stylesheet" href="/dist/main.css">
+</head>
+<body>
+    <!-- ... -->
+    <script src="/dist/bundle.js"></script>
+</body>
+```
+
+## Scss 語法
+:::warning
+強力建議先去看 [Learn Sass In 20 Minutes](https://www.youtube.com/watch?v=Zz6eOVaaelI&feature=youtu.be)，會清晰很多。
+:::
+
+### 變數 (Variables)
+```scss
+// highlight-next-line
+$bgColor: lightblue;
+
+header{
+    background-color: $bgColor;
+}
+```
+
+### 函式 (Mixins)
+```scss
+// 用 @mixin 宣告函式​
+@mixin flexSet{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// 在選擇器中用 @include 引入
+​header{
+    background-color: $bgColor;
+    // highlight-next-line
+    @include flexSet()
+}
+```
+
+另外，函式也支援參數的引入，比如說我要讓 `flex-direction` 透過參數來設定要 `row` 還是 `column`，我們可以把剛剛的 code 改成：
+```scss
+@mixin flexSet($direction){
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // highlight-next-line
+    flex-direction: $direction;
+}
+
+header{
+    background-color: $bgColor;
+    @include flexSet(column);
+}
+```
+
+### 巢狀 (Nesting)
+先看一般 CSS 語法：
+```css
+header h1{
+    color: white;
+}
+```
+用 scss 語法可以直接嵌在 `header` 內：
+```scss
+header{
+    background-color: $bgColor;
+    @include flexSet(column);
+    // add this​
+    h1{
+        color: white;
+    }
+}
+```
+這樣的巢狀結構可以避免一直撰寫重複的開頭，也更讓人清楚上下元素的關聯性。
+
+往更深入講，如果想使用偽元素呢？比如今天想要讓 `header` 裡的 `button` 在 `hover` 時背景變成紅色，一樣可以直接用巢狀結構撰寫：
+```scss
+header{
+    background-color: $bgColor;
+    @include flexSet(column);
+    h1{
+        color: white;
+    }
+    button{
+        &:hover{
+            background-color: red;
+        }
+    }
+}
+```
+
+## 繼承 (Extend)
+```scss
+div{
+    // 繼承 header 樣式​
+    @extend header;
+    // 更改背景色​
+    background-color: yellow;
+}
+```
+
+## 參考資料
+1. Alpha camp 課程
+2. [問過一百次的問題之 Sass 和 SCSS 的差別](https://medium.com/@onepiece0328/%E5%95%8F%E9%81%8E%E4%B8%80%E7%99%BE%E6%AC%A1%E7%9A%84%E5%95%8F%E9%A1%8C%E4%B9%8B-sass-%E5%92%8C-scss-%E7%9A%84%E5%B7%AE%E5%88%A5-5bd7fd78942a)
+3. [SCSS基本使用教學：變數、巢狀、函式、繼承寫法](https://www.minwt.com/webdesign-dev/13943.html)

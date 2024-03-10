@@ -1,0 +1,35 @@
+---
+title: Next 專案初始化
+tags: [next, react]
+---
+## 初始化專案
+1. 安裝 Next.js
+```powershell
+npx create-next-app@latest
+```
+2. 安裝依賴套件
+```powershell
+pnpm install
+```
+3. 啟動專案
+```powershell
+pnpm run dev
+```
+:::warning
+這是一個很弔詭的地方，React 自己的專案啟動關鍵字是 `start`，但 Next 的專案啟動關鍵字跟 Nuxt3 一樣是 `dev`。
+:::
+
+## 安裝 Tailwind CSS 跟 Eslint
+跟 vue 的 Nuxt3 不一樣，Next.js 不需要自己安裝 Tailwind CSS 跟 Eslint，在初始化專案時就會詢問是否要安裝。
+```xml
+What is your project named? my-app
+Would you like to use TypeScript? No / Yes
+<!-- highlight-start -->
+Would you like to use ESLint? No / Yes
+Would you like to use Tailwind CSS? No / Yes
+<!-- highlight-end -->
+Would you like to use `src/` directory? No / Yes
+Would you like to use App Router? (recommended) No / Yes
+Would you like to customize the default import alias (@/*)? No / Yes
+What import alias would you like configured? @/*
+```
