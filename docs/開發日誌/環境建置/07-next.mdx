@@ -33,3 +33,154 @@ Would you like to use App Router? (recommended) No / Yes
 Would you like to customize the default import alias (@/*)? No / Yes
 What import alias would you like configured? @/*
 ```
+
+## 安裝 Prettier
+1. 安裝 Prettier 跟插件：
+    * `prettier`: 主要的代碼格式化工具。
+    * `prettier-plugin-tailwindcss`: 整合Tailwind CSS。
+    * `eslint-config-prettier`: 關閉所有不必要或可能與 Prettier 衝突的ESLint規則。
+    * `eslint-plugin-prettier`: 將Prettier作為ESLint規則運行。
+```powershell
+pnpm install -D prettier prettier-plugin-tailwindcss eslint-config-prettier eslint-plugin-prettier
+```
+2. 建立 **.prettierrc.cjs** 檔案：
+```js
+module.exports = {
+  plugins: [
+    'prettier-plugin-tailwindcss'
+  ],
+  printWidth: 80,
+  semi: false,
+  singleQuote: true,
+  trailingComma: 'none',
+  bracketSpacing: true,
+  arrowParens: "always",
+  bracketSameLine: false,
+  endOfLine: "auto",
+  htmlFormat: "auto",
+  javascriptFormat: "auto",
+}
+```
+3. 前往 **.eslintrc.json** 檔案，加入 Prettier 設定：
+```json
+{
+  "extends": ["next/core-web-vitals", "prettier"],
+  "plugins": ["prettier"],
+  "rules": {
+    "prettier/prettier": "error"
+  }
+}
+```
+
+## Stylelint
+1. 安裝 Stylelint：
+```powershell
+pnpm install --save-dev stylelint stylelint-config-standard
+```
+2. 安裝 SCSS 規範：
+```powershell
+pnpm install --save-dev stylelint-config-standard-scss stylelint-order postcss postcss-scss postcss-html
+```
+
+3. **root** 下建立 **.stylelintrc.cjs** 並輸入：
+<details>
+<summary>完整配置</summary>
+
+```js
+module.exports = {
+  extends: [
+    "stylelint-config-standard",
+    'stylelint-config-standard-scss'
+  ],
+  plugins: [
+    'stylelint-order'
+  ],
+  "fix": true, // 自動修復
+  overrides: [
+    {
+      files: [ '*.scss', '**/*.scss'],
+      rules: {
+        'scss/no-global-function-names': null // 關閉 scss 全域函式名稱檢查
+      }
+    }
+  ],
+  rules: {
+    'unit-allowed-list': [ 'em', 'rem', 'deg', 'px', 'vh', 'vw', '%', 's', 'ms' ],
+    'order/properties-order': [
+      'position',
+      'top',
+      'bottom',
+      'right',
+      'left',
+      'display',
+      'align-items',
+      'justify-content',
+      'float',
+      'clear',
+      'overflow',
+      'overflow-x',
+      'overflow-y',
+      'margin',
+      'margin-top',
+      'margin-right',
+      'margin-bottom',
+      'margin-left',
+      'padding',
+      'padding-top',
+      'padding-right',
+      'padding-bottom',
+      'padding-left',
+      'width',
+      'min-width',
+      'max-width',
+      'height',
+      'min-height',
+      'max-height',
+      'font-size',
+      'font-family',
+      'font-weight',
+      'text-align',
+      'text-justify',
+      'text-indent',
+      'text-overflow',
+      'text-decoration',
+      'white-space',
+      'color',
+      'background',
+      'background-position',
+      'background-repeat',
+      'background-size',
+      'background-color',
+      'background-clip',
+      'border',
+      'border-style',
+      'border-width',
+      'border-color',
+      'border-top-style',
+      'border-top-width',
+      'border-top-color',
+      'border-right-style',
+      'border-right-width',
+      'border-right-color',
+      'border-bottom-style',
+      'border-bottom-width',
+      'border-bottom-color',
+      'border-left-style',
+      'border-left-width',
+      'border-left-color',
+      'border-radius',
+      'opacity',
+      'filter',
+      'list-style',
+      'outline',
+      'visibility',
+      'z-index',
+      'box-shadow',
+      'text-shadow',
+      'resize',
+      'transition'
+    ]
+  }
+}
+```
+</details>

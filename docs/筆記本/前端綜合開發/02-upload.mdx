@@ -1,0 +1,621 @@
+---
+title: 檔案上傳進度監聽
+tags: [axios, readablestream]
+---
+:::note
+紀錄一下 axios 跟 fetch 中斷 POST 請求的方法：  
+* **cancelToken**：axios。
+* **AbortController**：fetch。
+:::
+
+:::warning
+## 這是一個前言兼總結
+實際上，在進度顯示為 100% 時，打開 dev-tool 可能會看到檔案依舊還在 POST。  
+這是很正常的，畢竟我們身在純前端的環境，後端那邊接收了多少、做了哪些處理前端無法得知，所以這個上傳進度指的僅僅是檔案上傳到瀏覽器已經準備發出去的進度。  
+坊間的各項 ui-framework 經測試也都是這個問題，所以有些前端工程師會故意把前端跑完的進度上限設為 95%，一直等到後端傳回 response 才一次跳到 100%，當然，這樣的進度比例就不準。  
+如果要的是整個從 POST 到後端回應的進度，除了前端這邊設定外，也要使用 web-socket 來實時追蹤後端狀況。
+:::
+
+:::info
+這篇使用的 api 為 [httpbin.org](https://httpbin.org/)，可以接受 POST 請求但不會實際儲存檔案。
+:::
+
+## axios
+可以使用 axios 套件內部的 `onUploadProgress` 來直接處理上傳進度。
+
+```js
+axios.post('https://httpbin.org/post', formData, {
+// highlight-start
+  onUploadProgress: (progressEvent) => {
+    state.progress = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+  },
+//   highlight-end
+})
+```
+
+## 不使用 axios
+:::warning
+雖然我是這個的主因是為了 Nuxt3，但我先簡單用 vite 去做測試而已。
+:::
+基於 Nuxt3 提供了自己打 API 的方式 (`useFectch`、`$fetch`)，開發團隊也建議使用他們的方法就好，不用特意引入 axios 套件，因此監聽上傳檔案進度這件事就得換個方法。關於這個議題至今依舊在 GitHub 與 StackOverflow 是熱門的討論。
+
+在不使用套件下，現代打 API 普遍使用 `fetch`，但 `fetch` 其實不支援上傳進度的監聽。普遍解法是回歸傳統 AJAX 使用 `XMLHttpRequest` 發送請求，`xhr` 本身支援監聽上傳進度，基本上 axios 底層邏輯也是使用 `xhr`。但回歸 AJAX 顯然與現代網頁開發背道而馳。
+
+在這篇 [StackOverflow 討論](https://stackoverflow.com/questions/52422662/how-to-get-file-upload-progress-with-fetch-and-whatwg-streams/52860605#52860605)中有提到 Google 開始支援原生 fetch 的 **streaming uploads**，對於監聽上傳進度貌似是個解方。
+
+```js
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+
+    //  ReadableStream
+    const fileStream = formData.get(fileObj.file.name).stream().getReader()
+    console.log('fileStream', fileStream)
+    const totalSize = fileObj.file.size
+    let uploaded = 0
+    
+    const rs = new ReadableStream({
+      async pull(ctrl){
+        const result = await fileStream.read()
+        console.log('Read:', result)
+        if(result.done){
+          ctrl.close()
+          return
+        }
+        uploaded += result.value.byteLength
+        fileObj.progress = (uploaded / totalSize) * 100
+        console.log('uploaded', uploaded)
+        ctrl.enqueue(result.value)
+      }
+    })
+
+    try {
+      console.time('useFetch:')
+      await fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: rs,
+        duplex: 'half',
+        signal: fileObj.abortController.signal
+      })
+      console.timeEnd('useFetch:')
+    } catch (error) {
+      console.error('Upload error', error);
+    }
+}
+```
+其原理是建立一個 `ReadableStream` 來讀取上傳檔案的數據，並透過 `pull` 來控制數據的讀取和流動。  
+關於解釋，chatGPT 提供了一個不錯的解釋：
+>當可讀流需要新的數據時，它會調用 pull 方法。在 pull 方法中，首先從文件流中讀取一部分數據，並檢查是否已經讀取完整個文件。如果還有更多數據需要讀取，則將讀取到的數據放入數據流中，以便後續操作可以處理它們。如果已經讀取完整個文件，則關閉數據流，結束數據的讀取。
+
+:::danger
+一切看似很美好，但我實際用同一個 50 mb 的檔案做測試，從請求結束到 server 發回 response，`ReadableStream` 花費時間大概是 axios 的 4 倍，值不值得使用是一件可以討論的事，畢竟還是可以在 Nuxt3 中用 axios。
+:::
+
+## 建立測試用檔案
+* 指定檔案大小：
+```powershell
+dd if=/dev/urandom of=largefile bs=1M count=50
+dd if=/dev/urandom of=largefile2 bs=1M count=75
+```
+
+* 隨機檔案大小：
+建立一個 **generate_file.sh** 文件，貼上下列指令：
+```xml
+#!/bin/bash
+
+# 設定要生成的檔案數量
+num_files=20
+
+# 設定檔案大小的範圍（以 MB 為單位）
+min_size=10
+max_size=30
+
+# 生成檔案
+for ((i=1; i<=$num_files; i++)); do
+  # 隨機決定檔案大小
+  file_size=$(shuf -i $min_size-$max_size -n 1)
+  # 生成檔案內容
+  file_content=$(dd if=/dev/urandom of="file_${i}_${file_size}MB.txt" bs=1M count=$file_size status=none)
+  echo "Generated: file_${i}_${file_size}MB.txt"
+done
+```
+終端機執行：
+```powershell
+bash generate_file.sh
+```
+
+## 參考資料
+1. [使用Axios中的onUploadProgress实现显示文件上传进度](https://blog.csdn.net/qq_41915137/article/details/132607010)
+2. [Formdata object shows empty even after calling append](https://stackoverflow.com/questions/37235810/formdata-object-shows-empty-even-after-calling-append)
+3. [How to get File upload progress with fetch() and WhatWG streams](https://stackoverflow.com/questions/52422662/how-to-get-file-upload-progress-with-fetch-and-whatwg-streams/52860605#52860605)
+4. [从 Fetch 到 Streams —— 以流的角度处理网络请求](https://juejin.cn/post/6844904029244358670)
+5. [Support Request / Response progress #45](https://github.com/unjs/ofetch/issues/45)
+6. [How can I show a progress indicator for uploading a file using Nuxt3 built-in $fetch (ohmyfetch)?](https://stackoverflow.com/questions/73811890/how-can-i-show-a-progress-indicator-for-uploading-a-file-using-nuxt3-built-in-f)
+
+
+## 程式碼範例 ([Demo]( https://chungyingho.github.io/vue3-file-upload/))
+功能需求：
+1. 可以點擊選擇檔案，也可以拖曳選擇檔案。
+2. 可以取消上傳。
+3. 每次 POST 請求只有 5 個，一個執行完畢就立馬遞補一個檔案進來上傳。
+
+:::info
+此實作以 [Vuetify](https://vuetifyjs.com/zh-Hans/) 作為 UI framework，目的很單純，只是為了進度條的渲染。
+:::
+
+<details>
+<summary>axios</summary>
+
+```xml
+<script setup>
+import axios from 'axios';
+import { reactive } from 'vue';
+
+const state = reactive({
+    files: [],
+    uploading: false,
+    isDragOver: false,
+})
+
+// imput file
+const handleFileChange = (event) => {
+  state.uploading = true
+  state.files = Array.from(event.target.files).map((file) => ({
+    file,
+    progress: 0,
+    cancelTokenSource: axios.CancelToken.source(),
+  }))
+}
+
+// drag and drop
+const handleIsDrag = () => {
+    state.isDragOver = true
+}
+
+const handleDrop = (event) => {
+    state.isDragOver = false
+    state.uploading = true
+    const files = Array.from(event.dataTransfer.files).map((file) => ({
+    file,
+    progress: 0,
+    cancelTokenSource: axios.CancelToken.source(),
+    }));
+
+    state.files = files
+}
+
+// cancel upload
+const cancelUpload = (fileObj) => {
+  const fileIndex = state.files.findIndex((file) => file === fileObj);
+
+  if (fileIndex !== -1) {
+    state.files[fileIndex].cancelTokenSource.cancel('cancel upload')
+  }
+}
+
+// upload
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+    for(let pair of formData.entries()) {
+      console.log(pair[0]+', '+pair[1]);
+    }
+    let response
+
+    try {
+      console.time('axios:')
+      response = await axios.post('https://httpbin.org/post', formData, {
+          onUploadProgress: (progressEvent) => {
+            const loaded = progressEvent.loaded
+            const total = progressEvent.total
+            const uploadPercentage = response ? 100 : Math.round((loaded * 95) / total)
+            fileObj.progress = uploadPercentage
+          },
+          cancelToken: fileObj.cancelTokenSource.token
+      })
+      console.timeEnd('axios:')
+      fileObj.progress = 100
+    } catch (error) {
+    console.error('Upload error', error);
+    }
+}
+
+const uploadFiles = async () => {
+    if (state.files.length === 0) {
+      alert('No selected file!')
+      return
+    }
+
+    const maxConcurrentUploads = 5
+    let currentIndex = 0
+    let completedUploads = 0
+
+    const uploadFileAndNext = async (file) => {
+      try {
+        await uploadFile(file);
+      } catch (error) {
+        console.error(error);
+        // 上傳失敗時的處理邏輯
+      } finally {
+        // 無論上傳成功或失敗，都增加已完成的上傳數
+        completedUploads++;
+
+        // 當上傳結束後，遞補新的檔案進行 POST
+        if (currentIndex < state.files.length) {
+          const nextFile = state.files[currentIndex++];
+          uploadFileAndNext(nextFile)
+        }
+
+        // 如果所有檔案都已上傳完成，顯示提示
+        if (completedUploads === state.files.length) {
+          alert('All done')
+          state.uploading = false
+          state.files = []
+        }
+      }
+    }
+
+    // 初始化同時運行的 POST
+    const uploadPromises = []
+    for (let i = 0; i < maxConcurrentUploads && i < state.files.length; i++) {
+      const file = state.files[currentIndex++]
+      uploadPromises.push(uploadFileAndNext(file))
+    }
+
+    // 等待所有 POST 完成
+    await Promise.all(uploadPromises)
+}
+</script>
+
+<template>
+    <div class="container">
+      <p>Axios</p>
+      <div
+        @dragenter.prevent="handleIsDrag"
+        @dragover.prevent="handleIsDrag"
+        @dragleave.prevent="handleIsDrag"
+        @drop.prevent="handleDrop"
+        class="drop-area"
+        :class="{ 'drag-over': state.isDragOver }"
+        >
+        <label class="input-label">
+          <input type="file" @change="handleFileChange" multiple/>
+          <span>+</span>
+        </label>
+      </div>
+      <button @click="uploadFiles">Upload</button>
+      <div v-if="state.uploading">
+        <div v-for="(fileObj, index) in state.files" :key="index" class="progress">
+          <p>{{ fileObj.file.name }}</p>
+          <v-progress-linear
+            rounded
+            color="primary" 
+            v-model="fileObj.progress"
+            height="25px"
+            class="linebar">
+            <strong>{{ Math.ceil(fileObj.progress) }}%</strong>
+          </v-progress-linear>
+          <button @click="() => cancelUpload(fileObj)" class="cancel">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+</template>
+
+<style scoped>
+.container{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 25px;
+  height: 80vh;
+  width: 100%;
+  padding: 1rem;
+}
+
+.drop-area {
+  width: 15vw;
+  height: 20vh;
+  border: 2px dashed #ccc;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-over {
+  border-color: #2196F3;
+  background-color: #E3F2FD;
+}
+
+.input-label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(225, 225, 225, 0.6);
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  cursor: pointer;
+
+  input{
+    display: none;
+  }
+  span{
+    font-size: 3rem;
+    font-weight: 500;
+  }
+}
+
+button{
+  padding: 0.5rem;
+  border-radius: 25px;
+  background-color: lightblue;
+  font-size: 1rem;
+}
+
+.progress{
+  width: 45vw;
+  margin-top: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
+
+  p{
+    grid-column: 1/2;
+    align-self: center;
+  }
+  .linebar{
+    grid-column: 2/3;
+    align-self: center;
+  }
+}
+
+.cancel{
+  width: 60%;
+  border-radius: 25px;
+  padding: 0.5rem;
+  background-color: pink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 3/4;
+  align-self: center;
+  justify-self: end;
+}
+</style>
+```
+</details>
+
+<details>
+<summary>ReadableStream (以 vue3 進行實作)</summary>
+
+```xml
+<script setup>
+import { reactive } from 'vue';
+
+const state = reactive({
+    files: [],
+    uploading: false,
+    isDragOver: false,
+})
+
+// imput file
+const handleFileChange = (event) => {
+  state.uploading = true
+  state.files = Array.from(event.target.files).map((file) => ({
+    file,
+    progress: 0,
+    abortController: new AbortController()
+  }))
+}
+
+// drag and drop
+const handleIsDrag = () => {
+    state.isDragOver = true
+}
+
+const handleDrop = (event) => {
+    state.isDragOver = false
+    state.uploading = true
+    const files = Array.from(event.dataTransfer.files).map((file) => ({
+    file,
+    progress: 0,
+    abortController: new AbortController()
+    }));
+
+    state.files = files
+}
+
+// cancel upload
+const cancelUpload = (fileObj) => {
+    const fileIndex = state.files.findIndex((file) => file === fileObj);
+
+    if (fileIndex !== -1) {
+        fileObj.abortController.abort()
+    }
+}
+
+const uploadFile = async (fileObj) => {
+    const formData = new FormData()
+    formData.append(fileObj.file.name, fileObj.file)
+
+    //  todo ReadableStream
+    const fileStream = formData.get(fileObj.file.name).stream().getReader()
+    console.log('fileStream', fileStream)
+    const totalSize = fileObj.file.size
+    let uploaded = 0
+    
+    const rs = new ReadableStream({
+      async pull(ctrl){
+        const result = await fileStream.read()
+        console.log('Read:', result)
+        if(result.done){
+          ctrl.close()
+          return
+        }
+        uploaded += result.value.byteLength
+        fileObj.progress = (uploaded / totalSize) * 100
+        console.log('uploaded', uploaded)
+        ctrl.enqueue(result.value)
+      }
+    })
+
+    try {
+      console.time('useFetch:')
+      await fetch('https://httpbin.org/post', {
+        method: 'POST',
+        body: rs,
+        duplex: 'half',
+        signal: fileObj.abortController.signal
+      })
+      console.timeEnd('useFetch:')
+    } catch (error) {
+      console.error('Upload error', error);
+    }
+}
+
+const uploadFiles = async () => {
+    if(state.files.length === 0){
+      alert('No selected file!')
+      return
+    }else{
+      try {
+        await Promise.all(state.files.map(file => uploadFile(file)));
+        alert('All done');
+      } catch (error) {
+        console.error(error);
+        alert('Something error ><');
+      } finally {
+        state.uploading = false;
+        state.files = [];
+      }
+    }
+}
+</script>
+
+<template>
+    <div class="container">
+      <p>ReadableStream</p>
+      <div
+        @dragenter.prevent="handleIsDrag"
+        @dragover.prevent="handleIsDrag"
+        @dragleave.prevent="handleIsDrag"
+        @drop.prevent="handleDrop"
+        class="drop-area"
+        :class="{ 'drag-over': state.isDragOver }"
+        >
+        <label class="input-label">
+          <input type="file" @change="handleFileChange" multiple/>
+          <span>+</span>
+        </label>
+      </div>
+      <button @click="uploadFiles">Upload</button>
+      <div v-if="state.uploading">
+        <div v-for="(fileObj, index) in state.files" :key="index" class="progress">
+          <p>{{ fileObj.file.name }}</p>
+          <v-progress-linear
+            rounded
+            color="primary"
+            v-model="fileObj.progress"
+            height="25px"
+            class="linebar">
+            <strong>{{ Math.ceil(fileObj.progress) }}%</strong>
+          </v-progress-linear>
+          <button @click="() => cancelUpload(fileObj)" class="cancel">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+</template>
+
+<style scoped>
+.container{
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 25px;
+  height: 80vh;
+  width: 100%;
+  padding: 1rem;
+}
+
+.drop-area {
+  width: 15vw;
+  height: 20vh;
+  border: 2px dashed #ccc;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drag-over {
+  border-color: #2196F3;
+  background-color: #E3F2FD;
+}
+
+.input-label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(225, 225, 225, 0.6);
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  cursor: pointer;
+
+  input{
+    display: none;
+  }
+  span{
+    font-size: 3rem;
+    font-weight: 500;
+  }
+}
+
+button{
+  padding: 0.5rem;
+  border-radius: 25px;
+  background-color: lightblue;
+  font-size: 1rem;
+}
+
+.progress{
+  width: 45vw;
+  margin-top: 1rem;
+  display: grid;
+  gap: 1.5rem;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 3fr 1fr;
+
+  p{
+    grid-column: 1/2;
+    align-self: center;
+  }
+  .linebar{
+    grid-column: 2/3;
+    align-self: center;
+  }
+}
+
+.cancel{
+  width: 60%;
+  border-radius: 25px;
+  padding: 0.5rem;
+  background-color: pink;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-column: 3/4;
+  align-self: center;
+  justify-self: end;
+}
+</style>
+```
+</details>
