@@ -1,0 +1,136 @@
+---
+title: 非同步處理
+tags: [javascript, callback, promise, async/await]
+---
+## Event Loop
+### 前言
+在講什麼是 Event loop 之前必須先記得 JavaScript 的運作方式是**單執行緒 (single-threaded)**，也就是它一次只能做一件事情，所有的函式都得乖乖排隊等著被執行，這種事件又叫做**同步 (synchronous)**。
+
+在同步下，程式碼中的函式一多，或者複雜度提高，就增加了排隊等著被執行的時間，大概就有點像是大家在高速公路上排隊等著下交流道，然後就會很驚喜地發現：哇喔，網頁卡住了！這種塞住的現象被稱作**阻塞 (blocking)**。  
+但是很明顯，做為開發網頁的第一大語言，JavaScript 一定會克服這種阻塞的現象來造就現在大家使用的這麼順暢的網頁 UI，於是**非同步 (asynchronous)** 就隨之問世。  
+非同步的出現可以讓 JavaScript **並發 (concurrency)** 運作程式碼中的函式，讓單線程的執行變成多線程，因此避免了阻塞的發生。
+
+在非同步的流程中，有三個主要的區塊： **Call stack**、**Web API**、**Callback queue**。  
+**Call stack** 會追蹤我們呼叫的函式，通常來說，在同步下就只會有 Call stack 的存在，所以阻塞就是阻塞在 Call stack 這裡，可以把它想像成高速公路的交流道，一堆車子都擠在這裡等著下去。  
+
+當 JavaScript 要處理非同步，比如出現瀏覽器負責處理的函式 (如 `setTimeout`) 時，會從 **Call stack** 中將該函式取出丟到 **Web API** 的去執行，執行完畢再丟到 **Callback queue** 去，等著再被塞回 **Call stack** 中去輸出結果。
+
+而 **event loop** 就像是扮演一個守衛，它不斷檢查 **Call stack** 是否為空閒，若為空閒就把 **Callback queue** 中的**回調函式 (callback function)** 丟回 **Call stack** 中。
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8aGhZQkoFbQ?si=7V9jd4iQRVPrGkAt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+### 實際例子看非同步
+Philip Roberts 在 JSConf EU 介紹 event loop 的例子：
+```js
+console.log(‘hi’);
+
+setTimeout(function cb(){
+	console.log(‘there’);
+}, 5000);
+
+console.log(‘JSConfEU’)
+```
+
+這段 code 的產出結果順序將會是：
+1. `'hi'`
+2. `'JSConfEU'`
+3. `'there'`
+
+按照前面講的非同步來解釋事情是怎麼發生的：
+1. `console.log(‘hi’)` 塞入 **Call stack**，後方的程式碼乖乖排隊等待 `console.log(‘hi’)` 執行完畢離開 **Call stack**。
+2. `setTimeout` 塞入 **Call stack**，但因為它是個非同步處理，所以又移出  **Call stack** 轉交 **Web API** 做處理。
+3. `console.log(‘JSConfEU’)` 塞入 **Call stack** 執行。
+4. `setTimeout` 在 **Web API** 執行完畢，它內部的回調函式 (`console.log(‘there’)`) 塞入 **Callback queue**。
+5. **Call stack** 沒有程式在執行，`console.log(‘there’)` 從 **Callback queue** 塞入 **Call stack** 執行。
+
+:::info
+### 那 `setTimeout(func, 0)` 呢？
+輸出結果順序依然跟倒數5秒一樣，那是因為 `setTimeout` 這個**非同步**函式必然是要進入 **Web API**、**Callback queue** 然後再回到 **Call stack** 跑上這麼一圈的。
+:::
+
+## Callback Function
+需多文章解釋 **callback** 都會這樣說：
+> 把一個 B 函式做為參數傳進另一個 A 函式，透過 A 函式來呼叫它。
+
+這樣做的原因有兩個：
+1. 讓 B 函式滿足某個條件才**被動地**去執行。
+2. 讓函式之間有執行的順序。
+
+白話一點就是我要做完 A 才去執行 B，回想一下上面 `setTimeout` 的例子，就是很典型的 `callback` 應用，先執行 `setTimeout` 再執行 `console.log(‘there’)`。  
+再舉一個等一下會用到的例子：**數字相加的結果如果有大於 5 (A函式) 時，去對相加後的結果乘以 10 (B函式)**。
+
+```js
+const addNum = (a, b, callback) =>{
+    const plusNum = a + b
+    if(plusNum > 5){
+        callback(plusNum)
+    }else{
+        console.log('the plusNum < 5')
+    }
+}
+
+const multiNum = (num) => console.log(num * 10)
+
+addNum(6, 2, multiNum)
+```
+
+## Promise
+試想一下，剛剛的例子僅是 A 執行完去執行 B，但如果今天 B 執行完還要執行 C、D、E...呢？恐怕一不小心就迷失在茫茫的 callback 大海中了。  
+而 **promise** 的出現解決 **callback** 一層包一層的問題，讓函式間的次序更清楚。
+
+**promise** 的使用上會先建立一個 **promise 物件**，而 promise 通常會有三種狀態：
+1. Pending：表示正在處理中。
+2. Resolve：表示處理成功。
+3. Reject：表示處理失敗。
+
+接著通常會用 `then` 來接收成果的結果並繼續處理下一件事，然後用 `catch` 來捕獲失敗的狀況。  
+所以 promise 的語法架構大概是像這樣：`A().then(B()).catch(err)`。
+
+把前一段的程式碼改成 promise 會像這樣：
+```js
+const addNum = (a, b)=>{
+    return new Promise((resolve, reject)=>{
+        const plusNum = a + b
+        if(plusNum > 5){
+            resolve(plusNum)
+        }else{
+            reject('reject!')
+        }
+    })
+}
+
+addNum(6, 2)
+.then(num => multiNum(num))
+.catch(err => console.error(err))
+```
+
+
+## async/await
+這是基於 **promise** 的語法糖，他一切的運作原理都還是建立在 **promise** 上，只是 **async/await** 的寫法讓我們可以用看似同步的語法來撰寫非同步的內容。
+
+在函式一開始用 **async** 定義一個非同步函式，並在內部使用 **await** 等待 promise 執行完畢 (A函式)，然後再去執行下一個動作 (B函式)。  
+沒錯，還是需要用到 **promise**，就像一開始講的，**async/await** 只是 **promise** 的語法糖，讓我們不用 **then** 下去。所以如果要把前述的 **promise** 寫法改成 **async/await**，我們還是得保留 promise 的建立。
+
+而在 **async/await** 中，我們依靠 **try** 來處理 promise 操作成功的情況，然後靠 **catch** 捕獲錯誤結果。
+
+```js
+const calculate = async(a, b) =>{
+    try{
+        const plusNum = await addNum(a, b)
+        multiNum(plusNum)
+    }
+    catch(err){
+        console.error(err)
+    }
+}
+
+calculate(6, 2)
+```
+:::warning
+會有一個問題，就是 B 函式 `multiNum(plusNum)` 有沒有需要加上 `await`？答案是加了可以動，但沒必要加。
+像前述講的，`await` 在等待的是一個 promise 非同步函式的操作完成，但我們的 `multiNum(plusNum)` 實際是個同步函式 (不是基於 **Promise**、不使用 `setTimeout`、不進行網路請求)，為了不必要的誤會 (不論是人的誤會還是程式碼執行的誤會)，盡量不要在同步函式前添加 `await`。
+:::
+
+## 參考資料
+1. [callback, promise, async/await 使用方式教學以及介紹 Part I](https://yu-jack.github.io/2018/07/22/promise/)
+2. [我要學會 JS(三)：callback、Promise 和 async/await 那些事兒](https://noob.tw/js-async/)
