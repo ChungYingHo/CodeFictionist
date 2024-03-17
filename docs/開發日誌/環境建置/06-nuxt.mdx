@@ -39,8 +39,8 @@ export default defineNuxtConfig({
 ## Tailwind CSS (optional) - CSS 編輯
 這裡必須安裝 Nuxt3 的版本 [**@nuxtjs/tailwindcss**](https://tailwindcss.com/docs/guides/nuxtjs#modules)：
 ```powershell
-pnpx nuxi module add @nuxtjs/tailwindcss
-pnpx tailwindcss init
+pnpm dlx nuxi module add @nuxtjs/tailwindcss
+pnpm dlx tailwindcss init
 ```
 :::tip
 安裝 [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss) 輔助開發。
@@ -168,7 +168,7 @@ module.exports = {
     }
   ],
   rules: {
-    'unit-allowed-list': [ 'em', 'rem', 'deg', 'px', 'vh', 'vw', '%', 's', 'ms' ],
+    'unit-allowed-list': [ 'em', 'rem', 'deg', 'px', 'vh', 'vw', '%', 's', 'ms', 'fr' ],
     'order/properties-order': [
       'position',
       'top',
@@ -268,6 +268,73 @@ module.exports = {
 :::warning
 不論是 eslint、prettier、stylelint，我都有 ignore 一個 **dist** 資料夾，因為這個資料夾是編譯後的結果，不需要再檢查。
 :::
+
+## Vuetify
+1. 安裝 Vuetify
+```powershell
+pnpm i -D vuetify vite-plugin-vuetify
+pnpm i @mdi/font
+```
+2. 設定 **nuxt.config.ts**：
+```ts
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+export default defineNuxtConfig({
+  //...
+  build: {
+    transpile: ['vuetify'],
+  },
+  modules: [
+    (_options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig', (config) => {
+        // @ts-expect-error
+        config.plugins.push(vuetify({ autoImport: true }))
+      })
+    },
+    //...
+  ],
+  vite: {
+    vue: {
+      template: {
+        transformAssetUrls,
+      },
+    },
+  },
+})
+```
+
+3. 根目錄建立 **~/plugins/vuetify.ts**：
+```ts
+// import this after install `@mdi/font` package
+import '@mdi/font/css/materialdesignicons.css'
+
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+
+export default defineNuxtPlugin((app) => {
+  const vuetify = createVuetify({
+    // ... your configuration
+  })
+  app.vueApp.use(vuetify)
+})
+```
+
+4. 於 **app.vue** 引用：
+```xml
+<template>
+  <NuxtLayout>
+    <v-app>
+      <NuxtPage />
+    </v-app>
+  </NuxtLayout>
+</template>
+
+<style lang="scss">
+<!-- 隱藏 vuetify 自動產生無意義的 scroll bar -->
+html {
+  overflow-y: auto;
+}
+</style>
+```
 
 ## 參考資料
 1. [Nuxt.js 3.x ESLint 程式碼規範與自動排版－搭配 TypeScript](https://clairechang.tw/2023/06/30/nuxt3/nuxt-v3-typescript-and-eslint/)

@@ -1,0 +1,281 @@
+---
+title: React - Next
+tags: [react, next]
+---
+:::info
+專案建立見[這篇](../../開發日誌/環境建置/07-next.mdx)文章。
+:::
+## Next 環境基本介紹
+可以參照[官網](https://nextjs.org/docs/getting-started/project-structure)。  
+在建立專案時，Next 會詢問要使用 **app router** 還是 **pages router**，也會詢問是否使用 **src** 資料夾，這些都會影響專案啟動後的基本環境。  
+以我個人建環境為例，我採用 **app router** 及不使用 **src** 資料夾，因此我的基本環境是像這樣：
+* **app**：app router。
+* **public**：靜態檔案。
+
+當然仍然可以在自己創建個 **components** 和 **utils** 來存放會複用的元件或函式。
+
+:::info
+與 Nuxt3 不一樣，上面那兩個都是 Nuxt3 官方定義的資料夾，所以 Nuxt3 可以做到自動引用，但 Next 不行。
+:::
+
+## Next 的 app 資料夾
+Next 的作業環境很乾淨的原因跟 Next 獨有的 **app** 資料夾結構有關。  
+在 Next 改版前，他的自動路由設定叫做 **pages router**，用法大概跟現在的 Nuxt3 很像，所以 Next 則更推薦使用改版後的 **app router**，原因在於 **app.router** 方便集中管理相關設定。
+
+個人覺得 Johnny Wang 前輩在他的部落格提到 **app router** 與 **pages router** 的差別解釋的非常好：
+> **pages router** 以 **File** 為單位定義頁面，該頁面相關設定放在外部管理；**app router** 以 **Folder** 定義頁面，該頁面所有相關設定都放在同一個資料夾裡。
+
+如果是一位同時寫過 Nuxt3 跟 Next 的工程師，就可以明顯感受到這句話的含義。
+
+### app 資料夾的結構
+Next 定義的 Routing Files 是這樣：
+| Filename      | Extension(s)        | Description                    |
+|---------------|---------------------|--------------------------------|
+| layout        | .js, .jsx, .tsx     | Layout                         |
+| page          | .js, .jsx, .tsx     | Page                           |
+| loading       | .js, .jsx, .tsx     | Loading UI                     |
+| not-found     | .js, .jsx, .tsx     | Not found UI                   |
+| error         | .js, .jsx, .tsx     | Error UI                       |
+| global-error  | .js, .jsx, .tsx     | Global error UI                |
+| route         | .js, .ts            | API endpoint                   |
+| template      | .js, .jsx, .tsx     | Re-rendered layout             |
+| default       | .js, .jsx, .tsx     | Parallel route fallback page   |
+
+用資料夾結構就像是下列樣子，然後每個資料夾以此類推：
+```xml
+| app/
+<!-- highlight-start -->
+---| page.tsx
+---| layout.tsx
+---| loading.tsx
+---| not-found.tsx
+---| global-error.tsx
+<!-- highlight-end -->
+---| about/
+```
+上述這樣就是路由 **/** 的所有頁面相關設定。  
+而 **about** 資料夾會自動產生路由 **/about** 然後一樣可以再包這些設定 (名字一樣)。而如果 **about** 資料夾內還有包資料夾，比如 **story** 就會產生巢狀路由 **/about/story**。  
+**app router** 就是靠這樣的方式一次管理頁面相關設定和路由。
+
+* page.tsx：代表一個特定的頁面組件，負責渲染該頁面的 UI 和內容。
+* layout.tsx：定義當前頁面與子頁面的共享版型。
+* loading.tsx：用於展示頁面或組件加載過程中的提示
+* not-found.tsx：就常見的 404 頁面，可以只設定最外層這一個。
+* error.tsx：進行錯誤處理的地方，當錯誤發生時向用戶顯示一個更友好的錯誤訊息或界面，而不是讓應用直接崩潰或顯示無意義的錯誤訊息。
+* global-error.tsx：用來對最上層 layout 做錯誤處理的。
+* template.tsx：就是不儲存狀態的 layout，它不保持跨頁面狀態，每次導航都會重新渲染。(官方自己也說：**While less common, you might choose a template over a layout if you want..**)
+* default.tsx：配合**平行路由**使用，在資源載入前提供一個預設內容，為 UI 優化部分。
+* route.ts：不會跟 page.tsx 同時出現，定義當前層級的 route handler，就是一個讓開發者在特定的路由上處理客戶端請求，進行數據加工、特殊 API 調用等操作的地方。(把它對照去 Nuxt3 的 server 資料夾就好懂了)
+
+## Layouts
+1. Root Layout：這個一定要有，格式也一定要包含 `<html>` 跟 `<body>`。
+```tsx title='app/layout.tsx'
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <body>
+        {/* Layout UI */}
+        <main>{children}</main>
+      </body>
+    </html>
+  )
+}
+```
+2. 其它一般 layouts
+```tsx title='app/dashboard/layout.tsx'
+export default function DashboardLayout({
+  children, // will be a page or nested layout
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <section>
+      {/* Include shared UI here e.g. a header or sidebar */}
+      <nav></nav>
+ 
+      {children}
+    </section>
+  )
+}
+```
+
+## 路由
+如前段所述，Next 會自動產生路由，那如何在各頁面中使用路由？
+1. 單純使用
+```tsx title='app/page.tsx'
+import Link from 'next/link'
+ 
+export default function Page() {
+  return <Link href="/dashboard">Dashboard</Link>
+}
+```
+2. 使用 `usePathname()` 來更靈活運用路由：
+```tsx
+'use client'
+ 
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+ 
+export function Links() {
+  const pathname = usePathname()
+ 
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link className={`link ${pathname === '/' ? 'active' : ''}`} href="/">
+            Home
+          </Link>
+        </li>
+        <li>
+          <Link
+            className={`link ${pathname === '/about' ? 'active' : ''}`}
+            href="/about"
+          >
+            About
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  )
+}
+```
+3. 經由函式改變路由，需使用 `useRouter` hook：
+```tsx
+'use client'
+ 
+import { useRouter } from 'next/navigation'
+ 
+export default function Page() {
+  const router = useRouter()
+ 
+  return (
+    <button type="button" onClick={() => router.push('/dashboard')}>
+      Dashboard
+    </button>
+  )
+}
+```
+
+### 動態路由
+#### 基本款
+用 **[ ]** 把資料夾包起來即可。
+```xml
+| app/
+---| blog/
+------| [slug]/
+```
+如要取用動態路由資訊，使用 `params.slug` 即可。
+```tsx title='app/blog/[slug]/page.tsx'
+export default function Page({ params }: { params: { slug: string } }) {
+  return <div>My Post: {params.slug}</div>
+}
+```
+下方這段圍觀方式飯如何產生多個動態路由：
+```tsx
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+```
+#### Catch-all Segments
+可以通過在括號內添加省略號 **[...folderName]** 來擴展捕獲所有後續的段落。
+```xml
+| app/
+---| blog/
+------| [...slug]/
+```
+官方例子為 **app/shop/[...slug]/page.js** 可以同時對應到：
+* **/shop/clothes**
+* **/shop/clothes/tops**
+* **/shop/clothes/tops/t-shirts**
+
+#### Optional Catch-all Segments
+與 Catch-all Segments 相似，但它允許匹配只有基礎路徑而沒有任何子路徑的路由。  
+以上數例子來講就是 **app/shop/[[...slug]]/page.js** 可以多匹配 **/shop** 這個路由。
+
+### 平行路由
+這個概念指的是在同一個網頁布局中，根據特定的條件，可以同時顯示來自不同路由的內容。  
+這種方式允許在不跳轉頁面的情況下，在一個頁面上展示多個不同的內容區塊或組件，適合於動態性高的應用場景，比如儀表板或社交網站的信息流。
+
+```xml
+| app/
+---| @analytic/
+---| @team/
+```
+官方使用範例：
+```tsx title='app/layout.tsx'
+export default function Layout({
+  children,
+  team,
+  analytics,
+}: {
+  children: React.ReactNode
+  analytics: React.ReactNode
+  team: React.ReactNode
+}) {
+  return (
+    <>
+      {children}
+      {team}
+      {analytics}
+    </>
+  )
+}
+```
+
+### 攔截路由
+Intercepting Routes 可以讓使用者在瀏覽網頁的時候，能夠在不離開當前頁面的情況下，彈出或加載另一部分的內容，比如點擊一張照片，照片以彈出視窗的形式出現，而不是跳轉到另一個頁面。  
+以官方例子來看，**feed** 資料夾下有一個 **(..photo)** 資料夾，可以再這裡做彈出視窗樣式，他會自動攔截 **photo** 這個資料夾產生的路由。
+```xml
+| app/
+---| (..photo)/
+---| feed/
+------| photo/
+```
+
+* **(.)**： 用來匹配同一層級的段落。
+* **(..)**： 用來匹配上一層級的段落。
+* **(..)(..)**： 用來匹配兩層以上的段落。
+* **(...)**： 用來匹配從根目錄開始的所有段落。
+
+:::info
+#### 平行路由與攔截路由差別在哪？
+前者更多關注於一次性展示多樣化的內容，後者則是在用戶操作中靈活切換顯示的內容，但都不會讓用戶感覺自己已經離開了原本的頁面。  
+基本上兩者可以組合使用。
+:::
+
+## Middleware
+這是一個跟 app 資料夾同層級的檔案：
+```xml
+---| app/
+---| middleware.ts
+```
+基本上 middleware 允許在伺服器接收請求並完成處理之前先執行一些操作，比如說登入驗證。  
+以官方範例為例，就是將所有訪問 **/about** 路徑（及其所有子路徑）的請求重定向到 **/home** 路徑。
+```tsx title='middleware.ts'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+ 
+// This function can be marked `async` if using `await` inside
+export function middleware(request: NextRequest) {
+  return NextResponse.redirect(new URL('/home', request.url))
+}
+ 
+export const config = {
+  matcher: '/about/:path*',
+}
+```
+
+## Server Components 與 Client Components
+
+## 參考資料
+1. [快速上手 NextJS v13 - 基礎觀念 AppRouter 篇](https://johnnywang1994.github.io/book/articles/js/next13-intro-approuter.html)
+2. [【學習筆記】Next.js 路由系統：App Router vs Page Router](https://hackmd.io/@Heidi-Liu/nextjs-app-router?utm_source=preview-mode&utm_medium=rec)
