@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[5830],{7785:e=>{e.exports=JSON.parse('{"permalink":"/blog/tags/\u5433\u6de1\u5982","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

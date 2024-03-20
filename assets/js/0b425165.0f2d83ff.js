@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[6252],{91857:e=>{e.exports=JSON.parse('{"permalink":"/blog/tags/\u8fb2\u85dd\u7cfb","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
