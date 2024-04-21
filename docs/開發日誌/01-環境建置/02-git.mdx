@@ -71,3 +71,14 @@ git clone https://github.com/{owner-name}/{project-name}.git
 
 ## .gitignore
 關於那些不想讓 Git 紀錄的檔案，比如一大包的 `node_moules` 資料夾、含有私人隱私資訊 (比如資料庫連線字串) 的 `.env` 檔案，可以在專案下建立一個 `.gitignore` 檔案，裡面填入不要 Git 紀錄的檔案。
+
+:::tip
+如果你一開始忘記把 **.env** 加入 **.gitignore**，可以用以下指令移除：
+```powershell
+git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch .env" HEAD
+```
+然後再透過 `git push --force` 來強制推送。
+:::
+
+## 參考資料
+1. [Removing a .env file from Git history](https://dev.to/dailydevtips1/removing-a-env-file-from-git-history-3gao)

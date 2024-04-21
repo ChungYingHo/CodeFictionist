@@ -1,41 +1,8 @@
-# Website
+## CodeFictionist
+如果你看到這個 README，啊，那你發現了 CodeFictionist 的祕密 (笑。  
+雖然也不難發現啦，畢竟這個 repo 為了使用一些免費的服務所以一定得設成公開的。
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+如果你是對這個 repo 的內容感興趣，歡迎到 [CodeFictionist](https://codefictionist.com/) 觀看文章內容。  
+而如果你是單純想知道 Docusaurus 的 blog 是這麼建的，也還是推薦你前往 [CodeFictionist](https://codefictionist.com/)，我裡面有寫一點點教學。  
 
-### Installation
-
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+所以別在這裡逗留啦！趕快去 [CodeFictionist](https://codefictionist.com/)，那裡比較漂亮！
