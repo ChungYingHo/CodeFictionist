@@ -37,6 +37,72 @@ tags: [初始環境建立, vscode]
 * [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)：讓 VScode 支援 ESLint。
 * [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)：讓 VScode 支援 Prettier。
 * [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)：讓 VScode 支援 Stylelint。
+* [Highlight Matching Tag](https://marketplace.visualstudio.com/items?itemName=vincaslt.highlight-matching-tag)：高亮顯示 HTML tag 開始與結束。
+* [psioniq File Header](https://marketplace.visualstudio.com/items?itemName=psioniq.psi-header)：自動生成檔案頭部註解。
+
+<details>
+<summary>psi-header setting</summary>
+
+```json title='.vscode/setting.json'
+{
+  // https://marketplace.visualstudio.com/items?itemName=psioniq.psi-header
+  "psi-header": {
+    "changes-tracking": {
+        "isActive": true,
+        "modAuthor": "Modified By: ",
+        "modDate": "Last Modified: ",
+        "modDateFormat": "date",
+        "include": [],
+        "exclude": [
+            "markdown",
+            "json"
+        ],
+        "excludeGlob": [
+            "out/**",
+            "src/**/*.xyz"
+        ],
+        "autoHeader": "manualSave"
+    },
+    "lang-config": [
+        {
+            "language": "*",
+            "begin": "/**",
+            "end": "*/",
+            "prefix": " * "
+        },
+        {
+            "language": "vue",
+            "begin": "<!--",
+            "end": "-->",
+            "prefix": "  "
+        }
+    ],
+    "config": {
+        "forceToTop": true,
+        "blankLinesAfter": 1,
+    },
+    "templates": [
+        {
+            "language": "*",
+            "template": [
+                "@FilePath: <<filerelativepath>>",
+                "@Date: <<filecreated('YYYY-MM-DD HH:mm:ss')>>",
+                "@Author: <<author>>",
+                "@Description:",
+                "-----",
+                "Last Modified: <<dateformat('YYYY-MM-DD HH:mm:ss')>>",
+                "Modified By: <<author>>",
+                "-----",
+                "Copyright (c) <<year>> by PLANTAE Taiwan, All Rights Reserved.",
+            ],
+        },
+    ]
+  },
+}
+```
+</details>
+
+
 
 
 ### HTML / CSS 相關
@@ -44,6 +110,7 @@ tags: [初始環境建立, vscode]
 * [Live Sass Compiler](https://marketplace.visualstudio.com/items?itemName=glenn2223.live-sass)：自動編譯 Sass/Scss。
 * [Color Highlight](https://marketplace.visualstudio.com/items?itemName=naumovs.color-highlight)：在寫 CSS 的色碼時可以直接看到顏色。
 * [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)：Tailwind CSS 的附註插件。
+* [px to rem & rpx & vw (cssrem)](https://marketplace.visualstudio.com/items?itemName=cipchk.cssrem)：可以快速轉換 px 到 rem、rpx、vw。
 
 ### Markdown / MDX 相關
 * [Markdown Preview Mermaid Support](https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid)：可以在 markdown 上畫美麗的圖表。
@@ -56,9 +123,3 @@ tags: [初始環境建立, vscode]
 ### Vue 相關
 * [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar)：用 vue 開發時強力推薦。
 * [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin)：讓 TypeScript 更好地支援 vue。
-:::danger
-**Vue - Official** 三月更新的 2.0 版本往上，會告訴我們要把 **TypeScript Vue Plugin (Volar)** 解安裝，因為 **Vue - Official** 已經包含了 **TypeScript Vue Plugin (Volar)** 的功能。  
-但實際上 **Vue - Official** 目前對 TypeScript 支援並不完善 (瞬間噴 100 多個錯誤那種)，所以建議還是降回 **1.8.27** 的版本並配合 **TypeScript Vue Plugin (Volar)** 使用。
-
-[追蹤問題](https://github.com/vuejs/language-tools/issues/3912)
-:::

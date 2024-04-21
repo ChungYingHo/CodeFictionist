@@ -1,0 +1,24 @@
+---
+title: Nuxt3 資料獲取與 api
+tags: [vue3, nuxt3, api]
+---
+
+## 數據獲取 (api)
+Nuxt 提供了三個方便獲得數據的方法：`useFetch`、`useAsyncData` 和 `$fetch`。  
+
+依官網解說，`useFetch` 其實就是 `useAsyncData` 和 `$fetch` 的結合 ​：  
+> Indeed, useFetch(url) is nearly equivalent to useAsyncData(url, () => $fetch(url)) - it's developer experience sugar for the most common use case.
+
+```xml title='example'
+<script setup lang="ts">
+const { data: count } = await useFetch('/api/count')
+</script>
+```
+
+## Vercel Postgres
+連接方式跟 [Next 這篇文章](../React/Next/04-next-database.mdx) 一樣，只是需要安裝 **dotenv** 來讀取環境變數。
+
+### 安裝 **dotenv**
+```powershell
+pnpm install dotenv
+```

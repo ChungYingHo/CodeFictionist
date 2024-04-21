@@ -1,5 +1,5 @@
 ---
-title: Vue3 - Nuxt3
+title: Nuxt3 概觀
 tags: [vue3, nuxt3]
 ---
 :::info
@@ -257,18 +257,6 @@ definePageMeta({
 </style>
 ```
 
-## 數據獲取 (api)
-Nuxt 提供了三個方便獲得數據的方法：`useFetch`、`useAsyncData` 和 `$fetch`，推薦使用 `useFetch`。  
-
-依官網解說，`useFetch` 其實就是 `useAsyncData` 和 `$fetch` 的結合 ​：  
-> Indeed, useFetch(url) is nearly equivalent to useAsyncData(url, () => $fetch(url)) - it's developer experience sugar for the most common use case.
-
-```xml title='example'
-<script setup lang="ts">
-const { data: count } = await useFetch('/api/count')
-</script>
-```
-
 ## 靜態網頁部署
 1. 按裝 **gh-pages**：
 ```powershell
@@ -281,7 +269,7 @@ export default defineNuxtConfig({
     baseURL: process.env.NODE_ENV === 'production' ? '/your-github-repo/' : '/',
     buildAssetsDir: '/static/'
   }
-}
+})
 ```
 3. 在根目錄的 **public** 新增 **.nojekyll** 檔案。
 4. 在 **package.json** 中新增部署指令：
@@ -293,6 +281,9 @@ export default defineNuxtConfig({
 npm run generate
 npm run deploy
 ```
+
+## Vercel 部署
+請直接參閱[我 Next.js 的文章](../React/Next/04-next-database.mdx)。
 
 ## 參考資料
 1. [Nuxt.js 3.x 將靜態網站部署到 GitHub Pages](https://clairechang.tw/2023/10/03/nuxt3/nuxt-v3-static-site-generation/)

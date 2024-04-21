@@ -8,7 +8,7 @@ tags: [next, react]
 ## 初始化專案
 1. 安裝 Next.js
 ```powershell
-npx create-next-app@latest
+pnpm dlx create-next-app@latest
 ```
 2. 安裝依賴套件
 ```powershell
@@ -187,3 +187,98 @@ module.exports = {
 }
 ```
 </details>
+
+
+## 安裝 NextUI
+```powershell
+pnpm add @nextui-org/react framer-motion
+```
+
+### Tailwind CSS Setup
+```js title='tailwind.config.js'
+// tailwind.config.js
+import {nextui} from "@nextui-org/react";
+
+/** @type {import('tailwindcss').Config} */
+const config = {
+  content: [
+    // ...
+    // highlight-next-line
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}"
+  ],
+  theme: {
+    extend: {},
+  },
+  // highlight-start
+  darkMode: "class",
+  plugins: [nextui()]
+  // highlight-end
+}
+
+export default config;
+```
+
+### Setup Provider
+建立 **app/providers.tsx**：
+```tsx title='app/providers.tsx'
+// app/providers.tsx
+'use client'
+
+import {NextUIProvider} from '@nextui-org/react'
+
+export function Providers({children}: { children: React.ReactNode }) {
+  return (
+    <NextUIProvider>
+      {children}
+    </NextUIProvider>
+  )
+}
+```
+
+### Add Provider to Root
+
+```tsx title='app/layout.tsx'
+// app/layout.tsx
+import {Providers} from "./providers";
+
+export default function RootLayout({children}: { children: React.ReactNode }) {
+  return (
+    <html lang="en" className='dark'>
+      <body>
+        <Providers>
+          {children}
+        </Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+### Setup pnpm (optional)
+使用 pnpm 需要額外進行此項設定：
+
+```xml title='.npmrc'
+public-hoist-pattern[]=*@nextui-org/*
+```
+
+
+### 設定完成，嘗試使用
+
+```tsx title='app/page.tsx'
+// app/page.tsx
+import { Button } from '@nextui-org/button'
+
+export default function Home() {
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+      <div>
+        <Button>Click me</Button>
+      </div>
+    </main>
+  )
+}
+```
+
+:::warning
+如果出現這個錯誤：**找不到模組 '@nextui-org/button' 或其對應的型別宣告**，可以嘗試再一次 `pnpm install`。
+:::
