@@ -17,6 +17,11 @@ tags: [初始環境建立, git]
 8. `git log --oneline`: 查詢 commit 紀錄 (行列式)。
 9. `git reset --hard <commit>`: 回到指定 commit。
 
+:::tip
+如果今天突然跟我一樣想把舊專案整合到一個新資料夾中推送到遠端 repo 做整合，記得先刪除舊專案的 `.git` 資料夾，1並執行 `git rm --cache client_folder `。  
+詳情可參考 [GitHub folders have a white arrow on them](https://stackoverflow.com/questions/62056294/github-folders-have-a-white-arrow-on-them)。
+:::
+
 ## Git 版控流程
 :::info
 無論哪種版控流程都只是一個建議，不是規範。
@@ -76,3 +81,4 @@ tags: [初始環境建立, git]
 1. [git workflow tutorial](https://github.com/xirong/my-git/blob/master/git-workflow-tutorial.md)
 2. [三種版控流程](https://medium.com/@lf2lf2111/%E4%B8%89%E7%A8%AE%E7%89%88%E6%8E%A7%E6%B5%81%E7%A8%8B-29c82f5d4469)
 3. [一文弄懂 Gitflow、Github flow、Gitlab flow 的工作流](https://cloud.tencent.com/developer/article/1646937)
+
