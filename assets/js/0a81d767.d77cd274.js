@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[3271],{15443:s=>{s.exports=JSON.parse('{"label":"2024","permalink":"/blog/tags/2024","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);

@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[4130],{24374:e=>{e.exports=JSON.parse('{"label":"New Year","permalink":"/blog/tags/new-year","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);

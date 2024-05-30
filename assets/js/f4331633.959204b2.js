@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[4660],{34248:s=>{s.exports=JSON.parse('{"label":"\u7814\u7a76\u6240","permalink":"/blog/tags/\u7814\u7a76\u6240","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);
