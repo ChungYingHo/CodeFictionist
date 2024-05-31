@@ -1,5 +1,5 @@
 ---
-title: Dart 語法基礎 - 01
+title: Dart 語法
 tags: [dart]
 ---
 :::info
@@ -11,7 +11,7 @@ tags: [dart]
 :::
 
 ## Hello World in Dart
-```dart
+```ts
 void main() {
   print('Hello, World!');
 }
@@ -23,19 +23,19 @@ void main() {
 
 ## 定義變數
 在 Dart 中，定義變數可以使用 `var`，這時 Dart 會自動去推論變數型態：
-```dart
+```ts
 var name = 'Jeremy';
 print(name);
 ```
 
 也可以透過主動指定給予變數型態：
-```dart
+```ts
 String name = 'Jeremy';
 ```
 
 :::info
 Null safety
-```dart
+```ts
 String? name  // Nullable type. Can be `null` or string.
 
 String name   // Non-nullable type. Cannot be `null` but can be string.
@@ -45,7 +45,7 @@ String name   // Non-nullable type. Cannot be `null` but can be string.
 ### Late variables
 主要用途有兩個：  
 1. 聲明一個非空變數，但這個變數會在聲明之後初始化。
-```dart
+```ts
 late String description;
 
 void main() {
@@ -56,7 +56,7 @@ void main() {
 2. 懶加載變數，通常用在：
     - **當變數在某些情況下可能不會被使用時，避免不必要的初始化來節省資源**。
     - **初始化實例變數，並且初始化過程需要訪問 `this`**：在類的實例變數初始化過程中，如果需要訪問實例本身（例如訪問其他屬性或方法），使用 `late` 可以確保變數在第一次使用時才初始化，並且此時實例已經完全構建。
-```dart
+```ts
 // readThermometer() 函數只有在 temperature 變數第一次被使用時才會被調用
 late String temperature = readThermometer(); // Lazily initialized.
 ```
@@ -64,7 +64,7 @@ late String temperature = readThermometer(); // Lazily initialized.
 ### `final` and `const`
 `final` 跟 `const` 用在變數的值不會再改變時，或者換成 JS 的說法就是宣告常數。  
 `const` 跟 `final` 最大的差別在於 `const` 是**編譯時變數**，即**它的值在程式執行前就已經確定，並且不能在運行時更改**。
-```dart
+```ts
 void main() {
   // 使用 final
   final String runtimeValue = DateTime.now().toString(); // 運行時初始化
@@ -77,7 +77,7 @@ void main() {
 ```
 :::warning
 如果是在定義 `class` 時要使用 `const` 定義常數，必須使用 `static const`：
-```dart
+```ts
 class Example {
   static const int MAX_COUNT = 10; // 類級別的常量
 }
@@ -86,7 +86,7 @@ class Example {
 :::info
 根據官方說法。`const` 還有以下用法：
 
-```dart
+```ts
 // highlight-start
 var foo = const [];
 final bar = const [];
@@ -94,14 +94,14 @@ final bar = const [];
 const baz = []; // Equivalent to `const []`
 ```
 雖然同樣是定義一個常數，但 `const` 寫在等號左邊是定義一個變數為常數；`const` 寫在右邊則是定義變數的值為常數，但這個值是可以被覆蓋的：
-```dart
+```ts
 foo = [1, 2, 3]; // 這是可以的
 baz = [42]; // 這會報錯
 ```
 :::
 
 ## Libraries & imports
-```dart
+```ts
 // simple import
 import 'package:lib1/lib1.dart';
 
@@ -121,7 +121,7 @@ import 'package:greetings/hello.dart' deferred as hello;
 ## 判別式
 ### if else
 跟 JavaScript 基本長一樣：
-```dart
+```ts
 var num = 5;
 if (num > 10) {
   print('The Number > 10');
@@ -133,7 +133,7 @@ if (num > 10) {
 ```
 ### if-case
 這是一個 JavaScript 跟 Python 沒有的東西，是 Dart 為了提供更強大的模式匹配能力衍生出的功能：
-```dart
+```ts
 if (pair case [int x, int y]) return Point(x, y);
 ```
 :::info
@@ -149,7 +149,7 @@ if (pair case [int x, int y]) return Point(x, y);
 在 Dart 中模式是一個泛稱，例如在 `switch` 語句中進行值的匹配、在變量聲明中進行解構、在條件表達式中進行匹配等都可以稱作一種**模式**。
 
 Matching:
-```dart
+```ts
 switch (number) {
   // Constant pattern matches if 1 == number.
   case 1:
@@ -158,7 +158,7 @@ switch (number) {
 ```
 
 Destructuring：
-```dart
+```ts
 var numList = [1, 2, 3];
 // List pattern [a, b, c] destructures the three elements from numList...
 var [a, b, c] = numList;
@@ -169,7 +169,7 @@ print(a + b + c);
 
 ### switch
 基本用法：
-```dart
+```ts
 var command = 'OPEN';
 switch (command) {
   case 'CLOSED':
@@ -187,7 +187,7 @@ switch (command) {
 }
 ```
 特殊用法：
-```dart
+```ts
 switch (command) {
   case 'OPEN':
     executeOpen();
@@ -204,7 +204,7 @@ switch (command) {
 ```
 #### switch expressions
 switch expressions 允許根據表達式匹配的情況，產生一個值：
-```dart
+```ts
 var x = switch (y) { ... };
 
 print(switch (x) { ... });
@@ -212,7 +212,7 @@ print(switch (x) { ... });
 return switch (x) { ... };
 ```
 實際的應用例子如下：
-```dart
+```ts
 token = switch (charCode) {
   slash || star || plus || minus => operator(charCode),
   comma || semicolon => punctuation(charCode),
@@ -228,7 +228,7 @@ token = switch (charCode) {
 
 :::tip
 基本上 switch expressions 就是 switch 衍伸的產物 (應該能算是 switch 的語法糖)，上述的例子可以用 switch 改寫：
-```dart
+```ts
 // Where slash, star, comma, semicolon, etc., are constant variables...
 switch (charCode) {
   case slash || star || plus || minus: // Logical-or pattern
@@ -252,7 +252,7 @@ switch (charCode) {
 ## 迴圈
 ### for loop
 下列是一個簡單的 for loop 例子：
-```dart
+```ts
 for (int num = 0; num < 10; num++){
   print(num);
 }
@@ -262,7 +262,7 @@ for (int num = 0; num < 10; num++){
 :::
 :::info
 紀錄一下官方的 for loop 例子，因為裡面用到了一些初學 Dart 時我還沒學到的方法：
-```dart
+```ts
 void main() {
   var message = StringBuffer('Dart is fun');
   for (var i = 0; i < 5; i++) {
@@ -273,7 +273,7 @@ void main() {
 ```
 :::
 #### Dart 的閉包處理
-```dart
+```ts
 var callbacks = [];
 for (var i = 0; i < 2; i++) {
   callbacks.add(() => print(i));
@@ -307,7 +307,7 @@ for (let i = 0; i < 5; i++) {
 基本可以想像成：Dart 的 for loop 閉包處理就像是 JS 的 let 產生出來解決變數汙染的問題。
 :::
 ### 用 for-in loop 遍歷 List 或 Set
-```dart
+```ts
 // 遍歷 candidates 列表中的每個 candidate 對象，並對每個 candidate 執行 interview() 方法
 for (final candidate in candidates) {
   candidate.interview();
@@ -320,14 +320,14 @@ for (final Candidate(:name, :yearsExperience) in candidates) {
 ```
 
 ### 用 forEach 遍歷
-```dart
+```ts
 var collection = [1, 2, 3];
 collection.forEach(print); // 1 2 3
 ```
 
 ### while loop
 下述是基本的 while loop 用法：
-```dart
+```ts
 var num = 1;
 while (num < 10) {
   print(num);
@@ -335,7 +335,7 @@ while (num < 10) {
 }
 ```
 Dart 還有一個特殊的 `do-while`，但其實就是將條件寫在迴圈要做的事之後：
-```dart
+```ts
 var num = 1;
 do {
   print(num);
@@ -349,7 +349,7 @@ Dart 的迴圈跟 Python 一樣都有 `break` 跟 `continue` 來中斷迴圈或�
 
 ## 函式
 下列為簡單函式範例：
-```dart
+```ts
 // 不回傳值
 sayHello () {
   print('Hello, world!');
@@ -380,7 +380,7 @@ void main() {
 ### Named parameters
 Dart 中定義命名參數是使用 `{param1, param2, …}`。  
 命名參數如果未被標記為 **required** 則同時也是可選參數。
-```dart
+```ts
 // 定義命名參數函式
 void enableFlags({bool? bold, bool? hidden}) {...}
 
@@ -388,20 +388,20 @@ void enableFlags({bool? bold, bool? hidden}) {...}
 enableFlags(bold: true, hidden: false);
 ```
 也可以在定義函式時先給予命名參數預設值：
-```dart
+```ts
 void enableFlags({bool bold = false, bool hidden = false}) {...}
 
 // bold will be true; hidden will be false.
 enableFlags(bold: true);
 ```
 也可以添加 **required** 使之變為必須參數：
-```dart
+```ts
 void enableFlags({required bool bold, bool? hidden}) {...}
 ```
 
 ### Optional positional parameters
 可選位置參數在定義函數時使用 `[]` 包裹，調用函數時按參數順序傳遞值。
-```dart
+```ts
 String say(String from, String msg, [String? device]) {
   var result = '$from says $msg';
   if (device != null) {
@@ -419,7 +419,7 @@ void main() {
 }
 ```
 同樣也可以給予預設值：
-```dart
+```ts
 String say(String from, String msg, [String device = 'carrier pigeon']) {
   var result = '$from says $msg with a $device';
   return result;
@@ -428,7 +428,7 @@ String say(String from, String msg, [String device = 'carrier pigeon']) {
 
 ### 把函式作為參數
 例子 1：
-```dart
+```ts
 void printElement(int element) {
   print(element);
 }
@@ -440,7 +440,7 @@ void main() {
 }
 ```
 例子 2：
-```dart
+```ts
 var loudify = (msg) => '!!! ${msg.toUpperCase()} !!!';
 
 void main() {
@@ -450,13 +450,13 @@ void main() {
 
 ### Anonymous functions (匿名函式)
 一個匿名函式的長相大概像這樣：
-```dart
+```ts
 ([[Type]] param1[, ...]]) {
   codeBlock;
 }
 ```
 實際應用上如官方範例的 `(item) {...}` 就是匿名函式：
-```dart
+```ts
 void main() {
   const list = ['apples', 'bananas', 'oranges'];
 
@@ -488,7 +488,7 @@ void main() {
 閉包就像是這個被放在另一個盒子中的盒子。它可以**捕獲**（記住）其定義範圍之外的變量，並在以後的任何時候使用這些變量。  
 這樣，即使函數已經返回，這些變量的狀態仍然可以被保留下來。
 
-```dart
+```ts
 Function makeAdder(int addBy) {
   return (int i) => addBy + i;
 }
@@ -510,7 +510,7 @@ void main() {
 5. `add4` 傳入一個 `i` 為 3，故答案為 **4 + 3**。
 
 ### Tear-offs
-```dart
+```ts
 var charCodes = [68, 97, 114, 116];
 var buffer = StringBuffer();
 // highlight-start
@@ -540,7 +540,7 @@ charCodes.forEach((code) {
 
 Dart 有兩種生成器：
 1. 同步生成器：返回一個 **Iterable** 對象，即一個同步的、可以被迭代的集合。使用上為 `sync` 搭配 `yield`。
-```dart
+```ts
 Iterable<int> naturalsTo(int n) sync* {
   int k = 0;
   while (k < n) yield k++;
@@ -553,7 +553,7 @@ void main() {
 }
 ```
 2. 非同步生成器：返回一個 **Stream** 對象，即一個可以接收非同步事件或數據的序列，通常用在比如處理用戶輸入、網絡請求等。使用上為 `async` 搭配 `yield`。
-```dart
+```ts
 Stream<int> asynchronousNaturalsTo(int n) async* {
   int k = 0;
   while (k < n) yield k++;
@@ -569,7 +569,7 @@ void main() async {
 
 ### External functions
 外部函式的意思即函式的執行與聲明分別位在不同地方，比如來自其他 Dart library，或是來自其他語言 (ex. JavaScript)。
-```dart
+```ts
 external void someFunc(int i);
 ```
 
