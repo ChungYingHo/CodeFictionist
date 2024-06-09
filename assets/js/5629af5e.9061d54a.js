@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[7273],{17282:i=>{i.exports=JSON.parse('{"tag":{"label":"Big-O","permalink":"/docs/tags/big-o","allTagsPath":"/docs/tags","count":1,"items":[{"id":"algorithm/big-o","title":"Big-O","description":"O(1) - Constant Time","permalink":"/docs/algorithm/Big-O"}],"unlisted":false}}')}}]);
