@@ -103,6 +103,11 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
+            href:'https://chung-ying.vercel.app/',
+            label: 'Portfolio',
+            position: 'right',
+          },
+          {
             href: 'https://github.com/ChungYingHo',
             label: 'GitHub',
             position: 'right',

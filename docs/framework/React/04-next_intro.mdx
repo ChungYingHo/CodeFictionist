@@ -1,0 +1,239 @@
+---
+title: Next 概覽
+tags: [react, next, style]
+---
+:::info
+專案建立見[這篇](../../dev-note/01-環境建置/07-next.mdx)文章。
+:::
+
+## Next.js 概覽
+從 2023 年開始，Next 團隊開始採用 **app router** 的方式來取代原先 **pages router** 的開發方式。  
+Johnny Wang 前輩在他的部落格提到 **app router** 與 **pages router** 的差別解釋的非常好：  
+> **pages router** 以 **File** 為單位定義頁面，該頁面相關設定放在外部管理；**app router** 以 **Folder** 定義頁面，該頁面所有相關設定都放在同一個資料夾裡。
+
+在建立專案時，Next 會詢問要使用 **app router** 還是 **pages router**，也會詢問是否使用 **src** 資料夾，這些都會影響專案啟動後的基本環境。  
+以我個人建環境為例，我採用 **app router** 及不使用 **src** 資料夾，建起來後我的基本環境會是像這樣：  
+```xml
+---| app
+---| public
+```
+- `/app`：包含所有的路由、組件和邏輯，是主要工作的地方。
+- `/public`：包含應用程式的所有靜態資源，如圖片。
+上述是最基本的開發環境，其餘的可以是個人開發習慣建立 **scripts**、**utils** 等資料夾。
+
+### App 資料夾內的結構
+上面提到 **app** 資料夾會是 Next 開發一切路由和組件的地方，Next 對於該資料夾內部部分特殊命名的檔案都會有相對應的特殊處理，比如產生頁面的 **page.tsx** 跟定義模板佈局的 **layout.tsx**，其他 Next 規範他們會自動處理的檔案還包括：
+| Filename      | Extension(s)        | Description                    |
+|---------------|---------------------|--------------------------------|
+| layout        | .js, .jsx, .tsx     | Layout                         |
+| page          | .js, .jsx, .tsx     | Page                           |
+| loading       | .js, .jsx, .tsx     | Loading UI                     |
+| not-found     | .js, .jsx, .tsx     | Not found UI                   |
+| error         | .js, .jsx, .tsx     | Error UI                       |
+| global-error  | .js, .jsx, .tsx     | Global error UI                |
+| route         | .js, .ts            | API endpoint                   |
+| template      | .js, .jsx, .tsx     | Re-rendered layout             |
+| default       | .js, .jsx, .tsx     | Parallel route fallback page   |
+
+### Server Component 與 Client Component
+**app router** 的出現跟過去最大的差異不是資料夾結構，而是 **server component** 的出現。  
+具體來說 **server component** 跟 **client component** 差在哪，不妨先來看看什麼是 **client component**。
+
+**client component** 通俗一點來說就是專門處理跟使用者互動的 UI 架構，在 Next 中，因為預設所有建立起來的元件都會是 server component，所以要使用 client component 必須在檔案醉一開始加一個 `use client` 來宣告這是一個 client component。  
+而 client component 最大的用途是它可以使用 React 的各種 Hook，比如 `useState`、`useEffect`、`useRef`...等，這是 server component 所辦不到的事。
+
+:::tip
+簡單來說，在 2023 年以前就會 React 開發的朋友，那時開發的組件以現在 Next 觀點來看就是 client component。
+:::
+
+那 **server component** 呢？server component 不能使用 Hook，我要 server component 幹嘛？  
+主要是 server component 管理的是屬於那些不用跟使用者交互的**靜態**頁面，比如說部落格的文章、商場的商品介紹，這些都可以嘗試做成 server component 讓元件先在伺服器端做解析才到客戶端做渲染。  
+因為 server component 內部的程式都只會在 server 端執行，因此它還支援直接在 server component 內部對資料庫做 SQL 操作，這對全端開發是一件相對方便的事。  
+簡單來說，有關資料庫操作的事情，Next 都推薦做成 server component。
+
+在實務開發上很少純粹的 server component 或 client component，因為我們可以在 server component 內引用 client component，也可以在 client component 中引入 server component。
+
+## CSS
+Next 推薦大家使用 **CSS Modules** (或 SCSS) 或是 **Tailwind CSS** 來做樣式管理。
+:::warning
+以前大家很愛用的 **styled component** 在目前為止並無法用在 server component 中。
+:::
+
+- Tailwind CSS (個人很推)！！
+```xml
+<div
+  className="h-0 w-0 border-b-[30px] border-l-[20px] border-r-[20px] border-b-black border-l-transparent border-r-transparent"
+/>
+```
+
+- CSS Modules
+1. 新增 **app/home.module.css**：
+```css
+.shape {
+  height: 0;
+  width: 0;
+  border-bottom: 30px solid black;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+}
+```
+2. **/app/page.tsx** 引用：
+```tsx
+import styles from '@/app/home.module.css';
+<div className={styles.shape} />;
+```
+:::info
+根據官方說明：**CSS Modules allow you to scope CSS to a component by automatically creating unique class names**。因此使用 **CSS module** 不需要擔心樣式會起衝突。
+:::
+
+### 使用 **clcx** 動態轉換 class
+除了使用判別式，也可以使用 **clsx** 根據 status 的值動態改變 class：
+
+```tsx
+import clsx from 'clsx';
+ 
+export default function InvoiceStatus({ status }: { status: string }) {
+  return (
+    <span
+    {/* highlight-start */}
+      className={clsx(
+        'inline-flex items-center rounded-full px-2 py-1 text-sm',
+        {
+          'bg-gray-100 text-gray-500': status === 'pending',
+          'bg-green-500 text-white': status === 'paid',
+        },
+      )}
+      {/* highlight-end */}
+    >
+    // ...
+)}
+```
+
+### 字體
+```xml
+---| app/
+------| app/fonts.ts
+------| app/layout.tsx
+```
+1. 建立一個專門引入字型並管理的 **fonts.ts**：
+```ts
+import { Inter } from 'next/font/google';
+ 
+export const inter = Inter({ subsets: ['latin'] });
+```
+2. 在 **/app/layout.tsx** 中做使用：
+```tsx
+import '@/app/global.css';
+// highlight-next-line
+import { inter } from '@/app/fonts';
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+{/* highlight-next-line */}
+      <body className={`${inter.className} antialiased`}>{children}</body>
+    </html>
+  );
+}
+```
+:::info
+**antialiased** 是 Tailwind 提供讓文字邊緣更平滑、柔和細膩的設定。
+:::
+
+<details>
+<summary>練習題</summary>
+
+新增一個 **Lusitana** 字體並應用在 **page.tsx** 的 `<p>` 上：
+1. 先在 **fonts.ts** 引入：
+```ts
+import { Inter, Lusitana } from 'next/font/google';
+ 
+export const inter = Inter({ subsets: ['latin'] });
+// highlight-start
+export const lusitana = Lusitana({
+    subsets: ['latin'],
+    weight: '400'
+});
+// highlight-end
+```
+2. 在 **/app/page.tsx** 做使用：
+```tsx
+import AcmeLogo from '@/app/ui/acme-logo';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+// highlight-next-line
+import { lusitana } from '@/app/fonts';
+ 
+export default function Page() {
+  return (
+    // ...
+    // highlight-start
+    <p
+      className={`${lusitana.className} text-xl text-gray-800 md:text-3xl md:leading-normal`}
+    >
+    {/* highlight-end */}
+      <strong>Welcome to Acme.</strong> This is the example for the{' '}
+      <a href="https://nextjs.org/learn/" className="text-blue-500">
+        Next.js Learn Course
+      </a>
+      , brought to you by Vercel.
+    </p>
+    // ...
+  );
+}
+```
+</details>
+
+### 圖片
+```xml
+---| app/
+---| public
+```
+**public** 資料夾存放靜態檔案，包括圖片，在這個資料夾的圖片在使用 `<img>` 做引用時可以直接使用 **/ + 檔名**：
+```html
+<img
+  src="/hero.png"
+  alt="Screenshots of the dashboard project showing desktop version"
+/>
+```
+
+#### `<Image>` 元件
+這是 Next 基於 `<img>` 延伸開發的元件，按官方說明，此元件提供下述優化：
+* 防止圖片載入時自動造成的佈局移動。
+* 根據設備視窗大小調整圖片尺寸，避免向小視窗設備發送過大的圖片。
+* 預設啟用圖片的延遲加載（lazy load，當圖片進入視窗時才加載）。
+* 當瀏覽器支援時，提供現代格式（如 WebP 和 AVIF）的圖片。
+
+
+`<Image>` 在使用上必須先引入元件，如官方範例：
+```tsx title='/app/page.tsx'
+import AcmeLogo from '@/app/ui/acme-logo';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { lusitana } from '@/app/ui/fonts';
+// highlight-next-line
+import Image from 'next/image';
+ 
+export default function Page() {
+  return (
+    // ...
+    <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
+      {/* Add Hero Images Here */}
+      {/* highlight-start */}
+      <Image
+        src="/hero-desktop.png"
+        width={1000}
+        height={760}
+        className="hidden md:block"
+        alt="Screenshots of the dashboard project showing desktop version"
+      />
+      {/* highlight-end */}
+    </div>
+    //...
+  );
+}
+```
