@@ -12,23 +12,15 @@ const config = {
   tagline: '寫程式的小說家',
   favicon: 'img/favicon.ico',
 
-  // Set the production url of your site here
   url: 'https://codefictionist.com/',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'chungyingho', // Usually your GitHub org/user name.
-  projectName: 'CodeFictionist', // Usually your repo name.
+  organizationName: 'chungyingho',
+  projectName: 'CodeFictionist',
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
@@ -45,19 +37,11 @@ const config = {
         },
         docs: {
           sidebarPath: './sidebars.js',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl:
-          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         blog: {
           blogSidebarTitle: 'All posts',
           blogSidebarCount: 'ALL',
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl:
-          //   'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -69,7 +53,6 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
       docs: {
         sidebar: {
           autoCollapseCategories: true,
@@ -97,11 +80,16 @@ const config = {
           },
           {
             type: 'docSidebar',
-            sidebarId: 'novelSidebar',
+            sidebarId: 'thirtySeriesSidebar',
             position: 'left',
-            label: 'Novel',
+            label: '30 Days Series',
           },
           {to: '/blog', label: 'Blog', position: 'left'},
+          {
+            href: 'https://codefictionist-novel.vercel.app/',
+            position: 'right',
+            label: 'Novel',
+          },
           {
             href:'https://chung-ying.vercel.app/',
             label: 'Portfolio',
@@ -116,55 +104,6 @@ const config = {
       },
       footer: {
         style: 'dark',
-        // links: [
-        //   {
-        //     title: 'Markdown',
-        //     items: [
-        //       {
-        //         label: 'Markdown website',
-        //         href: 'https://markdown.tw/'
-        //       },
-        //       {
-        //         label: 'Emoji',
-        //         href: 'https://gist.github.com/rxaviers/7360908'
-        //       },
-        //       {
-        //         label: 'Prism',
-        //         href: 'https://prismjs.com/#supported-languages'
-        //       }
-        //     ],
-        //   },
-        //   {
-        //     title: 'Community',
-        //     items: [
-        //       {
-        //         label: 'Stack Overflow',
-        //         href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-        //       },
-        //       {
-        //         label: 'Discord',
-        //         href: 'https://discordapp.com/invite/docusaurus',
-        //       },
-        //       {
-        //         label: 'Twitter',
-        //         href: 'https://twitter.com/docusaurus',
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     title: 'More',
-        //     items: [
-        //       {
-        //         label: 'Blog',
-        //         to: '/blog',
-        //       },
-        //       {
-        //         label: 'GitHub',
-        //         href: 'https://github.com/ChungYingHo',
-        //       },
-        //     ],
-        //   },
-        // ],
         copyright: `Copyright © ${new Date().getFullYear()} CodeFictionist. Built with Docusaurus.`,
       },
       prism: {

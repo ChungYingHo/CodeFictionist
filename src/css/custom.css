@@ -1,21 +1,3 @@
-/**
- * Any CSS included here will be global. The classic template
- * bundles Infima by default. Infima is a CSS framework designed to
- * work well for content-centric websites.
- */
-
-/* You can override the default Infima variables here. */
-/* :root {
-  --ifm-color-primary: #2e8555;
-  --ifm-color-primary-dark: #29784c;
-  --ifm-color-primary-darker: #277148;
-  --ifm-color-primary-darkest: #205d3b;
-  --ifm-color-primary-light: #33925d;
-  --ifm-color-primary-lighter: #359962;
-  --ifm-color-primary-lightest: #3cad6e;
-  --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
-} */
 :root {
   --ifm-color-primary: #0077B6;
   /* 莫蘭迪深藍 */
@@ -35,33 +17,24 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
-/* For readability concerns, you should choose a lighter palette in dark mode. */
-/* [data-theme='dark'] {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: #21af90;
-  --ifm-color-primary-darker: #1fa588;
-  --ifm-color-primary-darkest: #1a8870;
-  --ifm-color-primary-light: #29d5b0;
-  --ifm-color-primary-lighter: #32d8b4;
-  --ifm-color-primary-lightest: #4fddbf;
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
-} */
 [data-theme='dark'] {
-  --ifm-color-primary: #3399cc;
-  /* 淺莫蘭迪藍 */
-  --ifm-color-primary-dark: #66b3cc;
-  /* 淺莫蘭迪藍的深色版本 */
-  --ifm-color-primary-darker: #80ccdb;
-  /* 淺莫蘭迪藍的更深色版本 */
-  --ifm-color-primary-darkest: #99d6e6;
-  /* 淺莫蘭迪藍的最深色版本 */
-  --ifm-color-primary-light: #4da6ff;
-  /* 淺莫蘭迪藍的淺色版本 */
-  --ifm-color-primary-lighter: #66b3ff;
-  /* 淺莫蘭迪藍的更淺色版本 */
-  --ifm-color-primary-lightest: #80c0ff;
-  /* 淺莫蘭迪藍的最淺色版本 */
-  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+  --ifm-color-primary: #FF9AA2;
+  /* Light Coral */
+  /* 明亮莫蘭迪粉 */
+  --ifm-color-primary-dark: #FF808B;
+  /* 明亮莫蘭迪粉的深色版本 */
+  --ifm-color-primary-darker: #FF6674;
+  /* 明亮莫蘭迪粉的更深色版本 */
+  --ifm-color-primary-darkest: #FF4D5D;
+  /* 明亮莫蘭迪粉的最深色版本 */
+  --ifm-color-primary-light: #FFADB4;
+  /* 明亮莫蘭迪粉的淺色版本 */
+  --ifm-color-primary-lighter: #FFC1C7;
+  /* 明亮莫蘭迪粉的更淺色版本 */
+  --ifm-color-primary-lightest: #FFD5DA;
+  /* 明亮莫蘭迪粉的最淺色版本 */
+  --docusaurus-highlighted-code-line-bg: rgba(255, 154, 162, 0.3);
+  /* Slightly transparent Light Coral */
 }
 
 /* algolia */

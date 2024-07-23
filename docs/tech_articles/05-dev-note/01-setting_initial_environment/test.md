@@ -1,0 +1,166 @@
+## 安裝 Jest
+```powershell
+npm install jest --save-dev
+```
+然後至 **package.json** 添加指令：
+```json
+{
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
+```
+
+## 簡單玩一下 unit test
+首先建立一個專案環境大概如下：
+```xml
+---| index.js
+---| index.test.js
+```
+**index.js** 內部放的是要測試的函式，**index.test.js** 則是測試檔。
+
+### **index.js**
+在 **index.js** 中先來簡單寫一個函式，記得寫完要 `export` 輸出：
+```js
+// function waiting for unit test
+const fn = (a, b) => {
+    return a + b;
+}
+
+module.exports = fn;
+```
+
+### **index.test.js**
+接下來到測試檔中引入要測試的函式，然後透過 `test(...)` 來定義一個 unit test，並透過 `expect()` 來設置預期的測試結果。  
+在 `expect()` 函式中，可以透過許多匹配器來檢查測試出的值是否符合預期，常用的匹配器有：
+1. `toBe`：檢查兩個值是否相等。
+2. `toBeNull`：檢查值是否為 null。
+3. `toBeUndefined`：檢查值是否為 undefined。
+4. `toBeTruthy`：檢查值是否為 true。
+5. `toBeFalsy`：檢查值是否為 false。
+
+```js
+const fn = require('./index');
+
+test('預期輸入 1 與 2 會得到 3', () => {
+    expect(fn(1, 2)).toBe(3);
+});
+```
+
+### 測試跑起來
+最後執行 `npm run test` 就可以看到終端機顯示測試運行的結果。
+
+## Vue 的測試
+在建立 Vue 專案時，其實 Vue 會詢問是否引入 **Vitest** 來做測試，如果我們選擇**是**，那 Vue 就會自動幫我們設置好 Vitest，在進入到專案後可以看到如下的專案結構：
+```xml
+---| src/
+------| components/
+---------| _tests_
+```
+**_tests_** 這個資料夾就是用來存放測試檔的地方。
+
+### Component Testing
+在專案建好後，其實可以看到在 **_tests_** 中，Vue 已經幫我們建好一個針對 **HelloWorld** 這個組件的測試檔：
+```js title='HelloWorld.spec.js'
+import { describe, it, expect } from 'vitest'
+
+import { mount } from '@vue/test-utils'
+import HelloWorld from '../HelloWorld.vue'
+
+describe('HelloWorld', () => {
+  it('renders properly', () => {
+    const wrapper = mount(HelloWorld, { props: { msg: 'Hello Vitest' } })
+    expect(wrapper.text()).toContain('Hello Vitest')
+  })
+})
+```
+`describe` 是用來定義一個測試的關鍵字，`it` 則是用來具體定義我們要測試的行為。  
+`mount` 是 Vue Test Utils 提供的函數，用於掛載 Vue 組件並返回一個包裝器（wrapper），其第一個參數是要掛載的 Vue 組件（HelloWorld），第二個參數是掛載選項，在這裡，我們傳遞了一個 props 對象，用來設置組件的道具（props）。  
+
+接著我們執行 `npm run test:unit` (具體請看當下 **package.json** 的指令) 即可啟動測試。
+
+### Unit Test
+已知官方給的範例是 Component Testing，但如果想針對寫在組件裡的函式做單元測試呢？  
+舉例來說，我在 **HelloWorld** 這個組件中新增一個函式：
+```xml title='HelloWorld.vue'
+<script setup>
+const fn = (a, b) => {
+  return a + b
+}
+</script>
+```
+
+接下來再去改寫測試檔 **HelloWorld.spec.js**：
+```js
+describe('HelloWorld', () => {
+  it('測試組件內函式', () => {
+    const wrapper = mount(HelloWorld)
+    const vm = wrapper.vm
+    expect(vm.fn(1, 2)).toBe(3)
+  })
+})
+```
+
+同樣執行 執行 `npm run test:unit` 就可以針對這個函式進行測試。
+
+
+## React (Next)
+在 React 中，同樣可以安裝 Vitest 來做測試：
+```powershell
+pnpm install -D vitest @vitejs/plugin-react jsdom @testing-library/react
+```
+
+### 建立 **vitest.config.ts**
+```ts
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+ 
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+  },
+})
+```
+
+### 添加測試指令
+```json title='package.json'
+"scripts": {
+  "test": "vitest"
+}
+```
+
+### 建立一個要測試的組件
+這裡就直接把 **page.tsx** 改成官網的範例：
+```tsx title='app/page.tsx'
+import Link from 'next/link'
+ 
+export default function Page() {
+  return (
+    <div>
+      <h1>Home</h1>
+      <Link href="/about">About</Link>
+    </div>
+  )
+}
+```
+
+### 建立測試檔
+記得先在根目錄下建立 **__tests__** 資料夾：
+```tsx title='__tests__/page.test.tsx'
+import { expect, test } from 'vitest'
+import { render, screen } from '@testing-library/react'
+import Page from '../app/page'
+ 
+test('Page', () => {
+  render(<Page />)
+  expect(screen.getByRole('heading', { level: 1, name: 'Home' })).toBeDefined()
+})
+```
+上面的測試就是測試 **page.tsx** 中是否有 `<h1>` 層級且叫做 **Home** 的元素被定義。
+
+Vitest 在 react 中，`render` 是用來渲染組件，`screen.getByRole` 是查找 DOM 元素的方法。
+
