@@ -18,24 +18,17 @@
 }
 
 [data-theme='dark'] {
-  --ifm-color-primary: #FF9AA2;
-  /* Light Coral */
-  /* 明亮莫蘭迪粉 */
-  --ifm-color-primary-dark: #FF808B;
-  /* 明亮莫蘭迪粉的深色版本 */
-  --ifm-color-primary-darker: #FF6674;
-  /* 明亮莫蘭迪粉的更深色版本 */
-  --ifm-color-primary-darkest: #FF4D5D;
-  /* 明亮莫蘭迪粉的最深色版本 */
-  --ifm-color-primary-light: #FFADB4;
-  /* 明亮莫蘭迪粉的淺色版本 */
-  --ifm-color-primary-lighter: #FFC1C7;
-  /* 明亮莫蘭迪粉的更淺色版本 */
-  --ifm-color-primary-lightest: #FFD5DA;
-  /* 明亮莫蘭迪粉的最淺色版本 */
-  --docusaurus-highlighted-code-line-bg: rgba(255, 154, 162, 0.3);
-  /* Slightly transparent Light Coral */
+  --ifm-color-primary: #FFD700;
+  --ifm-color-primary-dark: #E6C200;
+  --ifm-color-primary-darker: #CCAD00;
+  --ifm-color-primary-darkest: #B38F00;
+  --ifm-color-primary-light: #FFE033;
+  --ifm-color-primary-lighter: #FFEA66;
+  --ifm-color-primary-lightest: #FFF3B3;
+  --docusaurus-highlighted-code-line-bg: rgba(255, 215, 0, 0.3);
+  /* Slightly transparent gold */
 }
+
 
 /* algolia */
 [data-theme='light'] .DocSearch {
