@@ -1,44 +1,77 @@
 ---
 title: Day 0 - 2024 iThome 鐵人賽規劃
 ---
+在實務開發中，我們常常想為網站增添一些酷炫的特效，例如浮動粒子、浮雕效果等，來提升網站的互動性與趣味性。  
+然而，當我們使用的 UI 框架本身未支援這些特效時，往往需要自己手刻實現。雖然通常只要 Google 一下，就能很快找到相關的技術文章或教學影片，但似乎缺乏一個將這些常用特效集中整理的地方。  
+藉著這次鐵人賽的機會，我希望能夠親自實現、整理和分享這些特效的實作方法，讓大家能夠一次性地掌握這些實用的 CSS 技巧。
 
-## 2024 iThome 鐵人賽 30 天認識 Vue3 生態圈
+## 一天一項 CSS 小技巧：打造視覺與互動效果
+### Day 01 - 05：動畫與變形基礎
+- **Day 01：CSS 動畫基礎**  
+  介紹 `@keyframes` 及如何運用動畫來提升網站的動態效果。
+- **Day 02：CSS 變形基礎**  
+  介紹 `transform` 的基本應用，包括旋轉、縮放、移動和傾斜等效果。
+- **Day 03：複合動畫**  
+  結合 `@keyframes` 與 `transform` 創造更複雜的動畫效果。
+- **Day 04：動畫時間與緩動效果**  
+  探討 `animation` 相關的屬性及其應用，像是 `animation-duration`、`animation-timing-function` 等。
+- **Day 05：3D 變形**  
+  使用 `transform` 的 3D 效果來創造更立體的視覺效果。
 
-### Vue3
-- Day 01：該劇倍的環境與 Vue3 專案建立
-- Day 02：Vue3 語法與元件
-- Day 03：響應式資料 - ref、reactive、computed
-- Day 04：常用 Vue3 內建指令 - v-bind、v-on
-- Day 05：寫在 template 的 判斷式與迴圈 - v-if、v-show、v-for
-- Day 06：監聽事件 - watchEffect、watch
-- Day 07：Vue3 資料流 - props、emit
-- Day 08：Vue3 資料流 - provide、inject
-- Day 09：Vue3 資料流 - v-model
-- Day 10：Vue3 資料流 - Pinia
-- Day 11：Vue3 生命週期
-- Day 12：動態元件 - component
-- Day 13：插槽 - slot
-- Day 14：其它常用的 Vue3 元件 - Transition
+### Day 06 - 12：圖片與背景
+- **Day 06：多重背景**  
+  使用 `background` 屬性為元素設定多個背景圖片或顏色。
+- **Day 07：背景模糊與濾鏡效果**  
+  運用 `filter` 和 `backdrop-filter` 來為圖片背景增加模糊或其它濾鏡效果。
+- **Day 08：圖片懸停縮放效果**  
+  當滑鼠懸停時，圖片會進行縮放的視覺效果。
+- **Day 09：漸變背景動畫**  
+  透過 `background` 及 `@keyframes` 創造背景的漸變動畫效果。
+- **Day 10：圖片簍空效果**  
+  使用 `mix-blend-mode` 創造圖片的簍空（cut-out）效果。
+- **Day 11：背景平移效果**  
+  運用 `background-position` 和動畫來實現背景圖片的平移效果。
+- **Day 12：漸變邊框效果**  
+  透過 `border-image` 和 `linear-gradient` 創造元素的漸變邊框。
 
-### vue-router
-- Day 15：vue-router 基礎
-- Day 16：路由參數 - params、query
-- Day 17：匹配路由、重定向、別名
-- Day 18：巢狀路由
-- Day 19：路由守衛 - beforeEach、beforeResolve、afterEach、beforeEnter
+### Day 13 - 19：文字特效
+- **Day 13：漸變文字效果**  
+  使用 `background-clip` 和 `linear-gradient` 為文字添加漸變效果。
+- **Day 14：文字陰影動畫**  
+  結合 `text-shadow` 和 `@keyframes` 為文字創造陰影的動畫效果。
+- **Day 15：打字機效果**  
+  模擬打字機輸入文字的效果，讓文字一個字一個字地出現。
+- **Day 16：浮動文字效果**  
+  讓文字有浮動的視覺效果，使用 `@keyframes` 和 `animation`。
+- **Day 17：文字簍空效果**  
+  利用 `mix-blend-mode` 和 `background-clip` 來創造文字的簍空效果。
+- **Day 18：反向漸變文字**  
+  使用 `background-clip` 和 `linear-gradient` 創造反向的漸變文字效果。
+- **Day 19：文字陰影漂浮效果**  
+  透過 `text-shadow` 和 `@keyframes` 為文字陰影創造漂浮效果。
 
+### Day 20 - 26：互動特效
+- **Day 20：懸浮旋轉效果**  
+  當滑鼠懸停時，元素會進行旋轉的互動效果。
+- **Day 21：平滑滾動效果**  
+  使用 `scroll-behavior` 來創造滾動時的平滑過渡效果。
+- **Day 22：粒子浮動效果**  
+  透過 `@keyframes` 和 `animation` 實現粒子漂浮在頁面上的效果。
+- **Day 23：波浪效果**  
+  創造類似水波的效果，讓元素有波動的視覺效果。
+- **Day 24：按鈕彈跳效果**  
+  當滑鼠點擊時，按鈕會產生彈跳的動畫效果。
+- **Day 25：圖片懸停翻轉效果**  
+  當滑鼠懸停在圖片上時，圖片會有翻轉的互動效果。
+- **Day 26：捲動換頁效果**  
+  使用 `scroll-snap-type` 和 `scroll-snap-align` 來創造捲動時的換頁效果。
 
-### Nuxt3
-- Day 20：Nuxt3 專案建立
-- Day 21：Nuxt3 結構概覽
-- Day 22：Nuxt3 路由
-- Day 23：網站標頭
-- Day 24：轉場動畫
-- Day 25：部署 - github page、Vercel
-
-### Quasar
-- Day 26：Quasar 專案建立
-- Day 27：Quasar 的架構
-- Day 28：Quasar 的 UI 元件
-- Day 29：Quasar 的路由
-- Day 30：多平台應用
+### Day 27 - 30：其他特效
+- **Day 27：浮雕效果**  
+  使用 `box-shadow` 創造元素或文字的浮雕效果。
+- **Day 28：內容分割線**  
+  利用 `::before` 和 `::after` 偽元素來創造內容分割線效果。
+- **Day 29：3D 按鈕效果**  
+  結合 `transform` 和 `box-shadow` 創造立體按鈕的視覺效果。
+- **Day 30：全景視差效果**  
+  透過 CSS 和 JavaScript 創造視差滾動效果，增加網站的深度感。
