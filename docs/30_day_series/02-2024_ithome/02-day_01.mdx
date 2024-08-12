@@ -1,0 +1,119 @@
+---
+title: Day 0 - CSS 動畫基礎
+---
+在後面幾天來介紹那些有時會在其他網站常見的酷炫特效 (ex. 浮動粒子、按鈕彈跳效果...等) 之前，需要先花個幾天談一下 CSS 動畫的基礎，這樣才能更好適應後面部份的內容。  
+
+## `animation` 與 `@keyframes`
+基本上，一個 CSS 的動畫由兩個部分所組成：`animation` 屬性和 `@keyframes` 規則。  
+我們可以先來看一小段程式碼：
+```css
+@keyframes move {
+	from {
+		left: 0;
+	}
+	to {
+		left: 200px;
+	}
+}
+
+.element {
+	animation: move 2s infinite alternate;
+}
+```
+產生的結果會如下面嵌入的範例這樣，一顆籃球球不斷左右來回移動：
+<iframe width="800" height="600"  title="day 0 - basic css animation" src="https://codepen.io/ChungYingHo/embed/RwzLMzW?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/RwzLMzW">
+  day 0 - basic css animation</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+
+
+### 解析 `animation`
+我們先來解析上面的 `animation: move 2s infinite alternate;` 到底做了什麼事。：
+- 首先在我們範例中，第一個屬性 **move** 是透過 `@keyframes` 建立的關鍵影格，這點後面再說。  
+- 接下來的 `2s` 代表 **animation-duration**，簡單來說就是一個動畫的持續時間。  
+- `infinite` 代表 **animation-iteration-count**，定義動畫重複的次數，在這裡就表示動畫不限次數一直執行。  
+- `alternate` 代表 **animation-direction**，是用來定義動畫執行一次後是否反方向執行。
+所以上面這段 CSS 動畫就是讓 **move** 這個關鍵影格以每次 2 秒的時間執行動畫，執行完後反方向再來一次，然後無限重複。
+
+所以在這個範例中我們用到了**關鍵影格**、**animation-duration**、**animation-iteration-count** 以及 **animation-direction**，但其實 `animation` 遠不只這些屬性。  
+其它 `animation` 屬性還有：
+- **animation-delay**：動畫要延遲多久時間才開始執行。
+- **animation-play-state**：動畫的執行狀態，可以是 `running` 或 `paused`，簡而言之就是要動畫**執行**還是先**暫停**。
+- **animation-timing-function**：動畫的時間函數，可以在細分成數個項目，預設情況下是套用 `ease`。
+	- `ease`：緩慢開始，然後加速，然後緩慢結束。
+	- `linear`：動畫從頭到尾都是以相同的速度執行。
+	- `ease-in`：緩慢開始，然後加速。
+	- `ease-out`：加速，然後緩慢結束。
+	- `ease-in-out`：緩慢開始，中間加速，然後緩慢結束。
+
+<iframe width="800" height="600" title="day 0 - animation-timing-function" src="https://codepen.io/ChungYingHo/embed/BagwgQa?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/BagwgQa">
+  day 0 - animation-timing-function</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+- **animation-fill-mode**：動畫結束後的狀態，可以是 `none`、`forwards`、`backwards` 或 `both`，預設狀態下會是 `none`。
+	- `none`：動畫結束後，元素會回到原本的狀態。
+	- `forwards`：動畫結束後，元素會保持在動畫的最後一個影格。
+	- `backwards`：動畫開始前，元素會先套用第一個影格的樣式。
+	- `both`：結合 `forwards` 和 `backwards` 的效果。
+
+<iframe width="800" height="600" title="day 0 - animation-fill-mode" src="https://codepen.io/ChungYingHo/embed/wvLrbVV?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/wvLrbVV">
+  day 0 - animation-fill-mode</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+有些人會有疑問，**animation-fill-mode** 的 `none` 跟 `backwards` 測試起來好像沒有差別，在最後一幀的時候位置都是一樣的啊！  
+但請注意我們範例中的元素背景色，`none` 在動畫延遲的時間內 (注意範例中我設定動畫啟動延遲 5 秒)，背景色會是預設的黑色，而 `backwards` 則會是第一幀的粉藍色，所以關於 `none` 跟 `backwards` 的差異其實主要體現在設定 **animation-delay** 後的表現。
+
+### 解析 `@keyframes`
+前述有講到在 `animation` 引入了一個 **move** 這個關鍵影格，這個關鍵影格是透過 `@keyframes` 來定義的。  
+什麼是關鍵影格？  
+讓我們再看看最一開始那段 code：
+```css
+@keyframes move {
+	from {
+		left: 0;
+	}
+	to {
+		left: 200px;
+	}
+}
+
+.element {
+	animation: move 2s infinite alternate;
+}
+```
+我們用 `@keyframes` 定義了一個名為 **move** 的關鍵影格，在這個關鍵影格中，**move** 把 2 秒的 **animation-duration** 給拆成了兩個關鍵影格點，分別是 `from` 包起來的區塊以及 `to` 包起來的區塊。  
+`from` 代表動畫的開始狀態，而 `to` 代表動畫的結束狀態，講白話一點，這裡 **move** 做的事就是讓元素在 2 秒內從 `left: 0;` 移動到 `left: 200px;`，這就是一個最基本的關鍵影格，與 `animation` 一同構成一個最基本的動畫。
+
+除了 `from` 和 `to` 之外，我們還可以使用百分比來定義關鍵影格，實際上 `from` 和 `to` 就是 `0%` 和 `100%` 的簡寫。  
+至於百分比是誰的百分比呢？  
+其實這個百分比就是 **animation-duration** 的百分比，也就是 `animation-duration`，以上述 2 秒的例子來看， `0%` 就是 `0s`，`100%` 就是 `2s`，以此類推 `50%` 就是 `1s`。  
+我們來為上述例子添加一個在 `50%` 變成粉紅色的關鍵影格：
+```css
+@keyframes move {
+	from {
+		left: 0;
+	}
+	50% {
+		background-color: pink;
+	}
+	to {
+		left: 200px;
+  }
+}
+```
+現在我們的藍色球球會在 1 秒的時候變成粉紅色啦，這就是使用百分比來定義關鍵影格的效果。
+
+<iframe width="800" height="600" title="day 0 - keyframes" src="https://codepen.io/ChungYingHo/embed/NWZaZMR?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/NWZaZMR">
+  day 0 - keyframes</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## Reference
+1. [MDN CSS 動畫](https://developer.mozilla.org/zh-TW/docs/Web/CSS/CSS_animations/Using_CSS_animations)
