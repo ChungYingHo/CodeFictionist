@@ -1,0 +1,109 @@
+---
+title: Day 02 - CSS 變形基礎
+---
+說到 CSS 的變形，大家都會聯想到 `transform` 這個屬性，這個屬性可以讓我們對元素進行旋轉、縮放、移動和傾斜等效果。  
+基本上，對於部分前端工程師來說，`transform` 這個屬性也不是很陌生，有一道經典的面試考題是這樣的：
+
+> 請問如何將原素做置中效果？
+
+這題答案有好幾個，我們不討論 `flex` 或 `grid` 的方式，我們來談談 `transform`：
+```html
+<div class="parent position">
+ <div></div>
+</div>
+```
+```css
+.parent {
+ border: black solid 3px;
+ width: 20vw;
+ aspect-ratio: 1;
+ position: relative;
+
+ div {
+  border: red solid 2px;
+  width: 5vw;
+  aspect-ratio: 1;
+  background-color: red;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ }
+}
+```
+<iframe width="100%" height="600" title="Untitled" src="https://codepen.io/ChungYingHo/embed/OJeOprx?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/OJeOprx">
+  Untitled</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+在上述的例子中，如果僅透過 `position: absolute;` 來做置中，我們會發現是元素的**左上角**會被置中，而不是元素的**中心點**被置中。  
+這時後透過 `transform: translate(-50%, -50%);`，使元素向左及向右各移動自身寬度的一半，就可以達到元素的中心點被置中的效果。  
+這就是 `transform` 的一個常見應用。
+
+## `transform` 的大家族
+`transform` 當然不只有 `translate` 一個方法，還有非常多的方法可以讓我們對元素進行變形，我做了一個簡表：
+| 方法           | 簡介                                                     | 簡單範例代碼                                          |
+| -------------- | -------------------------------------------------------- | ---------------------------------------------------- |
+| `translate`    | 將元素在水平和垂直方向上移動。                            | `transform: translate(50px, 60px);`                 |
+| `translateX`   | 只在水平方向 (X 軸) 上移動元素。                          | `transform: translateX(50px);`                       |
+| `translateY`   | 只在垂直方向 (Y 軸) 上移動元素。                          | `transform: translateY(60px);`                      |
+| `scale`        | 根據提供的比例縮放元素。                                 | `transform: scale(1.5, 0.75);`                          |
+| `scaleX`       | 只在水平方向縮放元素。                                    | `transform: scaleX(1.5);`                            |
+| `scaleY`       | 只在垂直方向縮放元素。                                    | `transform: scaleY(0.75);`                              |
+| `rotate`       | 以指定角度旋轉元素。                                      | `transform: rotate(15deg);`                          |
+| `skew`         | 根據提供的角度傾斜元素，形成一個平行四邊形的效果。        | `transform: skew(15deg, 30deg);`                     |
+| `skewX`        | 只在水平方向傾斜元素。                                    | `transform: skewX(15deg);`                           |
+| `skewY`        | 只在垂直方向傾斜元素。                                    | `transform: skewY(30deg);`                           |
+| `matrix`       | 等同 `matrix(scaleX, skewY, skewX, scaleY, translateX, translateY)`，但須要把角度轉成弧度 | `transform: matrix(1.5, 0.5, 0.3, 0.75, 50px, 60px);`   |
+| `perspective`  | 以三維視角透視的方式看元素，使其有遠近的深度感。          | `transform: perspective(100px) rotateX(30deg);`     |
+| `rotateX`      | 繞 X 軸旋轉元素 (3D 旋轉)。                              | `transform: rotateX(60deg);`                         |
+| `rotateY`      | 繞 Y 軸旋轉元素 (3D 旋轉)。                              | `transform: rotateY(60deg);`                         |
+| `rotateZ`      | 繞 Z 軸旋轉元素 (與 `rotate` 一樣，3D 旋轉)。             | `transform: rotateZ(15deg);`                         |
+| `translateZ`   | 在 Z 軸上移動元素 (3D 轉換)，搭配 `rotateX` 跟 `rotateY` 較看得出效果。      | `transform: translateZ(100px);`        |
+| `scaleZ`       | 只在 Z 軸縮放元素 (3D 轉換) 。                            | `transform: scaleZ(2);`                              |
+| `skewZ`        | 繞 Z 軸傾斜元素 (3D 轉換) 。                              | `transform: skewZ(10deg);`                           |
+
+<iframe width="100%" height="600" title="day 2 - transform_method" src="https://codepen.io/ChungYingHo/embed/gONXWvj?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/gONXWvj">
+  day 2 - transform_method</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## `transition` 又是什麼？
+如果你夠細心，你會發現 `transform` 的變形是在瞬間完成的，這樣的效果有時候會讓人感到突兀，這時候就可以使用 `transition` 來讓變形的過程變得平滑。  
+基本的 `transition` 寫法如下：
+```css
+.element {
+ transition: property duration timing-function delay;
+}
+```
+- `property`：指定要變化的 CSS 屬性，例如 `transform`。
+- `duration`：指定變化的時間，例如 `1s`。
+- `timing-function`：指定變化的速度曲線，例如 `ease-in-out`。
+- `delay`：指定變化的延遲時間，例如 `2s`。
+
+現在來看個實際例子，在這個例子中，當滑鼠懸停在元素上時，元素的寬度會從 100px 變成 200px，並且會在 1 秒內完成，且會有 2 秒的延遲時間：
+```css
+.element {
+ width: 100px;
+ height: 100px;
+ background-color: red;
+ transition: width 1s ease-in-out 2s;
+}
+
+.element:hover {
+ width: 200px;
+}
+```
+<iframe width="100%" height="600" title="day 2 - transition" src="https://codepen.io/ChungYingHo/embed/poXdPxo?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/poXdPxo">
+  day 2 - transition</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## Reference
+1. [W3 schools - 2D Transform](https://www.w3schools.com/css/css3_2dtransforms.asp)
+2. [W3 schools - 3D Transform](https://www.w3schools.com/css/css3_3dtransforms.asp)
+3. [W3 schools - Transitions](https://www.w3schools.com/css/css3_transitions.asp)
