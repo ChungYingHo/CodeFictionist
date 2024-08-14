@@ -1,0 +1,72 @@
+---
+title: Day 03 - 複合動畫
+---
+第一天我們講了構成 CSS 動畫的兩個要素：`@keyframes` 與 `animation`。第二天我們探討了如何使用 `transform` 對元素做變形。  
+我們在簡短來複習一下：
+ - `@keyframes` 與 `animation` 負責控制動畫的**時間**與**進度**。
+- `transform` 負責控制元素的變形，包括旋轉、縮放、移動和傾斜等效果。
+
+基本上來說，`animation` + `transform` 的組合可以創造出目前大部分網站上看得到的動畫效果。之後的章節也會有更多使用到他們的地方。  
+那今天的主題就是把前兩天探討的內容結合起來，創造一個簡單的複合式動畫效果。  
+我們可以先來看 code：
+```html
+<div class="container">
+  <p>2024 iT 鐵人賽</p>
+</div>
+```
+```CSS
+.container {
+ border: black dashed;
+ display: flex;
+ justify-content: center;
+ padding: 50px 0;
+ font-family: Arial, sans-serif;
+}
+
+p {
+ font-size: 24px;
+ color: #333;
+ opacity: 0;
+ animation: fadeZoomInOut 6s ease-in-out infinite;
+}
+
+@keyframes fadeZoomInOut {
+ 0%,
+ 100% {
+  opacity: 0;
+  transform: scale(0.5) rotate(0deg);
+ }
+ 50% {
+  opacity: 1;
+  transform: scale(2) rotate(360deg);
+  color: #b0e0e6;
+ }
+}
+```
+
+從上面的 CSS 當中，你是否能從裡面的動畫與變形規則想像出這個動畫的樣子呢？  
+我們接下來解析上述的 code 做了什麼事。
+
+---
+
+### `animation`
+這裡的 `animation` 應用了一個叫做 `fadeZoomInOut` 的關鍵影格。  
+且我們規定了這個動畫的總執行時間為 6 秒，並且使用 `ease-in-out` (緩慢開始，中間加速，然後緩慢結束) 的時間函數。  
+最後我們規定這個動畫要無限循環。
+
+### `@keyframes` 與 `transform`
+這裡我們用 `@keyframes` 定義了一個 `fadeZoomInOut` 的關鍵影格，裡面又拆成了三個時間點：0%、50%、100%。  
+在 0% 與 100% 的時間點，我們規定了元素的透明度為 0，且元素的大小為原來的一半，旋轉角度為 0 度。  
+在 50% 的時間點，我們規定了元素的透明度為 1 (就是正常顏色啦)，且元素的大小為原來的兩倍，旋轉角度為 360 度。
+
+綜上所述，我們可以想像一下，這個動畫會是這樣的：  
+`2024 iT 鐵人賽` 這段文字會重複執行一段 6 秒的動畫。在前 3 秒，文字會慢慢變大出現 (`opacity` 與 `scale`) 且由黑色變成粉藍色 (`color`)，然後旋轉 360 度 (`rotate`)。接著在後 3 秒，文字又會慢慢變小消失 (`opacity` 與 `scale`) 且變回黑色 (`color`)，然後也是旋轉 360 度 (`rotate`)。
+
+這樣，我們就完成一個簡單的複合動畫效果了！  
+是說這個效果看起來好老...:scream:
+
+<iframe height="600" width="100%" title="day 03 - animation_transform" src="https://codepen.io/ChungYingHo/embed/QWXOrJr?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/QWXOrJr">
+  day 03 - animation_transform</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
