@@ -1,0 +1,53 @@
+---
+title: Day 04 - animation vs transition
+---
+
+今天的主題是稍微來解個惑。什麼疑惑呢？  
+在前面的文章中，說過：  
+> `@keyframes` 與 `animation` 負責控制動畫的時間與進度。
+
+但我們在第二天的 CSS 變形基礎中有談到一個 CSS 屬性 `transition`，足夠細心你會發現他的語法跟 `animation` 幾乎完全一致。  
+所以 `transition` 跟 `animation` 到底有什麼差別呢？
+
+## `transition` vs `animation`
+其實最簡單的差別在於 `transition` 接受的屬性遠比 `animation` 少。  
+從前面文章可以知道 `transition` 可以調控的只有：
+- `property`
+- `duration`
+- `timing-function`
+- `delay`
+而 `animation` 則可以多控制：
+- `iteration-count`
+- `direction`
+- `play-state`
+- `fill-mode`
+
+(不懂上面屬性在幹嘛的可以飛回去看看前面的文章)  
+`transition` 跟 `animation` 比起來就像個先天不足的小孩，天生就比它的手足 `animation` 少了一些功能。  
+所以說既生瑜何生亮呢？  
+然而實際情況是，他們根本就不是在同一個賽場上。
+
+先說結論：  
+**`transition` 適合作為使用者與元素互動的過度效果，而 `animation` 則適合做網頁中常駐的動畫。**
+
+我們拆成幾個項目來看造成他們彼此之間差異的原因。
+
+### 複雜度與可控性
+基於上面提到 `transition` 天生比 `animation` 少了一些屬性，這也就意味著 `transition` 的可控性比 `animation` 低。  
+它不能控制動畫的播放次數、方向、播放狀態，也無法如 `animation` 一樣透過 `@keyframes` 來細化控制動畫的進度。
+
+### 觸發方式
+`transition` 是被動的，這意味著它只有在某些事件觸發時才會執行。  
+比如說 `:hover`、`focus`、`active` 等等。
+
+而 `animation` 的觸發則不需要特定的觸發事件。它可以自動或根據條件開始，並通過 `@keyframes` 來定義動畫的多個階段。
+
+### 重複性
+因為觸發方式的不同，`transition` 通常只會執行一次，而 `animation` 則可以通過 `iteration-count` 來控制重複次數。
+
+## 結語
+沒想到吧，今天有結語 ~  
+誒好今天沒有 code 範例，想看 `animation` 跟 `transition` 的範例可以回去看看前面的文章。  
+但總之，今天開這個主題是想探討 `transition` 跟 `animation` 這兩個長得極為相似的 CSS 屬性他們之間的差異。  
+現在我們至少有一個結論：  
+> `transition` 適合作為使用者與元素互動的過度效果，`animation` 適合做網頁中常駐的動畫。
