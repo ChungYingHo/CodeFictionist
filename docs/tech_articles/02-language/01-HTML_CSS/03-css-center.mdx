@@ -2,7 +2,7 @@
 title: CSS - 元素置中
 tags: [css, center]
 ---
-<iframe height="600" width="800" title="[CSS] - 元素置中法" src="https://codepen.io/ChungYingHo/embed/xxNVqpa?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+<iframe height="600" width="100%" title="[CSS] - 元素置中法" src="https://codepen.io/ChungYingHo/embed/xxNVqpa?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/ChungYingHo/pen/xxNVqpa">
   [CSS] - 元素置中法</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
   on <a href="https://codepen.io">CodePen</a>.
@@ -21,34 +21,34 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 ## 前置作業
 ```html
 <div class="parent flex">
-	<div></div>
+ <div></div>
 </div>
 
 <div class="parent grid">
-	<div></div>
+ <div></div>
 </div>
 
 <div class="parent margin">
-	<div></div>
+ <div></div>
 </div>
 
 <div class="parent position">
-	<div></div>
+ <div></div>
 </div>
 ```
 ```css
 .parent {
-	border: black solid 3px;
-	width: 20vw;
-	aspect-ratio: 1;
+ border: black solid 3px;
+ width: 20vw;
+ aspect-ratio: 1;
 
-	div {
-		border: red solid 2px;
-		width: 5vw;
-		aspect-ratio: 1;
-		background-color: red;
-		border-radius: 50%;
-	}
+ div {
+  border: red solid 2px;
+  width: 5vw;
+  aspect-ratio: 1;
+  background-color: red;
+  border-radius: 50%;
+ }
 }
 ```
 
@@ -56,9 +56,9 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 很基本的用法，這裡用 `align-items: center;` 和 `justify-content: center;` 來置中。
 ```css
 .flex {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+ display: flex;
+ align-items: center;
+ justify-content: center;
 }
 ```
 
@@ -66,8 +66,8 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 這裡用 `place-items: center;` 來置中。
 ```css
 .grid {
-	display: grid;
-	place-items: center;
+ display: grid;
+ place-items: center;
 }
 ```
 
@@ -75,11 +75,11 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 因為 `margin: auto;` 會將元素水平置中，所以這裡用 `display: flex;` 來垂直置中。
 ```css
 .margin {
-	display: flex;
+ display: flex;
 
-	div {
-		margin: auto;
-	}
+ div {
+  margin: auto;
+ }
 }
 ```
 
@@ -87,13 +87,13 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 這裡用 `position: relative;` 和 `position: absolute;` 來置中。
 ```css
 .position {
-	position: relative;
+ position: relative;
 
-	div {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-	}
+ div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+ }
 }
 ```

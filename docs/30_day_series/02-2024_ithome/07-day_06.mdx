@@ -17,11 +17,6 @@ title: Day 06 - 多重背景
 .section1 {
  background: linear-gradient(to bottom, white, pink);
 }
-
-/* 範例2: 背景色左上白右下粉紅 */
-.section2 {
- background: linear-gradient(to bottom right, white, pink);
-}
 ```
 
 ![漸層色背景](./assets/day06_bg_01.jpg)
@@ -77,7 +72,8 @@ title: Day 06 - 多重背景
 以我下面例子來說，我第一個 `url` 放的是我部落格的 logo，第二個 `url` 放的是剛剛琉璃光苑的圖片，透過這樣排序，就做出一個 logo 在上面的背景圖了。
 ```css
 .section5 {
- background: url("https://codefictionist.com/assets/images/logo-white-5d1024ae24f7dd517ec2750931e42d82.png") no-repeat right bottom / cover,
+ background: 
+ url("https://codefictionist.com/assets/images/logo-white-5d1024ae24f7dd517ec2750931e42d82.png") no-repeat right bottom / cover,
  url("https://i.postimg.cc/bJs0ZYPS/DSC-1027.jpg") no-repeat center center / cover;
 }
 ```

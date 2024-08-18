@@ -1,0 +1,40 @@
+---
+title: Day 08 - 圖片懸停縮放效果
+---
+
+相信你有實在逛一些網站時，尤其那種電商平台，你可能會注意到有一些網站的設計是當你滑鼠懸停在圖片上時圖片會有一個放大的效果，讓你可以明確知道你正在關注哪項商品，而且也增加了一些互動性。  
+這樣的效果其實非常容易實現，主要就是透過我們第二天提到的 CSS 變形，透過 `transform` 跟 `transition` 來達成。
+
+## 圖片懸停縮放效果
+我們直接來看範例：
+```html
+<div class="container">
+ <div class="image-wrapper">
+  <img src="https://i.postimg.cc/bJs0ZYPS/DSC-1027.jpg" alt="Sample Image">
+ </div>
+</div>
+```
+```css
+.image-wrapper img {
+ transition: transform 0.3s ease-in-out;
+}
+
+.image-wrapper:hover img {
+ transform: scale(1.2);
+}
+```
+
+<iframe height="600" width="100%" title="day 08 - hover_img" src="https://codepen.io/ChungYingHo/embed/dyBJBrq?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/dyBJBrq">
+  day 08 - hover_img</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+解釋一下上面發生什麼事：  
+1. `transition: transform 0.3s ease-in-out;`：這行 CSS 代表當圖片的 `transform` 屬性發生變化時，會有 0.3 秒的過渡效果，並且是以 `ease-in-out` 的方式變化。
+2. `transform: scale(1.2);`：這行 CSS 代表當滑鼠懸停在圖片上時，圖片會放大 1.2 倍。
+
+## 結語
+其實就是廢話啦，一旦從一些基礎理論進到實作，其實很多東西寫成文章不過就寥寥幾行，只是平常有沒有想到這樣應用而已。  
+打這個結語其實就是來水字數的 :sweat_smile:  
+反正之後應該會慢慢都變這種簡短風格，畢竟有些東西真的實際做起來真的很簡單。
