@@ -1,0 +1,61 @@
+---
+title: Day 09 - 漸變背景動畫
+---
+
+什麼是漸變背景動畫？  
+我們乾脆直接先來看 CodePen 的範例效果：
+
+<iframe height="600" width="100%" title="day 09 - bg_gradient" src="https://codepen.io/ChungYingHo/embed/dyBddLN?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/dyBddLN">
+  day 09 - bg_gradient</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+可以從這個範例中看到，背景從粉紅、粉黃及粉綠三種顏色之間進行漸變，呈現一種網頁背景色彩動態變化的活潑效果。  
+這個效果是透過我們 **Day 06 - 多重背景** 所學的漸層背景加上 **Day 01 - CSS 動畫基礎** 所學的 `@keyframes` 動畫技巧來實現的。  
+我們先來看 code：
+
+```html
+<div class="gradient-bg">
+ 漸變背景動畫
+</div>
+```
+
+```css
+.gradient-bg {
+  /* 省略其它 CSS 設定 */
+ background: linear-gradient(
+  120deg,
+  #a8e6cf, /* 粉綠 */
+  #ffd3b6, /* 粉黃 */
+  #ffaaa5  /* 粉紅 */
+ );
+ background-size: 300% 300%;
+ animation: gradientAnimation 5s ease infinite;
+}
+
+/* 定義漸變動畫 */
+@keyframes gradientAnimation {
+ 0% {
+  background-position: 0% 50%;
+ }
+ 50% {
+  background-position: 100% 50%;
+ }
+ 100% {
+  background-position: 0% 50%;
+ }
+}
+```
+
+從上面的 code 可以看到製作一個這樣的漸變背景動畫，有三個關鍵點：`background`、`background-size` 及 `@keyframes`+`animation`。  
+我們來解析上述這三個關鍵點怎麼運作製作出這樣的效果：
+1. `background: linear-gradient(120deg, #a8e6cf, #ffd3b6,, #ffaaa5);`：這行先建立一個往 120 度方向的漸層背景，由粉綠、粉黃及粉紅三種顏色組成。
+2. `background-size: 300% 300%;`：這行很重要，沒設定的話，`animation` 會沒有效果，你看到的就會跟 **Day 06 - 多重背景**裡介紹的靜態漸層背景一樣。這裡將背景的寬度和高度設置為元素大小的三倍是為了提供動畫足夠的空間來移動背景。
+3. `animation` 與 `@keyframes`：這裡先透過 `@keyframes` 定義了一個關鍵影格，透過 `background-position` 從 `0% 50%` 移動到 `100% 50%`，然後再回到 `0% 50%`，創造出一種左右移動的效果。最後透過 `animation` 將這個關鍵影格應用到背景上，並設定動畫時間為 5 秒，速度函數為 `ease`，無限循環。
+
+如此一來，就完成了這個漸變背景動畫效果啦！
+
+## 結語
+又是廢話，其實我覺得今天的關鍵是 `background-size`，沒有這個設定，`animation` 會形同虛設。  
+天知道我因為忘記這玩意兒搞這個搞多久...。
