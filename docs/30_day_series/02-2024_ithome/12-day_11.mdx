@@ -1,0 +1,41 @@
+---
+title: Day 11 - 漸變文字效果
+---
+
+今天又是水文的一天 (誤)。  
+我們大概從圖片的一些常用效果畢業了，從今天開始進到 CSS 的一些文字特效。  
+那說到文字，除了最好調整的字型、粗體系體、字重、字體大小以外，我們通常也很喜歡幫文字改上一些符合網站風格或是凸顯文字的顏色，那你知道文字的顏色其實也可以做漸層嗎？
+
+## 使用 `background-clip` 和 `linear-gradient` 創造漸變文字效果
+我們直接來看例子：
+```html
+<div class="gradient-text">
+ 漸變文字效果
+</div>
+```
+```css
+.gradient-text {
+    font-size: 4rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff6b6b, #f06595, #d5aaff, #5c5cfe);
+    background-clip: text;
+    -webkit-background-clip: text; /* For Safari and Chrome */
+    color: transparent;
+    text-align: center;
+    padding: 1rem;
+}
+```
+
+<iframe height="600" width="100%" title="day 12 - border_gradient" src="https://codepen.io/ChungYingHo/embed/ExBQrar?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/ExBQrar">
+  day 12 - border_gradient</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+其實 `background: linear-gradient` 算是老朋友了，畢竟我們前面幾篇文章一直都在用。  
+這裡的重點其實是 `background-clip: text`，這個屬性可以讓背景色只顯示在文字上，進而把 `linear-gradient` 的漸層效果顯示在文字上。
+
+## 結語
+對，你只要看到今天文章有結語，就表示今天文章內容太少，我來水一點字數了~。  
+但坦白說，平常大家在玩 web 的時候真的大都只玩單色的文字效果，`background-clip` 這個屬性其實很少被使用，但如果你想要一些特別的效果，比如今天的漸層文字，那你就得認識他。  
+是說，漸層文字，做出來看起來夠老啊...。
