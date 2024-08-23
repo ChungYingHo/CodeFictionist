@@ -1,0 +1,49 @@
+---
+title: Day 12 - 文字陰影動畫
+---
+
+昨天是從文字本身的顏色著手，關於文字本身的顏色或背景後面還會有文章來介紹，今天稍微來聊聊文字的陰影效果。  
+文字的陰影效果其實也是設計師和前端工程師常在文字上使用的效果，透過陰影的變化，可以讓文字看起來更立體、更有層次感，有時還能做出那種 bling-bling 的酷炫效果。
+
+如果你本身有涉獵一些 CSS，那對 `box-shadow` 應該不陌生，而 `text-shadow`，也就是今天的主角，其實就是應用在文字上的 `box-shadow`。  
+我們可以直接來看 code：
+```html
+<div class="shadow-text">
+ 文字陰影動畫
+</div>
+```
+```css
+.shadow-text {
+ font-size: 48px;
+ color: #ecf0f1;
+ text-shadow: 0px 0px 5px #e74c3c, 0px 0px 10px #e74c3c, 0px 0px 15px #e74c3c;
+ animation: shadow-move 3s infinite alternate;
+}
+
+@keyframes shadow-move {
+ 0% {
+  text-shadow: 0px 0px 5px #e74c3c, 0px 0px 10px #e74c3c, 0px 0px 15px #e74c3c;
+ }
+ 25% {
+  text-shadow: -10px -10px 15px #f39c12, 10px 10px 20px #d35400;
+ }
+ 50% {
+  text-shadow: -10px 10px 15px #27ae60, 10px -10px 20px #16a085;
+ }
+ 75% {
+  text-shadow: 10px -10px 15px #2980b9, -10px 10px 20px #8e44ad;
+ }
+ 100% {
+  text-shadow: 10px 10px 15px #e74c3c, -10px -10px 20px #c0392b;
+ }
+}
+```
+<iframe height="600" width="100%" title="day 12 - text_shadow" src="https://codepen.io/ChungYingHo/embed/poXVyPp?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/poXVyPp">
+  day 12 - text_shadow</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+關於 `text-shadow` 的使用，其實就是透過 `x`、`y`、`blur`、`color` 這四個參數來控制陰影的位置、模糊程度和顏色。而我們可以透過 `,` 來分隔不同的陰影效果，這樣就可以同時顯示多個陰影效果。  
+上面的例子其實就是在一開始先給定一個基本的陰影效果，然後透過 `@keyframes` 來控制陰影的變化，讓文字的陰影效果有動畫的效果。  
+我突然發現，這幾天的特效做起來都好老 XD。
