@@ -1,0 +1,65 @@
+---
+title: Day 14 - 打字機效果
+---
+
+今天這篇是促成我這次鐵人賽寫 30 天 CSS 的契機之一。  
+當初在 IG 上看到一些前端工程師分享的網站特效，其中就有打字機效果，超級酷，所以在某一次更新我自己的作品集時，就花了一點時間研究一下這個特效應用在我的作品集網頁上。  
+本來想說這個特效是否需要運用到 JavaScript，結果你只要對 CSS 的一些進階用法夠熟悉，比如說 `before`，再加上我們最一開始 day 1 就提到的 `animation`，就可以輕鬆做出打字機效果。  
+我們先直接來看 code：
+
+```html
+<div class="container">
+ 芝加哥打字機
+</div>
+```
+
+```css
+.container {
+ position: relative;
+}
+
+.container::before {
+ content: "";
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ background: #282c34;
+ left: 0;
+ animation: typewriter 4s steps(23) infinite, blink 1.5s steps(23) infinite;
+}
+
+@keyframes typewriter {
+ 40%,
+ 60% {
+  left: 100%;
+ }
+ 100% {
+  left: 0;
+ }
+}
+
+@keyframes blink {
+ from {
+  border-left: solid 1px #fff;
+ }
+ to {
+  border-left: solid 1px transparent;
+ }
+}
+```
+
+<iframe height="600" width="100%" title="day 14 - typewriter" src="https://codepen.io/ChungYingHo/embed/yLdjqQd?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/yLdjqQd">
+  day 14 - typewriter</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+其實可以看到玩打字機效果都是針對那個偽元素 `before` 來做的，具體來說上面的 code 解析是這樣的：
+1. 我們使用 `before` 來創造一個偽元素，背景色跟下層背景一樣，然後是完整覆蓋在父元素 (也就是文字區塊) 上。
+2. 我們定一了一個關鍵影格 `typewriter`，這個關鍵影格是讓這個偽元素從左邊 0% 的位置，移動到右邊 100% 的位置，然後再回到左邊 0% 的位置，這樣這個 `before` 就會在移動過程中慢慢顯示出文字。到這裡打字機效果完成一半。
+3. 我們再定義一個關鍵影格 `blink`，這個關鍵影格是讓這個偽元素的左邊邊框從白色變成透明，然後再變回白色，這樣就會有一個閃爍的效果。
+4. 最後我們在 `before` 上加上這兩個關鍵影格的動畫，這樣就完成了打字機效果。
+
+在這裡多介紹一個 `animation` 的 **animation-timing-function** 屬性，`steps()`。  
+`steps()` 可以用來創建類似於動畫中的逐格動畫效果，使過渡看起來像是由一個個離散的階段組成，而不是平滑過渡。這大概較常用於製作像素風格的動畫效果。  
+而這裡的 `steps(23)` 就是讓這個動畫分成 23 個階段，表示動畫會被分成 23 個等距的步驟。每一個步驟都是瞬間的，沒有中間過渡的效果。這樣的設置可以模擬打字機逐字出現的效果。
