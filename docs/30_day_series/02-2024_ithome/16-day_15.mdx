@@ -1,0 +1,44 @@
+---
+title: Day 15 - 壓縮文字效果
+---
+
+今天這個特效是我週末滑 IG 看到 [This.Web](https://www.instagram.com/p/C_AwpqYyKv7/?img_index=1) 在介紹文字跳約起來的特效，剛好我因為拿掉幾篇實作起來跟前面幾天很相似的主題正苦無替代，所以決定也練練如何讓文字「跳」起來。  
+啊不過 **This.Web** 在 IG 提供的範例真的太酷炫 ，還有用到一些 JavaScript，我這邊就只是好奇稍微摸摸，著重在 CSS 部分而已。  
+那我是這樣想的，**This.Web** 的文字跳躍其實是有**壓縮** + **彈起**的感覺，我們今天先來玩壓縮，明天再來玩彈起。
+
+## 壓縮文字效果
+其實文字壓下去的感覺本質上也是透過 `transform` 來達成，透過 `scale` 將文字從 Y 軸縮小但從 X 軸稍微放大就會讓文字看起來有點被壓扁的感覺。
+
+```html
+<div class="squish-text">
+ <span>壓</span>
+ <span>縮</span>
+ <span>彈</span>
+ <span>性</span>
+ <span>效</span>
+ <span>果</span>
+</div>
+```
+
+```css
+/* 一樣省略其它雜七雜八的設定 */
+.squish-text span {
+ transition: transform 0.5s cubic-bezier(0.25, 1.5, 0.5, 1);
+}
+
+.squish-text span:hover {
+ transform: scale(1.2, 0.8); /* 水平方向放大，垂直方向壓縮 */
+}
+```
+
+<iframe height="600" width="100%" title="day 15 - jump_text" src="https://codepen.io/ChungYingHo/embed/RwzyYbM?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/RwzyYbM">
+  day 15 - jump_text</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+嗯，大概就是這樣，`transform` 真好用。
+
+## 結語
+今天的結語不是廢話，是剛好 **This.Web** 在這篇 IG 貼文的後面有一段話我覺得很有道理，也是我鐵人賽連續寫 15 天 CSS 的心情：  
+> 很多看起來很炫的效果原理其實很簡單，重點反而是你的想像力
