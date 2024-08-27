@@ -1,0 +1,53 @@
+---
+title: Day 16 - 彈跳文字效果
+---
+
+昨天講了文字壓縮的效果，今天我們來講文字彈跳的效果。  
+其實也沒什麼大不了的，昨天的 code 抄一抄，改一下 `transform` 裡面的內容就好，嗯，很簡單吧 www。  
+所以我們直接來看 code (￣▽￣)ノ
+
+## 彈跳文字效果
+```html
+<div class="squish-text">
+ <span>壓</span>
+ <span>縮</span>
+ <span>文</span>
+ <span>字</span>
+ <span>效</span>
+ <span>果</span>
+</div>
+```
+
+```css
+.bounce-text {
+ font-size: 4rem;
+ font-weight: bold;
+ display: inline-block;
+ position: relative;
+}
+
+.bounce-text span {
+ display: inline-block;
+ position: relative;
+ transition: transform 0.3s cubic-bezier(0.25, 1.5, 0.5, 1);
+}
+
+.bounce-text span:hover {
+ transform: translateY(-20px) scale(1.1);
+}
+```
+
+<iframe height="600" width="100%" title="Untitled" src="https://codepen.io/ChungYingHo/embed/xxojaGq?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/xxojaGq">
+  Untitled</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+嗯，你看吧，就是改一下 `transform`，讓 `hover` 時文字上移並稍微放大，就有了彈跳的效果。(又是水文的一天~)
+
+## 補充
+這裡補充一個昨天忘記說的的東西：`cubic-bezier`！  
+`cubic-bezier` 是用來定義 CSS 動畫速度曲線的函數，透過四個控制點 `(x1, y1, x2, y2)` 來決定動畫的加速度和減速方式。  
+`x1` 和 `x2` 決定動畫進行時間的分布（橫軸），`y1` 和 `y2` 則決定動畫效果的速度曲線（縱軸），讓動畫效果更加自然或具有彈性。  
+像 `ease` 其實就是 `cubic-bezier(0.25, 0.1, 0.25, 1)`。  
+很難懂對吧？沒事，我也沒完全了解這玩意兒的真面目，我們先會用就好了 www。
