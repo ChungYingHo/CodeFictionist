@@ -1,0 +1,65 @@
+---
+title: Day 17 - 彈跳文字效果最終回
+---
+
+哈哈哈，在拆開這個特效水了兩天文後，今天要來把壓下去和彈起來的效果合併在一起，讓文字在滑鼠滑過時有壓下去又跳起來的感覺。  
+跟前兩天單純只用 `transition` 不同，今天我們要用到 `animation` 來實現這個效果，畢竟 `transition` 還是很難做到這種精細的控制。  
+先來看 code，其實變動的不多：
+
+```html
+<div class="bounce-text">
+  <span>這</span>
+  <span>是</span>
+  <span>一</span>
+  <span>個</span>
+  <span>彈</span>
+  <span>跳</span>
+  <span>的</span>
+  <span>示</span>
+  <span>範</span>
+</div>
+```
+
+```css
+.bounce-text {
+  font-size: 4rem;
+  font-weight: bold;
+  display: inline-block;
+  position: relative;
+}
+
+.bounce-text span {
+  display: inline-block;
+  position: relative;
+}
+
+.bounce-text span:hover {
+  animation: jump-text 1.5s 0s ease;
+}
+
+@keyframes jump-text {
+  0%, 100% {
+    transform: translateY(0) scale(1.1);
+  }
+  25%, 75% {
+    transform: translateY(0) scale(1.2, 0.8);
+  }
+  50% {
+    transform: translateY(-50px) scale(0.8, 1.2);
+  }
+}
+```
+
+<iframe height="600" width="100%" title="day 17 - jump_tex_3" src="https://codepen.io/ChungYingHo/embed/GRbGXqd?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/GRbGXqd">
+  day 17 - jump_tex_3</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+可以看到這個復合特效的關鍵是在 `@keyframes` 中針對 4 段不同的時間點設定不同的 `transform` 效果，讓文字在滑鼠滑過時有壓下去又跳起來的感覺：
+1. 0% 和 100% 時，文字保持原位，並稍微放大。
+2. 25% 和 75% 時，文字保持原位，寬度稍微變寬、高度稍微變矮，呈現微微壓扁的感覺。
+3. 50% 時，文字上移 50px，寬度稍微變窄、高度稍微變高，呈現彈起來的感覺。
+
+## Reference
+關於 `@keyframes` 裡的設定，我就直接照搬 [This.Web](https://www.instagram.com/p/C_AwpqYyKv7/?img_index=1) 的參數了。
