@@ -1,0 +1,97 @@
+---
+title: Day 18 - 文字爆炸特效
+---
+
+今天早上我密了一個前端工程師群組，說：誒，我今天鐵人賽少了一個主題誒，有沒有人有好點子可以分享一下？  
+一個當初在前公司帶過我的前輩給了我一個我從沒想過的回答：讓文字爆炸吧！  
+嗯，好，的確挺有趣的，所以就這樣今天的主題就這樣愉快地定了。
+
+是說，所謂文字爆炸特效，其實也只是讓文字在滑鼠點擊時四散開來，仔細想一下就是一個 `translate` + `rotate` 做成的簡單動畫罷了。  
+但為了營造那種爆炸四散的隨機性，今天引入用一點 JavaScript 來讓那個四散的的方向變得隨機。  
+同樣，先看 code 才好繼續說下去：
+
+```html
+<div class="explosion-container">
+ <span class="explosion-text">點擊這裡！</span>
+</div>
+```
+
+```css
+.explosion-container {
+ display: inline-block;
+ font-size: 40px;
+ cursor: pointer;
+ user-select: none;
+ position: relative;
+}
+
+.explosion-text {
+ display: inline-block;
+ position: relative;
+}
+
+.explosion-text span {
+ display: inline-block;
+ position: absolute;
+ top: 0;
+ left: 0;
+ opacity: 0;
+ transition: transform 0.6s ease-out, opacity 0.6s ease-out;
+}
+
+.explosion-text span.exploded {
+ opacity: 1;
+ transform: translate(calc(var(--x) * 1000px), calc(var(--y) * 1000px)) rotate(calc(var(--angle) * 360deg)) scale(0);
+}
+```
+
+```javascript
+document
+  .querySelector(".explosion-text")
+  .addEventListener("click", function () {
+    const text = this.textContent;
+    this.innerHTML = "";
+
+    // Create spans for each character
+    for (let i = 0; i < text.length; i++) {
+      const span = document.createElement("span");
+      span.textContent = text[i];
+      span.style.setProperty("--x", Math.random() - 0.5);
+      span.style.setProperty("--y", Math.random() - 0.5);
+      span.style.setProperty("--angle", Math.random());
+      this.appendChild(span);
+    }
+
+    requestAnimationFrame(() => {
+      this.querySelectorAll("span").forEach((span) => {
+        span.classList.add("exploded");
+      });
+    });
+
+    // Add reverting class after 1 seconds
+    setTimeout(() => {
+      this.classList.add("reverting");
+
+      setTimeout(() => {
+        // Clean up the reverting state
+        this.classList.remove("reverting");
+        this.innerHTML = text; // Restore original text
+      }, 600); // Match the duration of the transition
+    }, 1000); // 1 seconds delay
+  });
+```
+
+<iframe  height="600" width="100%" title="day 18 - explosion_text" src="https://codepen.io/ChungYingHo/embed/KKjBQwd?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/KKjBQwd">
+  day 18 - explosion_text</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+其實可以看到在 CSS 中，`.explosion-text span` 跟 `.explosion-text span.exploded` 這兩項選中的都是點擊事件觸發後由 JavaScript 動態生成的 `span` 以及 class。  
+交給 JavaScript 做只是因為我懶得像前幾天彈跳文字一樣一個字一個字敲 `span` 了，這樣寫真的比較快。  
+但那不是重點！
+
+上面的重點其實是在 `transform: translate(calc(var(--x) * 1000px), calc(var(--y) * 1000px)) rotate(calc(var(--angle) * 360deg)) scale(0);` 這行。  
+我們把 X 和 Y 軸的 `translate` (位移) 以及 `rotate` 都交給 JavaScript 來隨機生成數值，這樣就可以讓文字每次點擊時四散的方向都不一樣。  
+`scale(0)` 則是讓文字在四散時縮成 0，讓它看起來像是消失了。  
+(如果有人要問下面 `setTimeout` 在幹嘛，它其實只是我想讓文字在爆炸後在復原而已，這叫善後 www)
