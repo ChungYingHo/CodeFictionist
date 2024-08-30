@@ -1,0 +1,48 @@
+---
+title: Day 19 - 跑馬燈文字
+---
+
+今天是文字特效的最後一篇，明天開始要來做互動累的特效了。  
+那文字特效的最後一篇，我們用個簡單的跑馬燈文字來當作結尾吧。
+
+其實今天這項真的是反璞歸真，你要是再翻回我們 Day 1 的第一個動畫例子，記得那顆左右一直來回的藍色球球嗎？跑馬燈文字其實就是一樣的概念，只是把球球換成了文字而已。
+
+直接上 code：
+
+```html
+<div class="marquee">
+ <div class="marquee-content">
+  <span>2024 iThome 鐵人賽開賽啦 </span>
+  <span>iT 貓貓教其實只有一個人養貓</span>
+  <span>拿來水字數</span>
+  <span>第二段拿來水字數</span>
+  <span>1234567890</span>
+ </div>
+</div>
+```
+
+```css
+/* 省略其它 CSS */
+.marquee-content {
+ animation: marquee 15s linear infinite;
+}
+
+@keyframes marquee {
+ from {
+  transform: translateX(100%);
+ }
+ to {
+  transform: translateX(-100%);
+ }
+}
+```
+
+<iframe height="600" width="100%" title="day 19 - marquee_text" src="https://codepen.io/ChungYingHo/embed/rNEZONd?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/rNEZONd">
+  day 19 - marquee_text</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+從上面的 code 可以看到，我們只是讓文字在一個容器內不斷地從右到左移動而已。  
+你瞧，是不是夢回 Day 1 的那個動畫基礎教學？  
+我現在真的覺得 CSS 真是有趣的東西，只要想像力夠，可以用很多基本功做出很多有趣的效果。
