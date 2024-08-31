@@ -1,0 +1,74 @@
+---
+title: Day 20 - 懸停旋轉效果
+---
+
+這種 `hover` 時元素翻轉的效果其實通常是用在卡片上。  
+你已經有見過很多網站，通常是比較新一點的電商網站和一些藝術作品集，會看到他們在網頁上加入這個效果，讓使用者在滑鼠懸停時可以看到卡片的背面資訊。  
+其實依現在前端開發的情況來說，這種特效很多 UI framework 都有現成的可以用 (其實前面的幾乎所有特效都有 UI framework 可以裝 www)，但是我覺得會 UI framework 跟自己會做這種特效還是有差的，所以我們還是來自己做一個吧 ~
+
+## 懸停旋轉效果
+下面我們來做一張卡片，第一面是一張圖片，第二面是一段文字：
+
+```html
+<div class="card">
+ <div class="card-inner">
+  <div class="card-front">
+   <img src="https://i.postimg.cc/bJs0ZYPS/DSC-1027.jpg" alt="Card Image" />
+  </div>
+  <div class="card-back">
+   <h2>琉璃光苑</h2>
+   <p>日本京都郊區的景點</p>
+  </div>
+ </div>
+</div>
+```
+
+```css
+.card {
+ width: 40vw;
+ height: 60vh;
+ perspective: 1000px;
+}
+
+.card-inner {
+ width: 100%;
+ height: 100%;
+ position: relative;
+ transform-style: preserve-3d;
+ transition: transform 0.6s ease;
+}
+
+.card:hover .card-inner {
+ transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+ width: 100%;
+ height: 100%;
+ position: absolute;
+ top: 0;
+ left: 0;
+ backface-visibility: hidden;
+ border-radius: 10px;
+ overflow: hidden;
+}
+
+.card-back {
+ /* 省略其它樣式設定 */
+ transform: rotateY(180deg);
+}
+```
+
+<iframe height="600" width="100%" title="day20 - hover_rotate_card" src="https://codepen.io/ChungYingHo/embed/KKjxyav?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/KKjxyav">
+  day20 - hover_rotate_card</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+你會發現今天的 CSS 設定有點多，主要是這樣的一個翻轉效果其實稍微涉及了一點 3D 的應用，看看我們 Day 5 講 3D 也是花了一些篇幅。  
+可以將上面的 code 拆成幾個部分：
+1. `.card` 是整張卡片容器，這裡給他一個 `perspective` 來設定 3D 空間的深度感。(你可以拿掉試試，翻轉會變很不自然)
+2. `.card-inner` 是卡片的內容，這裡設定了 `transform-style: preserve-3d` 來保持 3D 空間的一致性 (想複習的回去看 Day 5)，並且設定了 `transition` 來簡單地做一個翻轉的動畫。
+3. `.card:hover .card-inner` 是當滑鼠懸停在卡片上時，卡片內容會翻轉 180 度。(第二點的 `transition` 就是在這裡發揮作用)
+4. `.card-front` 和 `.card-back` 分別是卡片的正反面，這裡設定了 `backface-visibility: hidden` 來隱藏背面的內容。
+5. 這點很重要，你看到 `.card-back` 單獨被抓出來設定了 `transform: rotateY(180deg)`，你可以先拿掉這條設定試試，你會發現卡片背面在預設時就蓋住了正面的內容，這是 HTML 與 CSS 順序性的問題。所以我們想要背面的內容一開始就不顯示 (即在卡片的背面)，我們在一開始預設就要讓它翻轉 180 度。
