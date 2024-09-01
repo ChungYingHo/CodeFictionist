@@ -1,0 +1,73 @@
+---
+title: Day 21 - 平滑滾動效果
+---
+
+平滑滾動效果，乍聽之下應該會有所疑惑：平滑滾動？難道我平常 `scroll` 的時侯那個滾拉條的動作不平滑嗎？  
+嗯，好，這裡的平滑滾動其實是指 `scroll-behavior: smooth` 這個 CSS 屬性，那他可以幹嘛？我們要先來解釋一下 HTML 中 `<a>` tag 的一些行為。
+
+我們都知道 `<a>` tag 是 HTML 拿來做超連結的，其中一種用法是把 `href` 設為頁面上一個元素的 `id`，這樣點擊這個綁了 `id` 的超連結時，頁面就會自動**閃現**到這個元素的位置。  
+很方便食用，但你應該也注意到我用的詞是**閃現**，對，就是咻一下，那個元素的位置突然出現在你眼前。  
+其實這種體驗非常突兀，所以有了 `scroll-behavior: smooth` 這個 CSS 屬性後，當你點擊這個超連結時，頁面就會**平滑**地滾動到這個元素的位置，而不是瞬間出現。  
+
+如果這樣講你很難理解，我們可以直接來看例子：
+
+<iframe height="600" width="100%" title="Untitled" src="https://codepen.io/ChungYingHo/embed/vYqzWdO?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/vYqzWdO">
+  Untitled</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+```html
+<nav>
+ <a href="#section1">Section 1</a>
+ <a href="#section2">Section 2</a>
+ <a href="#section3">Section 3</a>
+</nav>
+
+<section id="section1">
+ <h1>Section 1</h1>
+ <a href="#section2">Scroll to Section 2</a>
+</section>
+
+<section id="section2">
+ <h1>Section 2</h1>
+ <a href="#section3">Scroll to Section 3</a>
+</section>
+
+<section id="section3">
+ <h1>Section 3</h1>
+ <a href="#section1">Back to Section 1</a>
+</section>
+```
+
+```css
+html {
+ scroll-behavior: smooth;
+}
+
+nav {
+ position: fixed;
+ top: 0;
+ width: 100%;
+ background-color: #282c34;
+ padding: 10px;
+ text-align: center;
+}
+
+nav a,
+section a {
+ margin: 0 15px;
+ color: white;
+ text-decoration: none;
+ font-size: 18px;
+}
+
+section {
+ height: 100vh;
+ padding: 50px;
+ background-color: #f0f0f0;
+}
+```
+
+其實上面的程式碼滿水的，真正的關鍵點只有針對 `html` 標籤設定 `scroll-behavior: smooth;` 而已。  
+簡簡單單一行就可以達到平滑滾動的效果。
