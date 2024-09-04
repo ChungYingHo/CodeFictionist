@@ -1,0 +1,53 @@
+---
+title: Day 24 - 按鈕彈跳效果
+---
+
+今天這個效果我覺得可以說是這 24 天來最常在實務上看到的一個效果，常見到 Tailwind CSS 都為它特別設計了一個 class。啊對，這就是按鈕的彈跳效果。  
+這個效果通常會在一些形象網站或是部落格的首頁上看到。當使用者看到一顆按鈕在那邊跳來跳去，通常都會不由自主地想要點它。  
+這個效果基本上要的就是吸引使用者去關注、點擊，進而達到導覽的效果。
+
+要達成這個效果其實你只要會 Day 1 的動畫基礎就 ok 了，其實我們在這 20 多天來一直在重複地練習用 `@keyframes` + `animation` 創造動畫效果，當中又最常用到 `transform` 來創造位移。  
+按鈕彈跳效果說白了就是一個按鈕在原本的位置上做上下位移的動畫。
+
+一樣先上 code：
+
+```html
+<button>
+ <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 10L12 16L18 10" stroke="currentColor" strokeWidth="2" fill="none" />
+ </svg>
+</button>
+```
+
+```css
+button {
+ border-radius: 50%;
+ padding: 0.5rem;
+ animation: bounce 1s infinite;
+ cursor: pointer;
+}
+
+@keyframes bounce {
+ 0%,
+ 100% {
+  transform: translateY(-25%);
+  animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+ }
+ 50% {
+  transform: translateY(0);
+  animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+ }
+}
+```
+
+<iframe height="600" width="100%" title="day 24 - bounce_btn" src="https://codepen.io/ChungYingHo/embed/LYKXGNw?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/LYKXGNw">
+  day 24 - bounce_btn</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+這個 CSS 其實就是從 Tailwind CSS 的官網那裡抄來的 www
+基本上該解釋的都在最前面解釋過了，這邊就不再重複了。
+
+## Reference
+1. [Tailwind CSS - animation](https://tailwindcss.com/docs/animation)
