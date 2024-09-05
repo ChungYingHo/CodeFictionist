@@ -1,0 +1,40 @@
+---
+title: 元素懸停浮空效果
+---
+
+今天這個主題又是划水的一個主題 www  
+我們之前曾經在 Day 8 介紹過**圖片懸停縮放效果**，今天這個其實也是有異曲同工之妙，也是透過 `hover` 來觸發一個動畫效果。  
+在 Day 8，是在 `hover` 時讓元素中的圖片透過 `scale` 來放大，今天這個效果就是真對元素本身透過 `translate` 來做 Y 軸的位移，配合適當的 `box-shadow` 來創造一個懸浮的視覺效果。
+
+還是先放 code：
+
+```html
+<div class="card">
+ Here is a card
+</div>
+```
+
+```css
+.card {
+ background-color: #fff;
+ padding: 3rem 4rem;
+ border-radius: 10px;
+ transition: transform 0.3s ease, box-shadow 0.3s ease;
+ box-shadow: 0 6px 10px rgba(255, 255, 255, 0.1);
+}
+
+.card:hover {
+ transform: translateY(-10px);
+ box-shadow: 0 12px 20px rgba(255, 255, 255, 0.3);
+}
+```
+
+<iframe height="600" width="100%" title="day 25 - hover_float" src="https://codepen.io/ChungYingHo/embed/Rwzqroa?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/Rwzqroa">
+  day 25 - hover_float</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+關於 `translateY` 如何做位移，就不贅述了，我們在前面真的一直很常在用這個屬性。  
+關於這個效果其實是透過 `box-shadow` 來在元素向上位移時在卡片下方增加一點陰影，模擬一種光打下來產生影子的效果，來讓我們的視覺以為這個元素是浮空的。  
+(啊我好像陰影沒調很好啦，大家不要太介意 XD)
