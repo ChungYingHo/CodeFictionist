@@ -1,0 +1,66 @@
+---
+title: Day 26 - 元素區塊捲動效果
+---
+
+先來解釋一下這個效果到底是什麼。  
+我們在 Day 21 介紹的平滑滾動效果是指當使用者點擊頁面上的錨點連結時，瀏覽器會自動滾動到目標位置，並且會有一個平滑的過渡效果。  
+而今天要講的元素區塊捲動效果則是當使用者**輕輕**滾一下滾輪時，瀏覽器自動捲到下一個元素區塊，而且一樣會有一個平滑的過渡效果。
+
+在一般情況下，這種效果通常又叫整頁式滾動 (fullpage scroll)，網路上有比如 [fullPage.js](https://alvarotrigo.com/fullPage/) 這樣的套件來實現這個效果。  
+但其實再不裝套件的情況下，我們可以透過 `scroll-snap-type` 跟 `scroll-snap-align` 這兩個 CSS 屬性來實現這個效果。  
+當然這兩個屬性不只可以做 fullpage scroll，也可以用在一般的區塊捲動效果上。
+
+## 元素區塊捲動效果
+一樣先來看 code：
+
+```html
+<div class="container">
+ <div class="section">Section 1</div>
+ <div class="section">Section 2</div>
+ <div class="section">Section 3</div>
+</div>
+```
+
+```css
+.container {
+ width: 100vw;
+ height: 100vh;
+ overflow-y: scroll;
+ scroll-snap-type: y mandatory;
+}
+
+.section {
+ width: 100%;
+ height: 100%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 5rem;
+ background-color: lightpink;
+ scroll-snap-align: center;
+}
+
+.section:nth-of-type(2) {
+ background-color: lightblue;
+}
+
+.section:nth-of-type(3) {
+ background-color: lightyellow;
+}
+```
+
+<iframe height="600" width="100%" title="day 26 - smooth_scroll" src="https://codepen.io/ChungYingHo/embed/XWLogdN?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/XWLogdN">
+  day 26 - smooth_scroll</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+在這裡有幾個重點：
+1. `.container` 除了要設定 `scroll-snap-type: y mandatory;` 之外，也要給予**明確的寬高**並設定 `overflow-y: scroll;`，這樣才能讓捲動效果正確運作。
+2. `.section` 要設定 `scroll-snap-align: center;`，這樣當捲動時，會自動對齊到中心。(也可以設定到 start 或 end，看你個人需求)
+
+關於 `scroll-snap-type` 屬性，有兩個值可以設定，分別是**軸向**和**強制性** (snap strictness)，我們這裡設定的是 `y mandatory`，代表著當使用者滾動滾輪時，會強制捲動到下一個元素區塊。  
+而子元素的 `scroll-snap-align` 屬性則是用來設定捲動時的對齊方式，這裡我們設定的是 `center`，代表著捲動時會對齊到中心。
+
+## Reference
+1. [MDN - scroll-snap-type](https://developer.mozilla.org/en-US/docs/Web/CSS/scroll-snap-type)
