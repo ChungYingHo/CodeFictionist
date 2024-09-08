@@ -1,0 +1,123 @@
+---
+title: Day 28 - 元素拖拉移動
+---
+
+嚴格來講，這個效果其實不干 CSS 的事，它其實是靠 HTML5 的 `draggable` 屬性和 JavaScript 來實現的。  
+但因為已經 28 天了，我實在也想不出有什麼常用的 CSS 特效了，乾脆就放一下這種好像也稍微常用到的一些網頁互動效果。  
+(OS: 本來今天安排是做**分隔線**的，但那個寫出來感覺會是我 28 天來最水文的一次 www)
+
+## 先看看 code
+```html
+<div class="container" id="containerA">
+ <h2>Container A</h2>
+ <div class="draggable" id="draggable" draggable="true">
+  拖拉我！
+ </div>
+</div>
+
+<div class="container" id="containerB">
+ <h2>Container B</h2>
+</div>
+```
+
+```css
+.container {
+ width: 300px;
+ height: 300px;
+ border: 2px dashed #ccc;
+ display: inline-block;
+ vertical-align: top;
+ margin-right: 20px;
+ text-align: center;
+ padding-top: 20px;
+}
+
+.draggable {
+ width: 150px;
+ height: 150px;
+ background-color: #8e44ad; /* 紫色 */
+ color: white;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ border-radius: 10px;
+ cursor: grab;
+ user-select: none;
+}
+
+.draggable:active {
+ cursor: grabbing;
+}
+```
+
+```javascript
+const draggable = document.getElementById("draggable");
+const containerA = document.getElementById("containerA");
+const containerB = document.getElementById("containerB");
+
+// 當元素開始被拖動
+draggable.addEventListener("dragstart", (e) => {
+ e.dataTransfer.setData("text/plain", e.target.id); // 傳遞被拖動元素的ID
+});
+
+// 許可容器A和容器B都可以放置元素
+function allowDrop(event) {
+ event.preventDefault(); // 必須阻止預設行為來允許放置
+}
+
+// 當元素被放置
+function handleDrop(event, targetContainer) {
+ event.preventDefault();
+ const draggableId = event.dataTransfer.getData("text");
+ const draggableElement = document.getElementById(draggableId);
+ targetContainer.appendChild(draggableElement); // 將元素放到目標容器
+}
+
+// 允許 A 和 B 容器接受拖放
+containerA.addEventListener("dragover", allowDrop);
+containerB.addEventListener("dragover", allowDrop);
+
+// 在 A 和 B 容器上放置元素
+containerA.addEventListener("drop", (e) => handleDrop(e, containerA));
+containerB.addEventListener("drop", (e) => handleDrop(e, containerB));
+```
+
+<iframe height="600" width="100%" title="Untitled" src="https://codepen.io/ChungYingHo/embed/mdZaNje?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/mdZaNje">
+  Untitled</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+## 解析
+我們從 HTML 開始一項一項來解析這個拖拉移動效果的關鍵。
+
+### HTML
+在 HTML 中，我們必須要給預計要拖拉的元素加上 `draggable="true"` 屬性，這樣瀏覽器才會知道這個元素是可以被拖拉的。
+
+### CSS
+雖說 CSS 不是這個效果的主要設定，但你仔細觀察會發現我在預計被拖拉的元素 `.draggable` 上設定了 `user-select: none;`，這是為了避免使用者選取時選到這個元素內部的文字而影響拖拉效果。
+
+### JavaScript
+JavaScript 是完成這個效果的關鍵，我們再把 JavaScript 的部分分成幾個部分來解析：
+
+1. **`dragstart` 事件**
+   - **觸發時機**：當元素開始被拖動時。
+   - **功能**：使用 `e.dataTransfer.setData("text/plain", e.target.id);` 將被拖動元素的 ID 存儲到拖動操作的數據傳輸對象中，以便在放置操作中檢索這個 ID。
+
+2. **`dragover` 事件**
+   - **觸發時機**：當拖動元素在目標容器上方時。
+   - **功能**：必須使用 `event.preventDefault();` 來阻止預設行為，允許放置操作。瀏覽器的預設行為通常是不允許拖放操作的，因此需要顯式阻止預設行為。
+
+3. **`drop` 事件**
+   - **觸發時機**：當拖動元素被放置到目標容器中時。
+   - **功能**：
+     - 使用 `event.dataTransfer.getData("text");` 來獲取拖動元素的 ID。
+     - 使用 `document.getElementById(draggableId)` 來獲取對應的 DOM 節點。
+     - 使用 `targetContainer.appendChild(draggableElement);` 將元素添加到目標容器中。
+
+**補充說明**
+
+- **`dataTransfer` 對象**：用來在拖放操作中傳遞數據，包括拖動的內容和目標容器。
+- **`e.target.id`**：用來獲取被拖動元素的 ID。這在 `dragstart` 事件中設置，以便在 `drop` 事件中能夠找到這個元素。
+- **`event.preventDefault()`**：在 `dragover` 事件中調用，確保目標容器能夠接受拖動元素。
+
