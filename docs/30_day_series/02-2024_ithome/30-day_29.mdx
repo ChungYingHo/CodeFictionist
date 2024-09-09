@@ -1,0 +1,98 @@
+---
+title: Day 29 - 輪播 (Carousel)
+---
+
+今天想了一天，今天雖然是地 29 天，但明天預計是寫個 30 天心得為這次鐵人賽收個尾，所以嚴格來講今天是寫技術文章的最後一天。  
+既然是最後一天，到底寫些啥好咧 ~？  
+想了一天齁，後來想到之前在用 Vuetify 那些 UI framework 時，時常會看到輪播的效果，自己過去在幫朋友做網站時也用過 Bootstrap 的輪播，所以今天乾脆就來寫一下如何不靠 UI framework，手工刻一個輪播效果。
+
+今天的 code 會跟昨天一樣有 HTML、CSS、JavaScript 三個部分，但今天 CSS 也是重要的主角之一，我們會用到我們這次鐵人賽野食常用到的 `transform`。
+
+```html
+<div class="carousel">
+ <div class="carousel-item" id="item1">1</div>
+ <div class="carousel-item" id="item2">2</div>
+ <div class="carousel-item" id="item3">3</div>
+</div>
+```
+
+```css
+.carousel {
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ perspective: 1000px;
+ width: 100%;
+ height: 300px;
+ overflow: hidden;
+ position: relative;
+}
+
+.carousel-item {
+ position: absolute;
+ width: 300px;
+ height: 200px;
+ background-color: #61dafb;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ font-size: 24px;
+ color: white;
+ transform-origin: center center;
+ transition: transform 0.5s ease-in-out;
+ transform-style: preserve-3d;
+ border-radius: 10px;
+}
+
+.carousel-item.active {
+ opacity: 1;
+ transform: rotateY(0deg) translateX(0) scale(1.2);
+}
+
+.carousel-item.left {
+ opacity: 0.5;
+ transform: rotateY(-30deg) translateX(-300px) scale(0.8);
+}
+
+.carousel-item.right {
+ opacity: 0.5;
+ transform: rotateY(30deg) translateX(300px) scale(0.8);
+}
+```
+
+```javascript
+let items = document.querySelectorAll(".carousel-item");
+let currentIndex = 0;
+
+function updateCarousel() {
+ items.forEach((item, index) => {
+  item.classList.remove("active", "left", "right");
+ });
+
+ let previousIndex = (currentIndex - 1 + items.length) % items.length;
+ let nextIndex = (currentIndex + 1) % items.length;
+
+ items[currentIndex].classList.add("active");
+ items[previousIndex].classList.add("left");
+ items[nextIndex].classList.add("right");
+}
+
+function nextSlide() {
+ currentIndex = (currentIndex + 1) % items.length;
+ updateCarousel();
+}
+
+updateCarousel();
+setInterval(nextSlide, 2000);
+```
+
+<iframe height="600" width="100%" title="day 29 - carousel" src="https://codepen.io/ChungYingHo/embed/WNqPpBZ?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/WNqPpBZ">
+  day 29 - carousel</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>
+
+先說 JavaScript 好了，其實 JavaScript 的部分只是為了可以自動輪播而已。  
+這裡使用了 `querySelectorAll()` 取得所有 `.carousel-item` 元素，並透過 `setInterval()` 每隔 2 秒遞增 `currentIndex`（即顯示在正中央的輪播項目）。  
+`updateCarousel()` 函式則是根據 `currentIndex` 的值，為左、中、右三個輪播項目分別添加不同的 `class`，以觸發相應的 CSS 轉換效果。  
+每個項目根據它在輪播中的位置（左、中、右）被分別套用不同的 `transform`，讓中間項目放大，兩側項目縮小並旋轉位移，進而實現一種看起來有些 3D 的輪播效果。
