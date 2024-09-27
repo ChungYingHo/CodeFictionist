@@ -204,6 +204,41 @@ let string = numbers.join(' ') // 帶空格
 console.log(string) // 1 2 3 4 5 6 7 8 
 ```
 
+## 實務上遇到前輩使用的方法
+### `Array.from`
+`Array.from` 是我在做 code review 時從一位前端前輩那裡學到的 array 操控方法，查了一下發現這方法真是好用。  
+他可以接受三個參數：
+1. `arrayLike`：必填，可以是任何類型的資料，但必須是可迭代的。
+2. `mapFn`：選填，可以對每個元素做處理。接受兩個參數，第一個是當前元素的值，第二個是當前元素的索引位置。
+3. `thisArg`：選填，可以指定 mapFn 中的 this。
+
+所以 `Array.from` 可以做什麼事？稍微列了一些例子：
+1. 陣列複製
+```js
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+let copy = Array.from(numbers)
+console.log(copy)  // [1, 2, 3, 4, 5, 6, 7, 8]
+```
+2. 創建指定長度的陣列
+```js
+let length = 5
+let newArray = Array.from({length}, (v, i) => i)
+console.log(newArray) // [0, 1, 2, 3, 4]
+```
+3. 對陣列做處理
+```js
+let numbers = [1, 2, 3, 4, 5, 6, 7, 8]
+let doubleNumbers = Array.from(numbers, (number) => number * 2)
+console.log(doubleNumbers) // [2, 4, 6, 8, 10, 12, 14, 16]
+```
+4. 可迭代資料轉陣列
+```js
+let string = 'hello'
+let stringArray = Array.from(string)
+console.log(stringArray) // ['h', 'e', 'l', 'l', 'o']
+```
+
+
 ## 參考資料
 1. [實用 Array 陣列操作大全](https://hackmd.io/@Calon/By3akyNOt#forEach)
 2. [JS Array 刪除重複元素的三種方式](https://gotraveltoworld.medium.com/js-array-%E5%88%AA%E9%99%A4%E9%87%8D%E8%A4%87%E5%85%83%E7%B4%A0%E7%9A%84%E4%B8%89%E7%A8%AE%E6%96%B9%E5%BC%8F-c79be2d270e6)
