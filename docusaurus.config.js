@@ -70,13 +70,13 @@ const config = {
           {
             to: '/about',
             position: 'left',
-            label: 'About',
+            label: 'About Me',
           },
           {
             type: 'docSidebar',
             sidebarId: 'programSidebar',
             position: 'left',
-            label: 'Programming',
+            label: 'Tech Articles',
           },
           {
             type: 'docSidebar',
@@ -91,13 +91,13 @@ const config = {
             label: 'Novel',
           },
           {
-            href:'https://chung-ying.vercel.app/',
-            label: 'Portfolio',
+            href: 'https://github.com/ChungYingHo',
+            label: 'GitHub',
             position: 'right',
           },
           {
-            href: 'https://github.com/ChungYingHo',
-            label: 'GitHub',
+            href: 'https://www.linkedin.com/in/chung-ying-ho',
+            label: 'LinkedIn',
             position: 'right',
           },
         ],
