@@ -4,32 +4,49 @@
         <title>CodeFictionist Blog</title>
         <link>https://codefictionist.com/blog</link>
         <description>CodeFictionist Blog</description>
-        <lastBuildDate>Fri, 02 Feb 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 08 Nov 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
-            <title><![CDATA[捨棄通靈、遠離解密！從此拋棄中英文切換！]]></title>
+            <title><![CDATA[華碩智慧輸入法]]></title>
             <link>https://codefictionist.com/blog/useful-input-method</link>
             <guid>https://codefictionist.com/blog/useful-input-method</guid>
-            <pubDate>Fri, 02 Feb 2024 00:00:00 GMT</pubDate>
-            <description><![CDATA[從此拋棄中英文切換是有點誇張啦，但不得不說華碩智慧輸入法真的很方便。]]></description>
-            <content:encoded><![CDATA[<p>從此拋棄中英文切換是有點誇張啦，但不得不說<a href="https://www.asus.com/tw/content/smartinput/" target="_blank" rel="noopener noreferrer">華碩智慧輸入法</a>真的很方便。<br>
-<!-- -->這是某次開會閒聊時總工程師提起的他新發現的輸入法，在他提起時，因為開了實在有夠久的會，我和我同事其實都有點精神萎靡，所以都「喔、哇」相當敷衍的回應，直到總工程師實際操作了一次，我的感嘆詞變成了「哇靠！」，然後等我回辦公室一用，我的感嘆詞變成了「哇靠，好用啊！」。</p>
+            <pubDate>Fri, 08 Nov 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[2024-11-08 更新]]></description>
+            <content:encoded><![CDATA[<p><strong>2024-11-08 更新</strong><br>
+<!-- -->最近有同事跟我說，我推薦他的<a href="https://www.asus.com/tw/content/smartinput/" target="_blank" rel="noopener noreferrer">華碩智慧輸入法</a>很方便很好用，嗯，推坑成功 <!-- -->😏<br>
+<!-- -->但說實在的，雖然我現在依舊還在使用華碩智慧輸入法，但那是因為它給予的方便性讓我選擇忽視它其他的缺點。<br>
+<!-- -->它有一些缺點是我這半年多使用下來逐漸察覺的，讓我無法像當初剛寫那篇文章時那樣無腦推它，所以在 2024 年更新一次這篇文章，重新來看看華碩智慧輸入法的優缺點。</p>
 <!-- -->
-<p>在資深工程師因為離職把他的機械式鍵盤傳承給我之前，我在公司用的鍵盤想來前一位工程師平常 debug 火氣非常大，許多案件都不是那麼好按，尤其是中英文切換的 shift。</p>
-<p>為了能順利切換中英文 (有時是真的很火大)，我有時都會很大力地敲 shift 鍵，這時坐前面的同事就會好笑地密我說：「鍵盤敲很大力喔 <!-- -->😏<!-- -->」。也時常打出一句句子送出後發現根本沒換到語言，導致變成一堆亂碼，我朋友也常說她都在解碼，哈哈，真是罪過罪過...<!-- -->😅<!-- -->。<br>
-<!-- -->但是！現在有了華碩智慧輸入法，你們再也不用解密和聽到怒敲鍵盤的聲音了！(我的，同事抱歉，我換了機械式鍵盤，接下來會變答答答不絕於耳)</p>
-<p>華碩智慧輸入法現在可以在微軟商店上下載到，安裝就可以使用了，至於 Mac 的用戶，我不知道華碩智慧輸入法究竟有沒有支援 Mac 或是有沒有其他替代的輸入法。<br>
-<!-- -->它的好處就是會自己判斷你正在打的詞彙究竟是英文還是中文，我猜這跟鍵盤上注音符號跟英文字母的分不可能有關，但先不論原理怎樣，它最大的特點就是如華碩官網說的：<strong>最聰明的中英混合輸入法</strong>。</p>
-<p>目前用下來，對日常使用 (回訊息、寫文章) 來說的確挺方便的，但對於軟體工程師來說還是得切成英文會比較便於使用。主要原因在於許多對軟體工程師而言相當熟悉的英文單詞對於華碩智慧輸入法而言是分辨不出來的。比如說網頁開發大家一定都會常打的的 <code>npm install</code>，如果用華碩智慧輸入法打會變成這樣：<code>n暈install</code>。<br>
-<!-- -->還有一點就是工程師常用 markdown 語法寫文件，當要使用程式碼區塊時會使用 <strong>```</strong> 來標示，但 <strong>`</strong> 在華碩智慧輸入法中是開啟特殊符號小鍵盤，這是一些對技術開發人員而言比較沒那麼友善的地方。但總體而言，華碩智慧輸入法體感還是相當不錯、方便使用的輸入法。</p>
-<p>喔，話說，這大概是我大爆炸的一週收穫的小確幸吧 - 獲得一個機械式鍵盤傳承以及一個好用的輸入法！</p>
+<p>華碩智慧輸入法是我在前公司時總工程師再某次開會後向大家分享的輸入法，這個輸入法嘛...最大的優點就是方便，其他部分呢...嗯，我現在會覺得一言難盡。<br>
+<!-- -->先說，想體驗華碩智慧輸入法的人現在可以在微軟商店上下載到，安裝就可以使用了。至於 Mac 的用戶，我不知道華碩智慧輸入法究竟有沒有支援 Mac 或是有沒有其他替代的輸入法。</p>
+<p>那正題開始，我們來說說華碩智慧輸入法的優缺點：</p>
+<ol>
+<li>
+<p>優點：</p>
+<ul>
+<li><strong>最聰明的中英混合輸入法</strong>：這是華碩官網自己說的，會自己判斷你正在打的詞彙究竟是英文還是中文，我猜這跟鍵盤上注音符號跟英文字母的分不可能有關，但先不論原理怎樣，這種你不用打字打到一半在那邊切 shift 換語言的設計真的是大大提高了打字效率。</li>
+</ul>
+</li>
+<li>
+<p>缺點：</p>
+<ul>
+<li><strong>對軟體工程師不太友善</strong>：主要原因在於許多對軟體工程師而言相當熟悉的英文單詞對於華碩智慧輸入法而言是分辨不出來的。比如說網頁開發大家一定都會常打的的 <code>npm install</code>，如果用華碩智慧輸入法打會變成這樣：<code>n暈install</code>。還有一點就是工程師常用 markdown 語法寫文件，當要使用程式碼區塊時會使用 <strong>```</strong> 來標示，但 <strong>`</strong> 在華碩智慧輸入法中是開啟特殊符號小鍵盤，這是一些對技術開發人員而言比較沒那麼友善的地方。</li>
+<li><strong>錯字多很多</strong>：這真的是我用了半年多以來感受最大的痛點，他跟我們預設的輸入法不一樣，他對於中文單詞的判斷貌似有些沒那麼智慧，三不五時就會給你用錯字，這真的有時挺困擾的。本來因為改用這個輸入法打字速度提高不少，但可能到頭來還要花比以前多的一些時間去對一些常見字詞做錯自檢查，瞧，我這個句子裡被他誤判了一個字，我就不改，你們應該就能體會到這玩意兒有時多離譜了。</li>
+<li><strong>中英自動判斷有時有 bug</strong>：對於一些生闢字，或是你如果在打數字，但注音符號剛好在數字上，好死不死你打的兩個數字上的注音剛好可以湊成一個中文字，這時他就會自動判斷你是在打中文，這時你就得切換語言，突然痛苦面具就來了。</li>
+<li><strong>打遊戲不方便</strong>：坦白說，我在其它遊戲是還好啦，但 minecraft 會有問題。通常遊戲玩家都會把左邊的 shift 鎖起來，讓它在遊戲裡不會觸發輸入法，因為左 shift 在遊戲裡通常在遊戲中都是一顆很重要的按鍵，但華碩智慧輸入法在完 minecraft 時就會有問題，因為他會把 shift 鍵當成一個切換語言的按鍵，這個我怎麼調都調不掉...。</li>
+</ul>
+</li>
+</ol>
+<p>呵呵，隔了大半年回來更新文章竟然多列了三個缺點，優點倒是一項沒增加。<br>
+<!-- -->我繼續使用華碩智慧輸入法的原因就是我開頭說的，它不用切換輸入法帶來的便利性在目前對於我而言還是挺重要的，可以讓我稍微忽視一下它的缺點。<br>
+<!-- -->但希望華碩在未來能好好把這項輸入法進行一些優化，不然我覺得，我哪天受不了可能就用回去預設的輸入法了...。</p>
 <p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/asus-edit-b91dd81764b05ad31857a2cf32074d87.png" width="1575" height="760" class="img_ev3q"></p>]]></content:encoded>
-            <category>輸入法</category>
+            <category>tools</category>
         </item>
         <item>
-            <title><![CDATA[人生實用商學院 - 富有是一種選擇]]></title>
+            <title><![CDATA[人生實用商學院]]></title>
             <link>https://codefictionist.com/blog/book-review-of-life-business-school</link>
             <guid>https://codefictionist.com/blog/book-review-of-life-business-school</guid>
             <pubDate>Mon, 15 Jan 2024 00:00:00 GMT</pubDate>
@@ -37,7 +54,7 @@
             <content:encoded><![CDATA[<p>吳淡如的這本 <code>人生實用商學院 - 富有是一種選擇</code>，沒有教你如何看線圖、沒有教你如何跑短線，雖然裡面稍微還是有些理財名詞，但這也是無可避免的。<br>
 <!-- -->在這本書裡，吳淡如更喜歡用那種過去到現在，乃至未來都有用的<code>原則</code>來教大家如何理財，那是她的學習所得、身邊人的經歷、或是根本就是自己的經歷，但總之，人生實用商學院中，吳淡如已經用最簡單的方式告訴我們如何理財。</p>
 <!-- -->
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="基本原則就是抗通膨">基本原則就是抗通膨<a href="https://codefictionist.com/blog/book-review-of-life-business-school#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%89%87%E5%B0%B1%E6%98%AF%E6%8A%97%E9%80%9A%E8%86%A8" class="hash-link" aria-label="Direct link to 基本原則就是抗通膨" title="Direct link to 基本原則就是抗通膨">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="基本原則就是抗通膨">基本原則就是抗通膨<a href="https://codefictionist.com/blog/book-review-of-life-business-school#%E5%9F%BA%E6%9C%AC%E5%8E%9F%E5%89%87%E5%B0%B1%E6%98%AF%E6%8A%97%E9%80%9A%E8%86%A8" class="hash-link" aria-label="Direct link to 基本原則就是抗通膨" title="Direct link to 基本原則�就是抗通膨">​</a></h2>
 <p>這是一個大通膨時代，你我都有感覺，現在的幣值跟爸媽那時代大相逕庭。<br>
 <!-- -->在台灣，111 年受雇群眾的薪資中位數落在年薪 51.8 萬元，換算月薪大概是 4.3 萬元。 (見下圖，來自行政院主計總處)</p>
 <p><img decoding="async" loading="lazy" src="https://codefictionist.com/assets/images/%E5%8F%B0%E7%81%A3%E5%B9%B3%E5%9D%87%E8%96%AA%E8%B3%87-3f8af9ee5e3d32c129eed8171d6a8455.png" width="1555" height="775" class="img_ev3q"></p>
@@ -89,8 +106,7 @@
 <p>當然個人的心態也要正確，我很推薦大家去看吳淡如解釋<code>錨定效應</code>和<code>啤酒效應</code>那兩章，你會發現自己的判斷和直覺有時根本就不可信<!-- -->😣<!-- -->！</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="書籍資訊">書籍資訊<a href="https://codefictionist.com/blog/book-review-of-life-business-school#%E6%9B%B8%E7%B1%8D%E8%B3%87%E8%A8%8A" class="hash-link" aria-label="Direct link to 書籍資訊" title="Direct link to 書籍資訊">​</a></h2>
 <p><strong>人生實用商學院 - 富有是一種選擇 / 吳淡如 / 時報出版</strong></p>]]></content:encoded>
-            <category>吳淡如</category>
-            <category>理財</category>
+            <category>books</category>
         </item>
         <item>
             <title><![CDATA[Hello, 2024!]]></title>
@@ -153,7 +169,7 @@
             <guid>https://codefictionist.com/blog/wordpress_experience</guid>
             <pubDate>Mon, 25 Dec 2023 00:00:00 GMT</pubDate>
             <description><![CDATA[用不到一週寫什麼心得]]></description>
-            <content:encoded><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="用不到一週寫什麼心得">用不到一週寫什麼心得<a href="https://codefictionist.com/blog/wordpress_experience#%E7%94%A8%E4%B8%8D%E5%88%B0%E4%B8%80%E9%80%B1%E5%AF%AB%E4%BB%80%E9%BA%BC%E5%BF%83%E5%BE%97" class="hash-link" aria-label="Direct link to 用不到一週寫什麼心得" title="Direct link to 用不到一週寫什麼心得">​</a></h2>
+            <content:encoded><![CDATA[<h3 class="anchor anchorWithStickyNavbar_LWe7" id="用不到一週寫什麼心得">用不到一週寫什麼心得<a href="https://codefictionist.com/blog/wordpress_experience#%E7%94%A8%E4%B8%8D%E5%88%B0%E4%B8%80%E9%80%B1%E5%AF%AB%E4%BB%80%E9%BA%BC%E5%BF%83%E5%BE%97" class="hash-link" aria-label="Direct link to 用不到一週寫什麼心得" title="Direct link to 用不到一週寫什麼心得">​</a></h3>
 <p>說是這樣說啦，但凡走過必留下痕跡嘛。<br>
 <!-- -->雖然用不到一週，但我每天下班可是搞這玩意兒搞到凌晨才睡覺，也能說是稍有心得啦。<br>
 <!-- -->所以就稍微寫篇小教學 + 吐槽心得文<!-- -->😏<!-- -->。</p>
