@@ -1,6 +1,6 @@
 ---
-title: py4e - Using Databases
-tags: [python]
+title: OOP and SQLite
+tags: [python, oop, sqlite]
 ---
 ## Object-oriented programming
 OOP 中有幾個基礎的定義：  
@@ -76,6 +76,8 @@ showCountry(taycan) # Germany
 `__init__` 是什麼？  
 就是在創造物件實例時，`__init__` 下的邏輯會先執行一次。
 :::
+
+---
 
 ## SQLite
 :::info
@@ -161,6 +163,8 @@ for row in cur.execute(sqlstr):
 
 cur.close()
 ```
+
+---
 
 ## Multi-Table Database
 使用 `JOIN` 進行多表關聯式查詢。
@@ -271,6 +275,8 @@ rows = cur.fetchall()
 for row in rows:
     print(row)
 ```
+
+---
 
 ## Associative Table
 在SQL中，associative table通常用於實現多對多關係。  

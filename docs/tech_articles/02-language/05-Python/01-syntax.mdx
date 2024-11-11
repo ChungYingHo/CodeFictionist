@@ -1,6 +1,6 @@
 ---
-title: py4e - Basic Python
-tags: [python]
+title: Basic Python Syntax
+tags: [python, syntax]
 ---
 ## 安裝 Python
 :::info
@@ -14,6 +14,8 @@ Windows 用戶不建議用 Git bash，畫面會卡住
 :::
 3. 同樣在 cmd ，輸入 `python`，沒意外的話會出現 Python 的執行環境。
 
+---
+
 ## 在 VScode 中寫 Python
 1. 安裝 [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) 插件來讓 VScode 可以寫 Python。
 ![](./assets/images/python.png)
@@ -26,6 +28,8 @@ Windows 用戶不建議用 Git bash，畫面會卡住
 `input` 允許使用者輸入一段內容，默認型態是字串
 :::
 
+---
+
 ## Python 基礎語法
 在 Python 中，是使用`縮排`來定義區塊程式碼，以 `if-else` 舉例：
 ```py
@@ -34,6 +38,8 @@ if A:
 else:
     # do another thing
 ```
+
+---
 
 ## 判別式
 依據使用者成績輸入來回傳成績等第為範例：
@@ -54,6 +60,8 @@ elif grade >= 0.6:
 else:
     print('F')
 ```
+
+---
 
 ## 函式
 以 def 定義函式：
@@ -108,6 +116,8 @@ print(numSum(apple=1, banana=2, orange=3))
 ```
 :::
 
+---
+
 ## 迴圈
 ### While
 適用在不知道循環次數，只想針對某一個條件一直執行程式碼時：
@@ -140,6 +150,8 @@ print('Minium', smallest)
 for i in range(1, 6):
     print(i)
 ```
+
+---
 
 ## error handling
 在 while 迴圈的範例中，有使用 `try-except` 的用法，這是 Python 中做例外處理的語法，是為了避免程式碼出錯而程式運行中斷而產生的語法。

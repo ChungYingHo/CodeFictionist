@@ -1,6 +1,6 @@
 ---
-title: py4e - Data Structure
-tags: [python, data structure]
+title: Type in Python
+tags: [python, type]
 ---
 ## 字串 (String)
 1. `find`：這可以找出特定字元的位置 (index)。
@@ -32,6 +32,8 @@ print(str)
 print(new_str)
 ```
 :::
+
+---
 
 ## 文件 (File)
 Python 可以讀取文件，以下範例為使用課程提供之純文字文件作範例，如果想自己練習的話，可以自己建一支 txt 檔案。  
@@ -96,6 +98,8 @@ def read_file_in_reverse(file_name):
 ```
 </details>
 
+---
+
 ## 列表 (List)
 用 JavaScript 的思維想就是陣列，基本操作跟字串大差不差，但列表中的元素可以直接修改，字串不行。
 ```py title='list'
@@ -122,6 +126,8 @@ lst = list(set(lst))
 lst.sort()
 print(lst)
 ```
+
+---
 
 ## 字典 (dictionary)
 用 JavaScript 的方式講，就是物件，同樣可以用 `{ }` 宣告或是用 `dict()`。
@@ -166,6 +172,8 @@ print(fruit_set)
 `set` 跟 `dictionary` 的差異在於 `set` 是一個無序且唯一的集合，其中的元素不能重複 (這點跟 `dictionary` 每個 key 必須為唯一一樣)，它的存在主要用於快速資料查找。而且 set 中的元素只能通過迭代來訪問，因為它沒有索引，所以無法使用如 `fruit_set[0]` 之類的方式取值。
 :::
 
+---
+
 ## 元組 (tuples)
 元組最大的特性就是不可修改，這種只能讀而無法修改的特性可以儲存那些怕更動到的資料。字典中的 `items` 方法回傳的 key-value pair 就是元組。
 ```py title='tuple'
@@ -189,6 +197,8 @@ ls = sorted(dic.items())
 for k, v  in ls:
     print(k, v)
 ```
+
+---
 
 ## Comprehension (推導式)
 基本語法是 `[expression for item in iterable if condition]` (以 List comprehension 為例)：
