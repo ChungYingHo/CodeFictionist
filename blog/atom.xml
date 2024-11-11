@@ -171,8 +171,7 @@
             <name>Chung-Ying</name>
             <uri>https://github.com/ChungYingHo</uri>
         </author>
-        <category label="2024" term="2024"/>
-        <category label="New Year" term="New Year"/>
+        <category label="life" term="life"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[不到一週的 wordpress 使用心得]]></title>
@@ -241,7 +240,7 @@
             <name>Chung-Ying</name>
             <uri>https://github.com/ChungYingHo</uri>
         </author>
-        <category label="wordpress" term="wordpress"/>
+        <category label="tech" term="tech"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[農藝系研究所考試心得]]></title>
@@ -295,8 +294,7 @@
             <name>Chung-Ying</name>
             <uri>https://github.com/ChungYingHo</uri>
         </author>
-        <category label="農藝系" term="農藝系"/>
-        <category label="研究所" term="研究所"/>
+        <category label="life" term="life"/>
     </entry>
     <entry>
         <title type="html"><![CDATA[Hello, Docusaurus]]></title>
@@ -338,7 +336,6 @@
             <name>Chung-Ying</name>
             <uri>https://github.com/ChungYingHo</uri>
         </author>
-        <category label="CodeFictionist" term="CodeFictionist"/>
-        <category label="Docusaurus" term="Docusaurus"/>
+        <category label="tech" term="tech"/>
     </entry>
 </feed>

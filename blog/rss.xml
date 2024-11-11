@@ -160,8 +160,7 @@
 <!-- -->總而言之，2024 拚拚看囉！</p>
 <p>最後，分享一首剛剛聽到的歌，頗勵志，就作為 2024 開端吧！</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/JWYNptUogU8?si=z6ilmErO5JcZG0SO" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>]]></content:encoded>
-            <category>2024</category>
-            <category>New Year</category>
+            <category>life</category>
         </item>
         <item>
             <title><![CDATA[不到一週的 wordpress 使用心得]]></title>
@@ -226,7 +225,7 @@
 <p>所以說，選擇 wordpress 還是其他的架站方式，都只是選擇的差異。<br>
 <!-- -->不得不說，wordpress 很多功能真的很方便，比如電商。比起自己串金流 API 跟架資料庫簡直不要說太方便。但是這很多的一切都是建立在肯不肯花那些錢去買工程師做出來的商品。</p>
 <p>好啦，小小心得，也是把這個網站的來源始末交代清楚了，大家聖誕快樂！</p>]]></content:encoded>
-            <category>wordpress</category>
+            <category>tech</category>
         </item>
         <item>
             <title><![CDATA[農藝系研究所考試心得]]></title>
@@ -276,8 +275,7 @@
 <p>此外，有人來信詢問外系考農藝系研究所適不適合，我得說聲抱歉，這個問題的答案是取決於你自己。</p>
 <p>如果你在足夠了解農藝系的宗旨，也真的了解自己讀研的動機後仍堅持要考農藝系研究所，那你就很適合，因為你已經了解你自己需要什麼了，有足夠的毅力與決心向前邁進了。</p>
 <p>如果你擔心的是大學非農藝系對於考試會不會比較劣勢，答案是多少都會，但我寫這篇文章的目的之一就是幫助各位更加了解該準備什麼。給予外系的朋友一些信心，我們所內有不少同學、學長姊都是非農藝出身，所以不要怕，有決心，衝就對了！</p>]]></content:encoded>
-            <category>農藝系</category>
-            <category>研究所</category>
+            <category>life</category>
         </item>
         <item>
             <title><![CDATA[Hello, Docusaurus]]></title>
@@ -315,8 +313,7 @@
 <p>我人生的夢想很多，以前看哥哥當醫生，所以國中夢想當醫生。無奈考大學離醫學系門檻遠的很，所以大學和研究所時想當個育種家。然後在那之後，忽略我一年不到的莫名其妙的事業夥伴經歷，我成為工程師。但不變的，是我一直想當作家，尤其是小說家。</p>
 <p><code>CodeFictionist</code>，code + fictionist，就是我給這個網站的設定與期許。它可以是把寫 code 當寫小說寫這樣歡樂，也可以是我期許自己成為一個獨當一面的工程師和能寫出至少能看的小說的小說家。</p>
 <p>不過，anyway，這就是一篇我剛架好站的歡迎文章，此時此刻仍然有超多版面沒調整，我就慢慢來吧！然後，歡迎你的來到！</p>]]></content:encoded>
-            <category>CodeFictionist</category>
-            <category>Docusaurus</category>
+            <category>tech</category>
         </item>
     </channel>
 </rss>
