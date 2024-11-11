@@ -2,7 +2,7 @@ import Giscus from "@giscus/react";
 
 export default function Comment(){
     return(
-        <div style={{paddingTop: 50}}>
+        <div style={{paddingTop: 10}}>
             <Giscus
                 id="comments"
                 repo="ChungYingHo/CodeFictionist"
