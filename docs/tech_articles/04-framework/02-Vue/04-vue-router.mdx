@@ -1,0 +1,340 @@
+---
+title: Vue3 - vue router
+tags: [vue3, vue-router]
+---
+## 安裝 vue-router
+在建立 Vue 初始專案的時候系統就會自動詢問要不要添加 vue-router。添加成功的話會在專案路徑 **/src** 下發現多一個 **router** 資料夾，裡面有個 **index.js** 是 Vue 準備的路由範例，同時 **main.js** 中也會引入路由供全局使用。
+
+```js title='main.js'
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
+
+const app = createApp(App)
+
+app.use(router)
+
+app.mount('#app')
+```
+:::info
+如果是舊專案要導入 vue-router，只需要 `npm install vue-router` 即可。
+:::
+
+---
+
+## 路由定義
+依 **/src/router/index.js** 官方範例：
+```js
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView
+    },
+    {
+      path: '/about',
+      name: 'about',
+      component: () => import('../views/AboutView.vue')
+    }
+  ]
+})
+
+export default router
+```
+* `createRouter`: 建立整個路由架構，架構之下會有紀錄路由操作歷史的 history 和各項我們定義的路由。
+* `history`: 此項可以透過 `createWebHistory` 或 `createWebHashHistory` 來建立歷史，雖然 Vue 推薦使用第一種 (SEO 問題)，但他會需要後端協助在伺服器端做些調整，若只是想簡簡單單做個佈署，用 hash 模式就好。
+* `routes`: 有三個要素：`path`、`name` 和 `component`。`path` 就是我們要自己定義的路由途徑，`name` 是路由的名字，通常會讓他跟 `path` 一樣，`component` 就是這個路由要對應的組件。
+:::info
+導引路由的時候使用 `to` 做導引，後面接的可以是路由的 `path` 或是 `name`。 (見**導入路由**)
+:::
+:::info
+官方在導入 home page 和導入 about page 用了不一樣的方式：
+```js
+import HomeView from '../views/HomeView.vue'
+/* …… */
+component: HomeView
+/* …… */
+component: () => import('../views/AboutView.vue')
+```
+Home page 的元件導入是先在外部 import 進來然後直接放到 component 下。但 about page 是採用**箭頭函式**的 import 方法來把組件導入到 component 下，差別在於第二種箭頭函式的方法會在切換路由要使用它時才會被加載進來 (lazy load)，相對於第一種方法可以避免因為一次加載過多東西導致畫面停頓使用者體驗不佳的地方。
+:::
+
+---
+
+## 導入路由
+### template 中導入路由
+* `<RouterLink>`: 添加 `to` 屬性加上我們設定的 `path` 或 `name` 可以導覽到我們設定的路由組件，實際它在編譯過後就是個 `<a>` tag。
+* `<RouterView>`: 匹配路由的組件該渲染的位置。
+
+```xml
+<template>
+  <header>
+    <div class="wrapper">
+      <HelloWorld msg="You did it!" />
+      <!-- highlight-start -->
+      <nav>
+        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/about">About</RouterLink>
+      </nav>
+      <!-- highlight-end -->
+    </div>
+  </header>
+  <!-- highlight-next-line -->
+  <RouterView />
+</template>
+```
+
+### `<script setup>` 中導入路由
+使用 `router.push` 來做導引：
+```js
+const navigateTo = () =>{
+  console.log(`I will navigate to about page`)
+  router.push({name: 'about'})
+}
+```
+將這個函式綁上按鈕的點擊事件，即可在點擊主頁按鈕時執行 `console.log` 並且導引到 about page。
+
+如果今天想要導引到某路由但不被記錄到歷史中，可以改用 `replace` 來做這件事：
+```js
+router.replace({name: 'about'})
+```
+這個一樣會導引到 about page，但歷史的紀錄會忽略它。而如果要在 HTML 模板上使用，只需要在 `<RouterLink>` 上添加 `replace` 即可。
+
+### 返回上一頁
+嚴格上來說，是前往歷史中紀錄的第幾筆資料。  
+上述提到 `history` 會記錄我們對路由的操作，所以我們就可以透過 `router.go` 來實現訪問上一頁或下一頁。
+```js
+const goBack = ()=>{
+  console.log(`I will go back to main page`)
+  router.go(-1)
+}
+```
+把它綁上一個 about page 的按鈕，那當點擊時就會前往上一頁，也就是 main page。
+
+---
+
+## 路由上的參數
+### 路由參數 (params)
+或稱動態路由，以 `: + 參數`的方式出現。  
+動態路由常用在比如一個部落格上每篇文章的網址，或是電影網站上每部電影的頁面。這些情況因為通常只更改內部資料的渲染所以都會靠迴圈直接套用組件與路由。
+
+可以先為一個 TryParams 元件建立它的導覽路由，一樣在 `index.js` 中做設定：
+```js
+{
+  path: '/try/:id',
+  name: 'tryParams',
+  component: () => import('../components/TryParams.vue')
+}
+```
+
+然後前往 **App.vue** 用 `v-for` 建立一個簡單的動態路由導覽列：
+```xml
+<template>
+  <ul>
+    <li v-for="i in 5" :key="i">
+      <RouterLink :to="`/try/${i}`"> I an page: {{ i }} </router-link>
+    </li>
+  </ul>
+
+  <RouterView />
+</template>
+```
+
+接著前往 **TryParams.vue** 做些設定，讓每個頁面都渲染出屬於他們自己的動態 id，並且監控在每次動態 id 改變時都拋出一個 console.log 在後台：
+```xml
+<script setup>
+import { watch } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+
+watch(() => route.params, (newParams, oldParams) => {
+    console.log(`id changed from ${oldParams.id} to ${newParams.id}`);
+});
+</script>
+
+<template>
+    <div>Here is page {{ route.params.id }}</div>
+</template>
+```
+簡單來說就是透過 `route.params` 在取路由參數。  
+如果只是單純應用在 HTML 模板中，可以直接寫 `$route.params.id`，但在 `<script setup>` 中就得先引入 `useRoute` 了。
+
+### 查詢參數 (query)
+這個參數的存在意義在於它所傳遞的是一對 **key-value** 參數，通常在搜索欄輸入關鍵字按下搜索後，就會看到網址的後面用 `?` 帶上剛剛輸入的關鍵字，這就是 `query`。  
+打個比方：**/search?page=1&keyword=vue**。
+
+### `props` 傳遞參數
+參數可以用 `props` 做傳遞，上述動態參數的程式碼改成這樣會精簡很多。
+```js title='index.js'
+{
+  path: '/try/:id',
+  name: 'try',
+  component: () => import('../components/TryParams.vue'),
+  // highlight-start
+  // 添加 props
+  props: true
+  // highlight-end
+}
+```
+
+```xml title='tryParams.vue'
+<script setup>
+<!-- highlight-start -->
+// 定義 props
+defineProps(['id'])
+<!-- highlight-end -->
+</script>
+
+<template>
+    <div>Here is page {{ id }}</div>
+</template>
+```
+
+---
+
+## 匹配路由
+### 404 頁面
+假設一個情況，當使用者今天想去 **/about** 但手滑打成 **/about/1**，但我們沒有定義這個路由的組件，所以使用者只能看到一片的白。  
+解決這種情況就會用匹配路由來導引到 404 頁面:
+
+```js
+{
+  path: '/about/:pathMatch(.*)*',
+  name: '404',
+  component: NotFound
+}
+```
+用正規表達式表示途徑 /about 後面接任何東西通通導向 NotFound 這個組件。
+
+### 依匹配動態渲染畫面
+可能有一種情況是，在同一條路由下想要渲染複數種畫面 (就是使用不一樣的組件)，最簡單的方法是給予他們各自不同的靜態路由，比如：**/about/a/:id** 和 **/about/b/:id** 或是寫個巢狀路由。  
+但就是有時會嫌為了區分還要多打 a 和 b 很麻煩，那同樣可以用匹配路由的方式幫忙完成。
+
+例如，我想要 /about 途徑後接的是數字時渲染 NotFound 組件，其他情況下渲染 AboutView 組件，可以這樣寫：
+```js
+{
+  path: '/about/:afterAbout',
+  component: AboutView
+},
+{
+  path: '/about/:afterAbout(\\d+)',
+  component: NotFound
+}
+```
+
+---
+
+## 重定向與別名
+### 重定向
+顧名思義就是從 A 路由轉址到另一個 B 路由去。因為 A 路由途徑下根本不會被渲染，所以連 component 都可以不要定義。
+
+```js
+{
+  path: '/try',
+  name: 'try',
+  redirect: {name: 'home'}
+}
+```
+
+### 別名
+別名跟重定向類似，但重定向比較像是你找 A 辦手續，但 A 跟你說要找 B。別名則是 A 的另一個名字就叫做 B，所以不管輸入哪一個路由都會對應到同個組件。
+
+```js
+{
+  path: '/',
+  name: 'home',
+  alias: ['/homepage', '/mainpage'],
+  component: HomeView
+}
+```
+:::tip
+解釋中二一點就是：**我乃 /home，偉大的 /homepage 暨尊爵不凡的 /mainpage！**
+:::
+
+---
+
+## 巢狀路由
+簡單來說就是一個 `<RouterView>` 中再放一個 `<RouterView>`。  
+這個的實作意義在於可能有兩個組件要渲染在父組件之下，比如說 /about/people 那就在 about 組件下渲染 people 組件，而 /about/number 就在 about 組件下渲染 number 組件。
+
+```xml title='AboutVue.vue'
+<template>
+  <div class="about">
+    <h1>This is an about page</h1>
+  </div>
+  <RouterView/>
+</template>
+```
+
+```js title='index.js'
+{
+  path: '/about',
+  component: AboutView,
+  children: [
+    {
+      path: 'people',
+      component: () => import('../components/People.vue')
+    },
+    {
+      path: 'number',
+      component: () => import('../components/Number.vue')
+    }
+  ]
+}
+```
+
+---
+
+## 導航守衛
+:::warning
+僅為先紀錄放著，沒實際操作過這部分。
+:::
+Vue router 提供了四個函數用來幫助切換頁面時進行一些操作或檢查。如果把路由想像成公路，導航守衛就是每條公路上的警察。
+
+1. **全局前置守衛 (beforeEach)**：會在每次路由切換之前執行，這項功能都常用在換頁的時候檢查使用者權限是否足以訪問該頁面。
+2. **全局解析守衛 (beforeResolve)**：在路由確定之前執行，通常用來確保所有內容都已加載完畢。
+3. **全局後置守衛 (afterEach)**：在每次路由切換之後執行，可以用來記錄用戶行為，或在頁面切換後做些操作。
+4. **路由獨享守衛 (beforeEnter)**：在特定路由設定中使用，用於對該路由進行獨立的前置檢查或操作。
+要注意的是，在 `<script setup>` 寫法中，`beforeRouteLeave`、`beforeRouteUpdate` 要改成 `onBeforeRouteLeave`、`onBeforeRouteUpdate`。
+
+---
+
+## 路由轉場動畫
+Vue 的轉場 `<Transition>` 組件同樣可以使用在路由的轉場上，但必須在 `<RouterView>` 上使用 `v-slot`：
+```xml
+<RouterView v-slot="{ Component }">
+  <transition name="fade">
+    <component :is="Component" />
+  </transition>
+</RouterView>
+```
+
+---
+
+## 滾動行為
+可以在創建路由時多添加一個 `scrollBehavior` 項目，用來管理滾動行為：
+```js
+const router = createRouter({
+    history: createWebHashHistory(),
+    routes: [...],
+    scrollBehavior(to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return { top: 0 }
+      }
+    }
+  })
+```
+
+## 參考資料
+1. [Vue Router](https://router.vuejs.org/zh/introduction.html)
+2. [Vue3 + Vite 快速上手 Get Startrd EP8 - Vue-Router 基礎入門，SPA網頁輕鬆上手 !](https://www.youtube.com/watch?v=5YzSuKfwWv4)

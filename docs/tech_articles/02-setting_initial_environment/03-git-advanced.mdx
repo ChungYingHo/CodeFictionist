@@ -1,0 +1,85 @@
+---
+title: Git - 進階使用
+tags: [初始環境建立, git]
+---
+:::tip
+## [Git 練習網站](https://learngitbranching.js.org/?locale=zh_TW)
+:::
+
+## Git 指令
+1. `git branch`: 檢查本地目錄下有哪些分支。
+2. `git branch develop`: 創建 XXX 分支。
+3. `git branch -d develop`: 刪除 XXX 分支。
+4. `git switch develop`: 切換路徑到 XXX 分支。
+5. `git checkout -b develop`: 建立並更換路徑。(**note**: 同`git switch -c`。)
+6. `git remote -v`: 查詢連線的遠端 repo。
+7. `git remote remove origin`: 解除跟遠端 repo 的連線。
+8. `git log --oneline`: 查詢 commit 紀錄 (行列式)。
+9. `git reset --hard <commit>`: 回到指定 commit。
+
+:::tip
+如果今天突然跟我一樣想把舊專案整合到一個新資料夾中推送到遠端 repo 做整合，記得先刪除舊專案的 `.git` 資料夾，如果發現推上去後有一個小箭頭圖標可以執行 `git rm --cache <<client_folder>>`。  
+詳情可參考 [GitHub folders have a white arrow on them](https://stackoverflow.com/questions/62056294/github-folders-have-a-white-arrow-on-them)。
+:::
+
+---
+
+## Git 版控流程
+:::info
+無論哪種版控流程都只是一個建議，不是規範。
+:::
+### Git flow
+特點：  
+1. 有 2 條主要分支： main 與 develop，這兩條會長期存在。
+2. 有 3 條支援分支：release、hotfix、feature。
+
+各 branch 專職如下：
+1. main：主要分支，正式上線的版本。
+2. develop：開發分支，統整所有開發中的程式碼。
+3. release：預發分支，指 develop branch 併回 main branch 前，需進行版本測試而產生的分支。所以 release 從 develop branch 分出來，版本測試完 merge 回 main 和 develop branch。
+4. hotfix：修復分支，指的是上線版本遇到急需處理的 bug，分出來進行修復的分支。所以是從 main branch 分出來，修復完 merge 回 main 和 develop branch。
+5. feature: 功能分支，由 develop 分出來進行細項功能的開發分支。開發結束併回 develop。
+
+### GitHub flow
+特點：  
+1. 只有 1 條主要分支：main branch。
+2. 以 pull request 為合併核心。
+
+簡單來說，就是各個開發者自己從 main branch 拉一條自己的分支出去，在開發完後發起 PR 請專案負責人 (或是其他開發者) 來審閱、討論發起 PR 的程式碼。  
+如果 PR 通過，即 merge 回 main branch，原本提交 PR 的分支即刪除。
+
+### GitLab flow
+特點：  
+1. 上游優先原則：即唯一主要分支 main branch 是所有分支的上游，只有上游允許的程式碼變化才可應用在下游分支。
+
+所以下游分支是什麼？現來簡單說一下 Gitlab flow 的運作流程：
+1. feature 分支開發完畢，merge 回 main branch。
+2. main branch 分出 production branch 和 stable branch，這些分支就會被視為下游。
+
+解釋一下什麼是 gitlab flow 的 production branch 和 stable branch：
+1. production：用在持續部署時，此分支的程式碼應是隨時可部署、經測試的穩定程式碼版本。
+2. stable：用在版本發佈時，為最新穩定釋放版本的分支。
+
+---
+
+## Git 踩雷紀錄
+### GitLab 問題紀錄集錦
+* 如果 `git clone` 了一份專案，解除原先的遠端 repo 儲存後，要接到自己的遠端 repo 時出現錯誤 `! [remote rejected] main -> main (pre-receive hook declined) `。
+    1. 先刪除該專案本地的 git repo。
+    ```powershell
+    Remove-Item -Path .git -Recurse -Force
+    ```
+    2. 檢查是否刪除乾淨：
+    ```powershell
+    git status
+    ```
+    3. 重新安裝本地 git repo：
+    ```powershell
+    git init
+    ```
+
+## Reference
+1. [git workflow tutorial](https://github.com/xirong/my-git/blob/master/git-workflow-tutorial.md)
+2. [三種版控流程](https://medium.com/@lf2lf2111/%E4%B8%89%E7%A8%AE%E7%89%88%E6%8E%A7%E6%B5%81%E7%A8%8B-29c82f5d4469)
+3. [一文弄懂 Gitflow、Github flow、Gitlab flow 的工作流](https://cloud.tencent.com/developer/article/1646937)
+

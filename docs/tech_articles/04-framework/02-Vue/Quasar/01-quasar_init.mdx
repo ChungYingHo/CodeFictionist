@@ -1,0 +1,71 @@
+---
+title: Quasar - 專案初始化
+tags: [quasar, vue]
+---
+
+:::info
+[Quasar 官方文件](https://quasar.dev/start/quick-start)
+:::
+
+## Create a Quasar Project
+1. 安裝 Quasar
+```powershell
+npm init quasar
+```
+
+```powershell
+√ What would you like to build? » App with Quasar CLI, let's go!
+√ Project folder: ... quasar_project
+√ Pick Quasar version: » Quasar v2 (Vue 3 | latest and greatest)
+√ Pick script type: » Typescript
+√ Pick Quasar App CLI variant: » Quasar App CLI with Vite 2 (stable | v1)
+√ Package name: ... quasar_project
+√ Project product name: (must start with letter if building mobile apps) ... quasar_project
+√ Project description: ... a quasar project
+√ Author: ... Jeremy
+√ Pick a Vue component style: » Composition API with <script setup>
+√ Pick your CSS preprocessor: » Sass with SCSS syntax
+√ Check the features needed for your project: » Linting (vite-plugin-checker + ESLint + vue-tsc), State Management (Pinia), axios, vue-i18n
+√ Pick an ESLint preset: » Standard
+```
+
+2. Global CLI (optional)
+裝了可以直接使用 `quasar` 指令。
+
+```powershell
+npm i -g @quasar/cli
+```
+
+3. `npm run dev` 或 `quasar dev` 啟動開發伺服器。
+
+---
+
+## Vercel 部署
+:::warning
+Quasar 部署 vercel 雖然簡單，但沒有像 Nuxt 或 Next 那樣無腦。
+:::
+### 建立 Vercel 帳號
+:::warning
+這裡默認已經有 GitHub 帳號並把之前的練習上傳到 GitHub repo 上了。
+:::
+[Vercel](https://vercel.com/signup) 選擇 **hobby** 免費方案，使用 GitHub 登入即可。
+
+### 調整 Quasar 專案設定
+```json title="package.json"
+"scripts": {
+  "build": "quasar build",
+  "deploy": "vercel"
+}
+```
+
+```json title="vercel.json"
+{
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
+```
+
+### Vercel 部署
+辦完 Vercel 帳號後可以直接連通 GitHub repo，import 專案後，調整 **Output Directory** 為 `dist/spa`，然後就可以部署了。

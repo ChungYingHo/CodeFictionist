@@ -1,0 +1,168 @@
+---
+title: Next - database、deploy
+tags: [react, next, database, api, deploy]
+---
+## 建立 Vercel 帳號
+:::warning
+這裡默認已經有 GitHub 帳號並把之前的練習上傳到 GitHub repo 上了。
+:::
+[Vercel](https://vercel.com/signup) 選擇 **hobby** 免費方案，使用 GitHub 登入即可。
+
+### Vercel 部署
+辦完 Vercel 帳號後可以直接連通 GitHub repo，import 專案後可以直接一鍵部署。
+
+---
+
+## 建立 Postgres database
+### 建立與連接資料庫
+1. 部署完成後，點選 **Continue to Dashboard**，選擇 **Storage**，接著前往下列路徑 **Postgres → Create**。當創建完成後，點擊 **Connect** 連結資料庫。
+
+2. 接著點擊前往 **.env.local**，點擊 **Show secret** 跟 **Copy Snippet**。
+
+3. 回到本地專案中，在 **.env** 貼上剛剛複製的內容。
+:::warning
+確保 **.env** 檔案有被加入 **.gitignore** 中。
+:::
+4. 安裝 Vercel Postgres SDK：
+```powershell
+pnpm install @vercel/postgres
+```
+5. 安裝 **dotenv** 來讀取環境變數：
+```powershell
+pnpm install dotenv
+```
+
+### 建立種子資料
+:::warning
+以下為個人實作專案範例，部分不重要內容會省略。
+:::
+1. 建立 **/scripts/seed.js**，裡面已經有 Next 官方製作好用來產生種子資料的指令。  
+```js
+const { db } = require('@vercel/postgres')
+
+async function clearTables(client) {
+  try {
+    // 清空所有資料表
+    await client.query(`
+      DROP TABLE IF EXISTS order_details;
+      DROP TABLE IF EXISTS orders;
+      DROP TABLE IF EXISTS products;
+      DROP TABLE IF EXISTS users;
+    `)
+    console.log('Tables cleared successfully.')
+  } catch (error) {
+    console.error('Error clearing tables:', error)
+    throw error
+  }
+}
+
+async function createTables(client) {
+  try {
+    // 創建用戶表
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS users (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(50) NOT NULL,
+          address VARCHAR(255) NOT NULL,
+          phone VARCHAR(255) NOT NULL,
+          email VARCHAR(255),
+          payment VARCHAR(255) NOT NULL
+      );
+    `)
+
+    // Details Skipped
+
+    console.log('Tables created successfully.')
+  } catch (error) {
+    console.error('Error creating tables:', error)
+    throw error
+  }
+}
+
+// 在 main 函數中連接數據庫，並調用 createTables 函數創建表
+async function main() {
+  const client = await db.connect()
+  await clearTables(client)
+  await createTables(client)
+  await client.end()
+}
+
+main().catch((err) => {
+  console.error('An error occurred while creating tables:', err)
+})
+```
+2. 接下來前往 **package.json** 增加一段指令：
+```json
+"scripts": {
+  "build": "next build",
+  "dev": "next dev",
+  "start": "next start",
+//   highlight-next-line
+  "seed": "node -r dotenv/config ./scripts/seed.js"
+},
+```
+
+3. 執行指令後回到 Vercel，在側欄找到 **Data**，就可以瀏覽剛剛建立的表格了。
+
+---
+
+## 在 Next 中獲取資料
+1. 建立 **/lib/data.ts**，以下為一個簡單範例：
+```ts
+'use server'
+
+import { sql } from '@vercel/postgres'
+
+// get the quality of the product from the database
+export async function getProductQuantity() {
+  try {
+    const { rows: products } = await sql`
+      SELECT
+        products.name,
+        SUM(order_details.quantity) AS quantity
+      FROM products
+      JOIN order_details ON products.id = order_details.product_id
+      GROUP BY products.name
+    `
+
+    const response = products
+
+    return response
+  } catch (error) {
+    console.error('Get product quantity error', error)
+    throw new Error('Get product quantity error')
+  }
+}
+```
+:::warning
+記得檔案前面一定要加 `'use server'`！！
+:::
+2. 在使用上就是在 component 內引進資料獲取函式：
+```tsx
+'use client'
+
+import { useEffect } from 'react'
+import { getProductQuantity } from '@/lib/data'
+
+const Page = () => {
+  const fetchData = async () => {
+    try {
+      const quantityResponse = await getProductQuantity()
+    } catch (error) {
+      console.error('Get all order data error', error)
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  return (
+    <main>
+      {/* Details Skipped */}
+    </main>
+  )
+}
+
+export default Page
+```

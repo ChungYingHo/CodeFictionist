@@ -1,0 +1,323 @@
+---
+title: Vue3 - 元件與資料傳遞
+tags: [vue3]
+---
+## Component
+The core architecture of Vue (also in React) revolves around components, which encapsulate reusable logic, styles, and content.  
+By packaging these elements into individual components, Vue enhances code reusability and development efficiency. Simply put, a webpage created with Vue is assembled from many such components, with data flowing between them to alter and render our view.
+
+### Simple use of component
+Below are is a simple component for example:
+```xml title='PeopleBlock.vue'
+<script setup>
+    <!-- Javascript here -->
+</script>
+
+<template>
+    <h1>I am a component</h1>
+</template>
+
+<style>
+    <!-- css here -->
+</style>
+```
+
+Then, we can import this component (`PeopleBlock.vue`) into `App.vue`, now we can call `App.vue` is a parent component and `PeopleBlock.vue` is a child component.
+```xml title='App.vue'
+<script setup>
+  import PeopleBlock from './components/PeopleBlock.vue';
+</script>
+
+<template>
+  <PeopleBlock />
+</template>
+```
+
+### Globally import a component
+Sometimes, certain components need to be imported in many places. To avoid writing numerous `import` statements, we can configure our application to globally import these components.
+
+Now, go to modify the `main.js`.  
+The first code block below is the configuration before modification:
+```js title='Before'
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+
+createApp(App).mount('#app')
+```
+
+Now, we configure the application to globally import `PeopleBlock.vue`:
+```js title='After'
+import './assets/main.css'
+
+import { createApp } from 'vue'
+import App from './App.vue'
+import PeopleBlock from './components/PeopleBlock.vue'
+
+const app = createApp(App)
+app.component('PeopleBlock', PeopleBlock)
+
+app.mount('#app')
+```
+
+---
+
+## Data Transmission
+### props
+`props` is a mechanism for passing data from a parent component to a child component.  
+For example:
+```xml title='App.vue (parent)'
+<template>
+  <PeopleBlock name="Jeremy"/>
+</template>
+```
+```xml title='PeopleBlock.vue (child)'
+<script setup>
+    const props = defineProps(['name'])
+</script>
+
+<template>
+    <h1>My name is: {{ props.name }}</h1>
+</template>
+```
+
+In Vue, you can use `defineProps` in child components to define the properties received from the parent component.  
+These properties can be defined either as an array or as an object：
+```js title='defineProps as an object'
+const props = defineProps({
+    name:{
+        type: String,
+        default: ''
+    }
+})
+```
+
+### emit
+> Props in, Events out.  
+
+The principle of `Props in, Events out` in Vue refers to using `props` to pass data from the parent to the child component, and using `emit` to send events from the child back to the parent component for data modification."
+
+For example:
+```xml title='App.vue (parent)'
+<script setup>
+  import { ref } from 'vue';
+  const name = ref('Jeremy')
+  const changeName = (newName)=> name.value = newName
+</script>
+
+<template>
+  <PeopleBlock :name="name" @update-name="() => changeName('Joanna')"/>
+</template>
+```
+```xml title='PeopleBlock.vue (child)'
+<script setup>
+    const props = defineProps({
+        name:{
+            type: String,
+            default: ''
+        }
+    })
+    defineEmits(['update-name'])
+</script>
+
+<template>
+    <h1>My name is: {{ props.name }}</h1>
+    <button @click="$emit('update-name')">click</button>
+</template>
+```
+
+Let me explain it:  
+1. In the example, `defineEmits` is used in `PeopleBlock.vue` (child component) to define a custom event named `update-name`.
+2. When the button in the child component's template is clicked, the `update-name event` is emitted to the parent component using `$emit`.
+3. In the parent component `App.vue`, the event `update-name` is listened for with `@update-name`, and it is bound to the `changeName` function for data modification
+
+:::info
+### Can we pass the function from parent to child with `props`?
+If you have a background in React and are transitioning to Vue, you might wonder if you can pass functions from parent to child components via `props`, as is commonly done in React.  
+Indeed, it is technically possible in Vue.
+```xml title='parent'
+<script setup>
+  import { ref } from 'vue';
+  const name = ref('Jeremy')
+  const changeName = (newName)=> name.value = newName
+</script>
+
+<template>
+  <PeopleBlock :name="name" :change-name="changeName"/>
+</template>
+```
+```xml title='child'
+<script setup>
+    const props = defineProps({
+        name:{
+            type: String,
+            default: ''
+        },
+        changeName:{
+            type: Function,
+            default: () => {}
+        }
+    })
+</script>
+
+<template>
+    <h1>My name is: {{ props.name }}</h1>
+    <button @click="changeName('Joanna')">click</button>
+</template>
+```
+However, Vue recommends a different approach known as `Props in, Events out`, which I have explained above.  
+Just follow what the Vue officials say to avoid some unexpected mistakes.
+:::
+
+### v-model
+In Vue, `v-model` is a directive used for creating two-way bindings on form input, textarea, and select elements.  
+It automatically picks the correct way to update the element based on the input type.
+
+When the value of the form element changes, the bound Vue instance data is automatically updated, and vice versa.  
+This makes handling form data in Vue applications more convenient and efficient.  
+For example:
+```xml
+<script setup>
+  import { ref } from 'vue';
+  const name = ref('Jeremy')
+</script>
+
+<template>
+  <input type="text" v-model="name">
+  <h1>{{ name }}</h1>
+</template>
+```
+
+Moreover, `v-model` provides three modifiers to assist with form handling:  
+1. `.lazy`: Changes the way Vue synchronizes the input with the data, from updating on every input event to updating on change events. This means the data is updated when the input field loses focus or the input is completed.
+2. `.number`: Attempts to convert the user's input into a number. This is especially useful for numeric inputs, avoiding extra type conversion during form submission.
+3. `.trim`: Automatically removes any leading and trailing whitespace from the user's input. This is helpful for processing user input, reducing the need for additional string manipulation on the backend."
+
+### How to pass the `v-model` between components?
+To pass `v-model` between components in Vue, I define a prop named `modelValue` in the child component to receive the value from the parent component and an emit event (like `update:modelValue`) to notify the parent component about data changes in the child component.  
+
+In the child component, the `<input>` element binds its value to `modelValue` and triggers the `update:modelValue event` in its input event, sending the updated value back to the parent. 
+```xml title='parent'
+<script setup>
+  import { ref } from 'vue';
+  import InputArea from './components/InputArea.vue'
+  const name = ref('Jeremy')
+</script>
+
+<template>
+  <InputArea v-model="name"/>
+</template>
+```
+```xml title='child'
+<script setup >
+    defineProps(['modelValue'])
+    defineEmits(['update:modelValue'])
+</script>
+
+<template>
+    <input type="text" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)">
+    <h2>{{ modelValue }}</h2>
+</template>
+```
+
+### Can we binding multiple `v-model`?
+Sure, the example from Vue official:
+```xml title='App.vue'
+<script setup>
+  import { ref } from 'vue';
+  import InputArea from './components/InputArea.vue'
+  const first = ref('Jeremy')
+  const last = ref('Ho')
+</script>
+
+<template>
+  <InputArea
+    v-model:first-name="first"
+    v-model:last-name="last"
+  />
+</template>
+```
+```xml title='InputArea.vue'
+<script setup>
+    defineProps({
+        firstName: String,
+        lastName: String
+    })
+
+    defineEmits(['update:firstName', 'update:lastName'])
+</script>
+
+<template>
+  <input
+    type="text"
+    :value="firstName"
+    @input="$emit('update:firstName', $event.target.value)"
+  />
+  <input
+    type="text"
+    :value="lastName"
+    @input="$emit('update:lastName', $event.target.value)"
+  />
+  <h1>{{ firstName }} {{ lastName }}</h1>
+</template>
+```
+:::warning
+Maybe you will notice that the `v-model` binding variable is different in topic `How to pass the v-model between components?` and this example:
+```xml title='How to pass the v-model between components?'
+<InputArea v-model="name"/>
+```
+```xml title='In this example'
+<InputArea
+    v-model:first-name="first"
+    v-model:last-name="last"
+/>
+```
+In Vue, `v-model` is used for two-way data binding. When you need to handle multiple `v-model` bindings within a single child component, you can use `v-model` with modifiers, such as `v-model:first-name="first"` and `v-model:last-name="last"`.  
+In this case, you need to use custom prop names in the child component via defineProps to receive these values.
+
+With a non-modified v-model (like `v-model="name"`), the corresponding prop in the child component must be named `modelValue`.  
+However, with a modified v-model (such as `v-model:first-name="first"`), you can define props in the child component with custom names, like firstName.
+:::
+
+### provide-inject
+In Vue, when you need to pass data across distant component levels (such as from a grandparent to a grandchild component), using props becomes complicated.  
+In these situations, Vue's provide and `inject` features can be used for data transmission.
+
+In the higher-level component (like the grandparent), you use the `provide` function to supply data.  
+This function accepts two arguments: the first is the name under which the data will be provided, and the second is the actual data to be provided.
+
+In the lower-level component (like the grandchild), you use the `inject` function to inject the provided data.  
+This function takes one argument, which is the name of the provided data.
+
+For example:
+```xml title='parent'
+<script setup>
+import { ref, provide } from 'vue';
+import HelloWorld from './components/HelloWorld.vue';
+const greeting = ref('hello world')
+provide('msg', greeting)
+</script>
+
+<template>
+  <HelloWorld />
+</template>
+```
+```xml title='child'
+<script setup>
+import { inject } from 'vue';
+
+const msg = inject('msg')
+</script>
+
+<template>
+  <h1>{{ msg }}</h1>
+</template>
+```
+
+## Reference
+1. [Vue.js](https://cn.vuejs.org/guide/quick-start.html)
+2. [Vue3 + Vite 快速上手 Get Startrd EP3 - components / props / emit](https://www.youtube.com/watch?v=ureFPVghH30&list=PLbOfcOk7bN42Kzp1wQsoLuU0vPUmFBe-X&index=5)
+3. [Vue3 + Vite 快速上手 Get Startrd EP4 - v-model 資料的雙向綁定 / 自訂義組件的資料綁定 / One-Way Data Flow 單向資料流](https://www.youtube.com/watch?v=firPRbhoX7o&list=PLbOfcOk7bN42Kzp1wQsoLuU0vPUmFBe-X&index=5)
+4. [Vue 中，如何将函数作为 props 传递给组件](https://blog.csdn.net/qq449245884/article/details/106066381)
+5. [父子組件資料傳遞 props、$emit](https://docs-99.vercel.app/Vue/props-emit.html)

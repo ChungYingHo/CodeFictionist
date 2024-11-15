@@ -1,0 +1,94 @@
+---
+title: Git - 安裝與使用
+tags: [初始環境建立, git]
+---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Git 安裝
+<Tabs>
+  <TabItem value="windows" label="Windows" default>
+    [Git 安裝檔下載](https://git-scm.com/)。
+  </TabItem>
+  <TabItem value="mac" label="Mac">
+    Mac 安裝可能會等很久，需耐心等待。
+    1. 安裝 Homebrew
+    ```bash
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ```
+    2. 等待安裝，直到 `Press RETURN to continue or any other key to abort` 出現，按下`Enter`。
+    3. 繼續等待安裝，直到出現`Installation successful!`。
+    4. 測試 Homebrew 是否正確安裝：`brew --version`。
+    5. 安裝 Git
+    ```bash
+    brew install git
+    ```
+  </TabItem>
+</Tabs>
+
+---
+
+## 初次設定 Git
+下載完，可以先用 `git --version` 確認是否安裝成功。  
+按照[開始 - 初次設定 Git](https://git-scm.com/book/zh-tw/v2/%E9%96%8B%E5%A7%8B-%E5%88%9D%E6%AC%A1%E8%A8%AD%E5%AE%9A-Git) 進行設定。最主要需要設定使用者名稱與電子郵件：
+```git
+git config --global user.name "Jeremy"
+git config --global user.email jeremy@example.com
+```
+可以用 `git config --list` 確認資訊。
+
+---
+
+## 使用 Git
+要在專案中使用 Git，要先在專案中建立本地儲存庫：
+```git
+git init​
+```
+之後當專案中程式碼編輯完需要紀錄時就可以直接進行下列動作：  
+1. 檔案更新，準備丟到暫存區。`.` 代表所有變動檔案通通都丟過去，可以用檔案名取代它。
+```git
+git add .
+```
+2. 提交到本地儲存庫
+```git
+git commit -m "Your commit message"
+```
+3. 追蹤查詢狀態
+```git
+git status​
+```
+
+---
+
+## 推到 GitHub 上
+當已經在 GitHub 上建好一個儲存庫：
+```git
+git remote add origin https://github.com/{user-name}/{repo-name}.git
+git branch -M main
+git push -u origin main
+```
+關於這一串指令，GitHub 在剛創完 repo 會自行產生，複製即可。  
+在第一次執行完畢後，往後如果有程式碼變動要再推到遠端儲存庫來你只需要輸入`git push`。
+
+---
+
+## 下載 GitHub 上的專案
+```git
+git clone https://github.com/{owner-name}/{project-name}.git
+```
+
+---
+
+## .gitignore
+關於那些不想讓 Git 紀錄的檔案，比如一大包的 `node_moules` 資料夾、含有私人隱私資訊 (比如資料庫連線字串) 的 `.env` 檔案，可以在專案下建立一個 `.gitignore` 檔案，裡面填入不要 Git 紀錄的檔案。
+
+:::tip
+如果你一開始忘記把 **.env** 加入 **.gitignore**，可以用以下指令移除：
+```powershell
+git filter-branch --index-filter "git rm -rf --cached --ignore-unmatch .env" HEAD
+```
+然後再透過 `git push --force` 來強制推送。
+:::
+
+## 參考資料
+1. [Removing a .env file from Git history](https://dev.to/dailydevtips1/removing-a-env-file-from-git-history-3gao)

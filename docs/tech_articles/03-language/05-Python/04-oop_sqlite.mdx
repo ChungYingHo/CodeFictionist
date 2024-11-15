@@ -1,0 +1,374 @@
+---
+title: PY - OOP and SQLite
+tags: [python, oop, sqlite]
+---
+## Object-oriented programming
+OOP 中有幾個基礎的定義：  
+1. `class`：定義了一個物件，相當於定義了一個藍圖。
+2. `method` (or `message`)：定義了使用資料的方法。
+3. `attribute` (or `field`)：定義資料的形式。
+4. `object`：透過 `class` 定義出來的實例，也就是一張包含資料與方法的藍圖。
+
+```py title='Simple OOP example'
+# Animal 是一張藍圖
+class Animal:
+    x = 0
+
+    def sumAnimals(self):
+        self.x = self.x + 1
+        print('There are',self.x, 'animals')
+
+# 用 Animal 這張藍圖建立一個實例並存進一個變數中
+dog = Animal()
+dog.sumAnimals() # There are 1 animals
+dog.sumAnimals() # There are 2 animals
+dog.sumAnimals() # There are 3 animals
+```
+:::tip
+可以用 `type()` 查看物件原型。  
+可以用 `dir()` 查看屬性與方法。
+```py
+print(type(dog)) # <class '__main__.Animal'>
+print(dir(dog))
+```
+:::
+:::warning
+定義物件時，函式的第一個參數都要代入 `self`，表示可以透過這個物件來引用這個方法。
+:::
+
+OOP 三大特性：
+1. 封裝 (Encapsulation)：將物件內部的資料與方法隱藏起來，使用者只能透過物件提供的介面去取得內部的內容。
+2. 繼承 (Inheritance)：父類別通常是概括式的物件，子類別可以繼承父類別的所有內容並自行添加一些細節，比如 `狗 (父類別)` 和 `柴犬 (子類別)`。
+3. 多型 (Polymorphism)：指的是同樣的操作，針對不一樣的物件會有不一樣的結果。
+
+```py
+class Car:
+    wheels = 4
+    def highSpeed(self, speed):
+        print('Max high speed:', speed, 'km')
+    def country(self):
+        print('No country')
+
+# 繼承
+class Bugatti(Car):
+    system = '4matic'
+    def country(self):
+        print('France')
+
+class Porche(Car):
+    system = '2matic'
+    def country(self):
+        print('Germany')
+
+chiron = Bugatti()
+taycan = Porche()
+chiron.highSpeed(289) # Max high speed: 289 km
+taycan.highSpeed(266) # Max high speed: 266 km
+
+# 多型
+def showCountry(car):
+    car.country()
+showCountry(chiron) # France
+showCountry(taycan) # Germany
+```
+
+:::info
+`__init__` 是什麼？  
+就是在創造物件實例時，`__init__` 下的邏輯會先執行一次。
+:::
+
+---
+
+## SQLite
+:::info
+相關文章：
+1. [SQL 基礎語法-1](../04-SQL/01-basic-sql.mdx)
+:::
+
+### Install SQLite
+:::info
+[SQLite](https://sqlitebrowser.org/dl/)
+:::
+記得安裝時要勾選新增到桌面或應用程式列，不然會找不到。
+
+### Create Table
+```sql
+CREATE TABLE Ages ( 
+  name VARCHAR(128), 
+  age INTEGER
+)
+```
+
+### Add Data
+```sql
+DELETE FROM Ages;
+INSERT INTO Ages (name, age) VALUES ('Morgan', 39);
+INSERT INTO Ages (name, age) VALUES ('Eveline', 20);
+INSERT INTO Ages (name, age) VALUES ('Eshal', 31);
+INSERT INTO Ages (name, age) VALUES ('Mackenzie', 39);
+INSERT INTO Ages (name, age) VALUES ('Sinem', 28);
+```
+
+### 基本操作
+將 name 和 age 欄位組合成一個新的十六進制字串，並按照這個字串的值對結果進行排序。
+```sql
+SELECT hex(name || age) AS X FROM Ages ORDER BY X
+```
+
+### SQLite in Python
+:::info
+[mbox.text](./assets/mbox.txt), from [Programming for Everybody](https://www.coursera.org/specializations/python)
+:::
+```py
+import sqlite3
+
+# 與 SQLite 資料庫建立聯繫並建立 cursor 才可以在資料庫中查詢
+conn = sqlite3.connect('sql-work-01.sqlite')
+cur = conn.cursor()
+
+# 先刪除可能存在的表格
+cur.execute('DROP TABLE IF EXISTS Counts')
+
+# 建立 Counts 表格
+cur.execute('''
+CREATE TABLE Counts (org TEXT, count INTEGER)''')
+
+fname = 'mbox.txt'
+fh = open(fname)
+for line in fh:
+    if not line.startswith('From: '): continue
+    pieces = line.split()
+    email = pieces[1]
+    # 從email中提取組織部分（即域名）
+    org = email.split('@')[1]
+    # `?` 表示佔位符，是讓後面的 email 變數代入的
+    cur.execute('SELECT count FROM Counts WHERE org = ? ', (org,))
+    # 從查詢結果中獲取一行數據
+    row = cur.fetchone()
+    # 如果email不存在，則插入新記錄
+    if row is None:
+        cur.execute('''INSERT INTO Counts (org, count)
+                VALUES (?, 1)''', (org,))
+    # 如果email存在，則更新count值加1
+    else:
+        cur.execute('UPDATE Counts SET count = count + 1 WHERE org = ?',
+                    (org,))
+    # 將查詢語句和更新語句的結果都提交到資料庫中
+    conn.commit()
+
+sqlstr = 'SELECT org, count FROM Counts ORDER BY count DESC LIMIT 10'
+# 印出前 10 個結果的 email 和 count 值
+for row in cur.execute(sqlstr):
+    print(str(row[0]), row[1])
+
+cur.close()
+```
+
+---
+
+## Multi-Table Database
+使用 `JOIN` 進行多表關聯式查詢。
+:::info
+[Library.xml](./assets/Library.xml), from [Programming for Everybody](https://www.coursera.org/specializations/python)
+:::
+```py
+import xml.etree.ElementTree as ET
+import sqlite3
+
+conn = sqlite3.connect('trackdb.sqlite')
+cur = conn.cursor()
+
+# executescript() 是 SQLite 中用於執行多個 SQL 語句的方法
+cur.executescript('''
+DROP TABLE IF EXISTS Track;
+DROP TABLE IF EXISTS Artist;
+DROP TABLE IF EXISTS Album;
+DROP TABLE IF EXISTS Genre;
+
+CREATE TABLE Artist (
+    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    name    TEXT UNIQUE
+);
+
+CREATE TABLE Genre (
+    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    name    TEXT UNIQUE
+);
+
+CREATE TABLE Album (
+    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    artist_id  INTEGER,
+    title   TEXT UNIQUE
+);
+
+CREATE TABLE Track (
+    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+    title TEXT  UNIQUE,
+    album_id  INTEGER,
+    genre_id  INTEGER,
+    len INTEGER, rating INTEGER, count INTEGER
+);
+''')
+
+
+fname = 'Library.xml'
+# 查找函式
+def lookup(d, key):
+    found = False
+    for child in d:
+        if found : return child.text
+        if child.tag == 'key' and child.text == key :
+            found = True
+    return None
+
+stuff = ET.parse(fname)
+all = stuff.findall('dict/dict/dict')
+for entry in all:
+    if ( lookup(entry, 'Track ID') is None ) : continue
+
+    name = lookup(entry, 'Name')
+    artist = lookup(entry, 'Artist')
+    album = lookup(entry, 'Album')
+    genre = lookup(entry, 'Genre')
+    count = lookup(entry, 'Play Count')
+    rating = lookup(entry, 'Rating')
+    length = lookup(entry, 'Total Time')
+
+    if name is None or artist is None or album is None or genre is None: 
+        continue
+
+    cur.execute('''INSERT OR IGNORE INTO Artist (name) 
+        VALUES ( ? )''', ( artist, ) )
+    cur.execute('SELECT id FROM Artist WHERE name = ? ', (artist, ))
+    artist_id = cur.fetchone()[0]
+
+    cur.execute('''INSERT OR IGNORE INTO Album (title, artist_id) 
+        VALUES ( ?, ? )''', ( album, artist_id ) )
+    cur.execute('SELECT id FROM Album WHERE title = ? ', (album, ))
+    album_id = cur.fetchone()[0]
+
+    cur.execute('''INSERT OR IGNORE INTO Genre (name) 
+    VALUES ( ? )''', ( genre, ) )
+    cur.execute('SELECT id FROM Genre WHERE name = ? ', (genre, ))
+    genre_id = cur.fetchone()[0]
+
+    cur.execute('''INSERT OR REPLACE INTO Track
+        (title, album_id, genre_id ,len, rating, count) 
+        VALUES ( ?, ?, ?, ?, ?, ? )''', 
+        ( name, album_id, genre_id ,length, rating, count ) )
+
+    conn.commit()
+
+# 執行單個 SQL 查詢並獲取結果，應該使用 execute() 方法而不是 executescript() 
+cur.execute('''
+SELECT Track.title, Artist.name, Album.title, Genre.name 
+    FROM Track JOIN Genre JOIN Album JOIN Artist 
+    ON Track.genre_id = Genre.id and Track.album_id = Album.id 
+        AND Album.artist_id = Artist.id
+    ORDER BY Artist.name LIMIT 3
+''')
+
+# 獲取結果
+rows = cur.fetchall()
+
+# 打印結果
+for row in rows:
+    print(row)
+```
+
+---
+
+## Associative Table
+在SQL中，associative table通常用於實現多對多關係。  
+它允許在兩個實體（entity）之間建立多對多的關係，而不是僅限於單個實體之間的一對多關係。
+
+舉例來說，假設有一個學生(Student)實體和一個課程(Course)實體，一個學生可以選修多個課程，同時一門課程也可以被多個學生選修。這種情況下，我們需要一個關聯表（associative table）來存儲學生和課程之間的多對多關係。  
+這個關聯表通常包含兩個外鍵，分別指向學生表和課程表，這樣就可以通過關聯表來建立學生和課程之間的關係。
+
+:::info
+[roster_data.json](./assets/roster_data.json), from [Programming for Everybody](https://www.coursera.org/specializations/python)
+:::
+
+```py
+import json
+import sqlite3
+
+conn = sqlite3.connect('rosterdb.sqlite')
+cur = conn.cursor()
+
+cur.executescript('''
+DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Member;
+DROP TABLE IF EXISTS Course;
+
+CREATE TABLE User (
+    id     INTEGER PRIMARY KEY,
+    name   TEXT UNIQUE
+);
+
+CREATE TABLE Course (
+    id     INTEGER PRIMARY KEY,
+    title  TEXT UNIQUE
+);
+
+CREATE TABLE Member (
+    user_id     INTEGER,
+    course_id   INTEGER,
+    role        INTEGER,
+    PRIMARY KEY (user_id, course_id)
+)
+''')
+
+fname = 'roster_data.json'
+
+#   [ "Charley", "si110", 1 ],
+#   [ "Mea", "si110", 0 ],
+
+str_data = open(fname).read()
+json_data = json.loads(str_data)
+
+for entry in json_data:
+
+    name = entry[0]
+    title = entry[1]
+    role = entry[2]
+
+    cur.execute('''INSERT OR IGNORE INTO User (name)
+        VALUES ( ? )''', ( name, ) )
+    cur.execute('SELECT id FROM User WHERE name = ? ', (name, ))
+    user_id = cur.fetchone()[0]
+
+    cur.execute('''INSERT OR IGNORE INTO Course (title)
+        VALUES ( ? )''', ( title, ) )
+    cur.execute('SELECT id FROM Course WHERE title = ? ', (title, ))
+    course_id = cur.fetchone()[0]
+
+    cur.execute('''INSERT OR REPLACE INTO Member
+        (user_id, course_id, role) VALUES ( ?, ?, ? )''',
+        ( user_id, course_id, role, ) )
+
+    conn.commit()
+
+cur.execute('''
+SELECT User.name,Course.title, Member.role FROM 
+    User JOIN Member JOIN Course 
+    ON User.id = Member.user_id AND Member.course_id = Course.id
+    ORDER BY User.name DESC, Course.title DESC, Member.role DESC LIMIT 2;
+''')
+
+cur.execute('''
+SELECT 'XYZZY' || hex(User.name || Course.title || Member.role ) AS X FROM 
+    User JOIN Member JOIN Course 
+    ON User.id = Member.user_id AND Member.course_id = Course.id
+    ORDER BY X LIMIT 1;
+''')
+
+rows = cur.fetchall()
+
+for row in rows:
+    print(row)
+```
+
+## 參考資料
+1. [Programming for Everybody](https://www.coursera.org/specializations/python)
+2. [物件導向(Object Oriented Programming)概念](https://totoroliu.medium.com/%E7%89%A9%E4%BB%B6%E5%B0%8E%E5%90%91-object-oriented-programming-%E6%A6%82%E5%BF%B5-5f205d437fd6)

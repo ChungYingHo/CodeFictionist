@@ -1,0 +1,76 @@
+---
+title: vue3-ol - 來畫一張地圖吧
+tags: [vue3, nuxt3, openlayers]
+---
+## 安裝 [vue3-openlayers](https://vue3openlayers.netlify.app/)
+```powershell
+# ​install the peerDependencies
+npm install ol ol-ext ol-contextmenu
+# ​install this library
+npm install vue3-openlayers
+```
+
+---
+
+## 設定 plugin 檔案
+在 vue3-openlayers 的官網只有使用 Vue3 的設定教學，用 Nuxt 做設定的我還是在 Stack Overflow 上看的。(詳細看[這一篇](https://stackoverflow.com/questions/70189545/how-to-add-vue3-openlayers-plugin-to-nuxt))
+
+在 Nuxt 中要使用 ol 要先設定插件，也就是 **plugin** 檔案。然後因為 vue3-ol 需要依賴 window，所以我們必須要把插件套到客戶端，因此檔名要使用 **.client.js**。  
+因此先在根目錄下建立一個 **plugins** 資料夾，然後在裡面建立一個 **vue3-ol.client.js** 設定檔：
+
+```js
+import { defineNuxtPlugin } from '#app'
+import OpenLayers from 'vue3-openlayers'
+
+export default defineNuxtPlugin(nuxtApp => {
+  nuxtApp.vueApp.use(OpenLayers)
+})
+```
+
+---
+
+## 印出第一張世界地圖
+在根目錄下建立一個 components 資料夾，並建立一個 **MyMap.vue** 組件，這裡我們用官網的範例 code：
+```xml
+<script setup>
+import { ref } from 'vue'
+const center = ref([40, 40])
+const projection = ref('EPSG:4326')
+const zoom = ref(8)
+const rotation = ref(0)
+</script>
+
+<template>
+    <ol-map
+        style="height: 400px"
+    >
+        <ol-view
+            ref="view"
+            :center="center"
+            :rotation="rotation"
+            :zoom="zoom"
+            :projection="projection"
+        />
+
+        <ol-tile-layer>
+            <ol-source-osm />
+        </ol-tile-layer>
+    </ol-map>
+</template>
+
+<style scoped>
+@import 'vue3-openlayers/dist/vue3-openlayers.css';
+</style>
+```
+
+### 解析 `<script setup>` 內容
+1. center：這代表的地圖起始中心點座標，改改看，滿好玩的，台灣大概是在 [841, 24] 的地方。
+2. projection：表示地圖投影方式，預設的 EPSG:4326 是一種經緯度座標系統。
+3. zoom：地圖的縮放級別，數字越小可以看到範圍越廣的地圖。
+4. rotation：地圖旋轉角度。
+
+
+### 解析 `<template>`
+1. `<ol-map>`：這是 ol 提供的地圖容器，可以理解成圖畫的畫框，在這裡給它設定了高度為 400px。
+2. `<ol-view>`：如果說 `<ol-map>` 是畫框，`<ol-view>` 就是畫布的部分。他決定了這張地圖的縮放、中心、旋轉等配置，前面在 `<script setup>` 中作的設定就是給它用的。
+3. `<ol-tile-layer>`、`<ol-source-osm>`：現在想像，這是一幅拼貼畫，給了畫框和畫布，那接下來就是要把一塊塊畫片給貼上畫布，這個畫片就是 `<ol-tile-layer>`。而 `<ol-source-osm>` 就是畫片上的色彩，也就是資料來源。 osm 表示資料來自 OpenStreetMap。
