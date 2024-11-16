@@ -1,0 +1,141 @@
+---
+title: Quasar - Axios
+tags: [quasar, vue, axios]
+---
+
+這一篇主要紀錄如何在 Quasar 中使用 axios 來 call API，我初次接觸到 Quasar 時是在實做 [Quasar serverside pagination](https://quasar.dev/vue-components/table#server-side-pagination-filter-and-sorting)，這是當初剛入職時每個前端新人都要做的小專案，用來熟悉 Quasar 跟在 Quasar 中 call API。
+
+:::info
+[我寫的 Quasar demo](https://quasar-demo.vercel.app/)~  
+本次使用的 API 是 [DummyJSON](https://dummyjson.com/)。
+:::
+
+## 設定 API
+### `/src/boot/axios.ts`
+其實我們在前一篇文章建完 Quasar 專案後，如果有稍微逛逛，會發現 Quasar 已經幫忙建好很多預設的資料夾，其中有一個 `/src/boot/axios.ts`，這是 Quasar 中負責來把 axios 的實例註冊到 Vue 全局的設定，所以拿到新的 API 之後可以來這裡做設定。
+
+```ts title="src/boot/axios.ts"
+import axios, { AxiosInstance } from 'axios'
+import { boot } from 'quasar/wrappers'
+
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $axios: AxiosInstance;
+    $api: AxiosInstance;
+  }
+}
+
+// Be careful when using SSR for cross-request state pollution
+// due to creating a Singleton instance here;
+// If any client changes this (global) instance, it might be a
+// good idea to move this instance creation inside of the
+// "export default () => {}" function below (which runs individually
+// for each client)
+const api = axios.create({ baseURL: 'https://dummyjson.com/users' })
+
+export default boot(({ app }) => {
+  // for use inside Vue files (Options API) through this.$axios and this.$api
+
+  app.config.globalProperties.$axios = axios
+  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
+  //       so you won't necessarily have to import axios in each vue file
+
+  app.config.globalProperties.$api = api
+  // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
+  //       so you can easily perform requests against your app's API
+})
+
+export { api }
+```
+
+### `/src/service/index.ts`
+接下來我們可以在 `/src` 路徑下建一個 `service` 資料夾，在裡面放我們的 API 使用邏輯。
+
+```ts title="src/service/index.ts"
+import { api } from 'src/boot/axios'
+import { User, ApiParams } from 'src/components/models'
+import { errorHandler } from 'src/composables/errorHandler'
+// NOTE only get user's firstName,lastName,age,gender,email,phone,id in this project
+const buildUrl = (searchParams: ApiParams) => {
+  const { search, limit, skip, sortBy, order } = searchParams
+  const url = search ? '/search' : '/'
+  const params: {[key: string]: unknown} = {
+    select: 'firstName,lastName,age,gender,email,phone,id',
+    q: search ?? undefined,
+    limit: limit ?? undefined,
+    skip: skip ?? undefined,
+    sortBy: sortBy ?? undefined,
+    order: order ? 'desc' : 'asc'
+  }
+  return { url, params }
+}
+// get users
+export const getUsers = async (searchParams: ApiParams) => {
+  try {
+    const { url, params } = buildUrl(searchParams)
+    const response = await api.get(url, { params })
+    const users = response.data.users
+    const total = response.data.total
+    return { users, total }
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+// add user
+export const addUser = async (user: User) => {
+  try {
+    const response = await api.post('/add', user)
+    return response.data
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+// update user
+export const updateUser = async (id: number, user: User) => {
+  try {
+    const response = await api.put(`/${id}`, user)
+    return response.data
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+// delete user
+export const deleteUser = async (id: number) => {
+  try {
+    const response = await api.delete(`/${id}`)
+    return response.data
+  } catch (error) {
+    errorHandler(error)
+  }
+}
+```
+
+這樣之後就可以在我們的 component 中使用這些 API 了。
+
+### 使用
+上述設定完後，可以像這樣在 component 中使用 API。
+
+```ts title="src/pages/QuasarTable.vue"
+import { getUsers } from 'src/service/api'
+
+onMounted(async () => {
+  try {
+    loading.value = true
+    // highlight-start
+    const params: ApiParams = {
+      limit: 5,
+      skip: 0
+    }
+    const response = await getUsers(params)
+    // highlight-end
+    const users = response?.users
+    const total = response?.total
+    rows.value = users
+    pagination.value.rowsNumber = total
+  } catch (error) {
+    errorHandler(error)
+  } finally {
+    loading.value = false
+  }
+})
+```

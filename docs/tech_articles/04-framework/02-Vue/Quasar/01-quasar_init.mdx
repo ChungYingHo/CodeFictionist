@@ -40,6 +40,59 @@ npm i -g @quasar/cli
 
 ---
 
+## 調整 quasar.config.js
+這是 Quasar 的設定檔，可以在這裡設定專案的一些基本設定。  
+基本上這裡要調整的只有 `vueRouterMode`、`plugin` 跟 CSS 相關設定而已。  
+
+Plugin 的部分要添加較常用的彈出視窗和警告提示，置於為何這裡要添加 plugin，可以參考 Quasar 官方的說法：
+
+> The advantage of using Dialogs as Quasar Plugins as opposed to QDialog component is that the plugin can also be called from outside of Vue space and doesn’t require you to manage their templates.
+
+```javascript title="quasar.config.js"
+vueRouterMode: 'history', // 決定 url 顯示方式是否帶有 # 號，同時也影響 SEO
+plugins: [
+  'Dialog',
+  'Notify'
+],
+cssAddon: true // 啟用 Quasar CSS 預設樣式
+```
+
+---
+
+## 其它設定調整
+視專案需求可以調整 **.eslintrc.cjs** 跟 **.vscode/settings.json**。  
+這裡紀錄比較重要跟 vue 相關的 eslint 設定。
+
+```json title=".eslintrc.cjs"
+'vue/comma-spacing': 'error', // 逗號前後的空格
+    'vue/key-spacing': 'error', // 冒號前後的空格
+    'vue/mustache-interpolation-spacing': ['error', 'always'], // {{ }} 內的空格
+    'vue/no-multi-spaces': 'error', // 多餘空格報錯
+    'vue/multiline-html-element-content-newline': 'error', // 多行 html 元素的內容應該換行
+    'vue/attribute-hyphenation': ['error', 'always'], // 屬性名應該使用連字符
+    'vue/attributes-order': ['error', {
+      order: [
+        'DEFINITION', // is, v-is
+        'LIST_RENDERING', // v-for
+        'CONDITIONALS', // v-if v-else-if v-else v-show v-cloak
+        'RENDER_MODIFIERS', // v-once v-pre
+        'TWO_WAY_BINDING', // v-model
+        'OTHER_DIRECTIVES', // v-custom-directive
+        'SLOT', // v-slot
+        'GLOBAL', // id
+        'UNIQUE', // key, ref
+        'ATTR_SHORTHAND_BOOL', // boolean-prop
+        'ATTR_STATIC', // prop=""
+        'ATTR_DYNAMIC', // :prop=""
+        'EVENTS', // v-on, @
+        'CONTENT' // v-text, v-html
+      ],
+      alphabetical: false // 不需要按字母排序
+    }],
+```
+
+---
+
 ## Vercel 部署
 :::warning
 Quasar 部署 vercel 雖然簡單，但沒有像 Nuxt 或 Next 那樣無腦。
