@@ -1,0 +1,522 @@
+---
+title: Handsontable - 表格
+tags: [vue3, quasar, handsontable]
+---
+:::info
+[Handsontable 官網](https://handsontable.com/)
+:::
+
+Handsontable 怎麼說呢~ 按照官網說的：
+
+> JavaScript data grid with spreadsheet UI
+
+所以就是類似一個可以在 Web 上使用的 Excel 表格，可以進行編輯、排序、過濾、合併儲存格等等操作。  
+因為工作需要，所以花了時間做了一些研究，就順便寫一下筆記~ 
+
+:::info
+[我寫的 Handsontable Demo](https://quasar-demo.vercel.app/demo-handsontable)。  
+[Demo code commit](https://github.com/ChungYingHo/Quasar-Template/commit/89ed5eacf359f141a4b5da912fb18862f61e7d97)
+此 Demo 使用 Vue3 (Quasar Framework)，老實說如果用 React 來寫會簡單很多，因為 Handsontable 官網直接有提供 React 的範例，Vue 和 Angular 就只有最基本的教學，其它都要自己魔改。
+:::
+
+## 安裝
+```powershell
+npm install handsontable @handsontable/vue3
+```
+
+---
+
+## 基本使用
+```html
+<template>
+  <div>
+    <HotTable
+      ref="hotTable"
+      col-widths="100px"
+      row-heights="30px"
+      license-key="non-commercial-and-evaluation"
+      :data="data"
+      :columns="columns"
+      :col-headers="colHeaders"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+import { HotTable } from '@handsontable/vue3'
+import { registerAllModules } from 'handsontable/registry'
+import 'handsontable/dist/handsontable.full.css'
+
+const data = [
+  { year: 2021, airport: 'Airport A' },
+  { year: 2022, airport: 'Airport B' },
+  { year: 2022, airport: 'Airport C' }
+]
+
+const colHeaders = [
+  'Year',
+  'Airport'
+]
+
+const columns = [
+  {
+    data: 'year'
+  },
+  {
+    data: 'airport',
+    readOnly: true
+  }
+]
+</script>
+```
+
+1. `data`：表格資料
+2. `columns`：表格欄位
+3. `colHeaders`：表格欄位名稱
+    - `readOnly`：是否可編輯
+
+---
+
+## checkbox
+Handsontable 本身提供 checkbox 的 cell type，我們只需要調整 `columns` 的 `type` 即可。同時我們也可以給 `data` 一個預設的 boolean 直，這樣初次渲染就可以顯示各自的 checkbox 狀態。
+
+```ts
+const data = [
+  { year: 2021, airport: 'Airport A', isCheck: true },
+  { year: 2022, airport: 'Airport B', isCheck: false },
+  { year: 2022, airport: 'Airport C', isCheck: true }
+]
+
+const colHeaders = [
+  'Year',
+  'Airport',
+  'Checkbox'
+]
+
+const columns = [
+  {
+    data: 'year',
+    readOnly: true
+  },
+  {
+    data: 'airport',
+    readOnly: true
+  },
+  {
+    data: 'isCheck',
+    // highlight-next-line
+    type: 'checkbox'
+  }
+]
+```
+
+---
+
+## Button (Custom Renderer)
+Handsontable 本身沒有提供 button 的 cell type，但我們可以透過 `renderer` 來自定義一個 button，然後將自定義的 `renderer` 放到 `columns` 的 `renderer` 中即可。
+
+```ts
+const columns = [
+  {
+    data: 'year',
+    readOnly: true
+  },
+  {
+    data: 'airport',
+    readOnly: true
+  },
+  {
+    data: 'isCheck',
+    type: 'checkbox'
+  },
+  {
+    readOnly: true,
+    // highlight-next-line
+    renderer: createBtn
+  }
+]
+
+// 自定義創造 button 的 function，裡面可以很自由地寫一些邏輯判斷，像這裡就是依資料有沒有帶 url 來決定 button 是否可點擊
+function createBtn (instance: any, td: any, row: any) {
+  const rowData = instance.getSourceDataAtRow(row)
+  const link = rowData.url
+  if (link) {
+    td.innerHTML = '<button class="dialog-btn"><i class="material-icons">open_in_new</i></button>'
+  } else {
+    td.innerHTML = '<button class="dialog-btn" disabled><i class="material-icons">open_in_new</i></button>'
+  }
+  td.querySelector('.dialog-btn')?.addEventListener('click', () => {
+    if (link) {
+      openLink(link)
+    }
+  })
+}
+```
+
+---
+
+## Export to CSV
+Handsontable 本身提供了 `exportFile` plugin，可以將表格資料匯出成 CSV 檔案。
+
+```html
+<template>
+  <div>
+    <HotTable
+      ref="hotTable"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+const hotTable = ref<any>(null)
+
+const exportToCsv = () => {
+  const hotInstance = hotTable.value.hotInstance
+  const exportPlugin = hotInstance.getPlugin('exportFile')
+  exportPlugin.downloadFile('csv', {
+    bom: false,  // 是否加入 BOM
+    columnDelimiter: ',', // 欄位分隔符號
+    columnHeaders: true, // 是否包含欄位名稱
+    exportHiddenColumns: true, // 是否包含隱藏的欄位
+    exportHiddenRows: true, // 是否包含隱藏的列
+    fileExtension: 'csv', // 檔案副檔名
+    filename: 'PNR_DATA_[YYYY]-[MM]-[DD]', // 檔案名稱
+    mimeType: 'text/csv', // 檔案類型
+    rowDelimiter: '\r\n', // 列分隔符號
+    rowHeaders: true // 是否包含列名稱
+  })
+}
+</script>
+```
+
+---
+
+## filter
+### 客製各欄位的 filter
+```html
+<template>
+  <div>
+    <HotTable
+      ref="hotTable"
+      filters="true"
+      :dropdown-menu="dropdownMenu"
+      :settings="hotTableOptions"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+const hotTable = ref<any>(null)
+
+// filter_by_value 和 filter_action_bar 是 Handsontable 提供的 filter 選項
+// 這裡的 hidden 是用來判斷是否要顯示該 filter 項目
+const dropdownMenu = {
+  items: {
+    filter_by_value: {
+      hidden () {
+        const selectedCol = hotTable.value.hotInstance.getSelectedRangeLast()!.to.col
+        return selectedCol !== 0 && selectedCol !== 2
+      }
+    },
+    filter_action_bar: {
+      hidden () {
+        const selectedCol = hotTable.value.hotInstance.getSelectedRangeLast()!.to.col
+        return selectedCol !== 0 && selectedCol !== 2
+      }
+    }
+  }
+}
+
+
+// 是否顯示 filter 下拉選單的那顆按鈕
+const hotTableOptions = {
+  afterGetColHeader: (col: number, TH: { querySelector: (arg0: string) => any; }) => {
+    if (col !== 0 && col !== 2) {
+      const button = TH.querySelector('.changeType')
+      if (!button) {
+        return
+      }
+      button.parentElement.removeChild(button)
+    }
+  }
+}
+</script>
+```
+
+### search
+可以製做一個 input 來透過搜尋篩選資料。
+
+```html
+<template>
+  <div>
+    <q-input
+      v-model="searchWord"
+      outlined
+      dense
+      label="Search"
+      placeholder="Search..."
+      class="q-mb-sm row"
+    />
+    <HotTable
+      ref="hotTable"
+      filters="true"
+      :dropdown-menu="dropdownMenu"
+      :settings="hotTableOptions"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+const hotTable = ref<any>(null)
+const searchWord = ref('')
+
+watch(searchWord, (newVal) => {
+  if (hotTable.value) {
+    const filters = hotTable.value.hotInstance.getPlugin('filters')
+    const columnToFilter = 0
+    filters.removeConditions(columnToFilter)
+    filters.addCondition(columnToFilter, 'contains', [newVal])
+    filters.filter()
+  }
+})
+</script>
+```
+
+### 自定義特定資料篩選
+如自定一顆按鈕，按下去後可以自動篩出過去兩年的資料：
+
+```ts
+// 把函式綁到按鈕上即可
+const filterPastTwoYears = () => {
+  if (hotTable.value) {
+    const filters = hotTable.value.hotInstance.getPlugin('filters')
+    const columnToFilter = 0
+    filters.removeConditions(columnToFilter)
+    filters.addCondition(columnToFilter, 'gte', [new Date().getFullYear() - 2])
+    filters.filter()
+  }
+}
+```
+
+### 清除篩選條件
+```ts
+const clearFilters = () => {
+  if (hotTable.value) {
+    const filters = hotTable.value.hotInstance.getPlugin('filters')
+    filters.clearConditions()
+    filters.filter()
+  }
+}
+```
+
+---
+
+## 顯示選中的資料
+Handsontable 提供 `afterSelectionEnd` hook，可以載我們選中一個 cell 時配合 `getDataAtRow` 取得該列的資料。  
+另外，因為 checkbox 如果是透過鍵盤操作的話，當 checkbox 的 boolean 變動時 Handsontable 並不會立即更新顯示，所以這裡需要透過 `afterChange` hook 來監聽資料的變動。
+```ts
+const selectedData = ref<any>(null)
+
+watch(() => hotTable.value, (newVal) => {
+  // afterChange 是當資料有變動時觸發
+  newVal.hotInstance.addHook('afterChange', (changes: any, source: any) => {
+    if (source === 'edit') {
+      const row = changes[0][0]
+      // remove the last column because it is a button
+      selectedData.value = newVal.hotInstance.getDataAtRow(row).slice(0, -1)
+    }
+  })
+
+  // afterSelectionEnd 是當選中一列時觸發
+  if (newVal) {
+    newVal.hotInstance.addHook('afterSelectionEnd', (r: number) => {
+      // remove the last column because it is a button
+      selectedData.value = newVal.hotInstance.getDataAtRow(r).slice(0, -1)
+    })
+  }
+})
+```
+
+---
+
+## sort
+:::danger
+Handsontable 的 `column-sorting` 僅對畫面顯示的資料進行排序，不會影響到 `data` 的順序。  
+這個很重要，會影響後續刪除、更新資料的邏輯寫法。
+:::
+
+```html
+<template>
+  <div>
+    <HotTable
+      ref="hotTable"
+      // highlight-next-line
+      column-sorting=true
+    />
+  </div>
+</template>
+```
+:::tip
+在有排序的狀況下若要進行等等會介紹的**新增**、**刪除**、**更新**資料，需要在操作完後觸發排序，否則會產生一些非預期的結果。
+
+```ts
+nextTick(() => {
+  const hotInstance = hotTable.value.hotInstance
+  const columnSortingPlugin = hotInstance.getPlugin('columnSorting')
+  const sortSetting = columnSortingPlugin.getSortConfig()
+  columnSortingPlugin.sort(sortSetting)
+})
+```
+:::
+
+---
+
+## 新增資料
+可以透過基本操作陣列的方法來新增資料，資料在 Handsontable 顯示的順序會與在 `data` 陣列中的順序一致。
+
+```ts
+const data = ref<any>([
+  { year: 2021, airport: 'Airport A', price: 100000 },
+  { year: 2020, airport: 'Airport B', price: 200000 },
+  { year: 2019, airport: 'Airport C', price: 300000 }
+])
+
+const addData = () => {
+  data.value.unshift({ year: 2019, airport: 'Airport add with unshift' })
+  data.value.push({ year: 2020, airport: 'Airport add with push' })
+  data.value.splice(2, 0, { year: 2018, airport: 'Airport add with splice' })
+
+  // trigger sorting immediately after adding data
+  nextTick(() => {
+    const hotInstance = hotTable.value.hotInstance
+    const columnSortingPlugin = hotInstance.getPlugin('columnSorting')
+    const sortSetting = columnSortingPlugin.getSortConfig()
+    columnSortingPlugin.sort(sortSetting)
+  })
+}
+```
+
+---
+
+## 刪除與更新資料
+這裡我們可以為每個 column 增加一個 delete button 跟 update button，透過這兩個 button 來進行刪除與更新資料。  
+方法跟前述透過自定義 `renderer` 來增加 button 是一樣的，只是這裡的邏輯會比較複雜一點。
+
+如前述在 `sort` 中提到，`column-sorting` 只會影響畫面顯示的順序，所以畫面顯示的順序跟 `data` 陣列的順序是不一致的，所以在刪除與更新資料時，需要先找到選中的資料在 `data` 陣列中的 index，然後再進行刪除或更新。
+
+```ts
+function createDeleteButton (instance: any, td: any, row: any) {
+  const btnClass = 'btn-delete'
+  const btnLabel = 'Delete'
+  const isDisabled = !canDelete.value
+  td.innerHTML = `<button class="${btnClass}" ${isDisabled ? 'disabled' : ''}>${btnLabel}</button>`
+  td.querySelector(`.${btnClass}`)?.addEventListener('click', () => {
+    const instanceData = instance.getData()
+    const dataDeletedIndex = data.value.findIndex((item: { airport: string }) => item.airport === instanceData[row][1])
+    data.value.splice(dataDeletedIndex, 1)
+    nextTick(() => {
+      const columnSortingPlugin = instance.getPlugin('columnSorting')
+      const sortSetting = columnSortingPlugin.getSortConfig()
+      columnSortingPlugin.sort(sortSetting)
+    })
+  })
+}
+
+function createUpdateButton (instance: any, td: any, row: any) {
+  const btnClass = 'btn-update'
+  const btnLabel = 'Update'
+  const isDisabled = !canUpdate.value
+  td.innerHTML = `<button class="${btnClass}" ${isDisabled ? 'disabled' : ''}>${btnLabel}</button>`
+  td.querySelector(`.${btnClass}`)?.addEventListener('click', () => {
+    const instanceData = instance.getData()
+    const dataUpdatedIndex = data.value.findIndex((item: { airport: string }) => item.airport === instanceData[row][1])
+    data.value[dataUpdatedIndex].year = 2019
+    data.value[dataUpdatedIndex].airport = `update row ${row} airport`
+    nextTick(() => {
+      const columnSortingPlugin = instance.getPlugin('columnSorting')
+      const sortSetting = columnSortingPlugin.getSortConfig()
+      columnSortingPlugin.sort(sortSetting)
+    })
+  })
+}
+```
+
+---
+
+## 千分位顯示
+若要在 cell 編輯時不顯示千分位，但在不編輯時顯示千分位，可以分別撰寫 `editor` 與 `renderer`。
+
+```ts
+class numberEditor extends Handsontable.editors.TextEditor {
+  // 建立 input 框元素，限制只能輸入數字
+  createElements () {
+    super.createElements()
+    this.TEXTAREA.setAttribute('type', 'text')
+    this.TEXTAREA.setAttribute('inputmode', 'numeric')
+  }
+
+  // 當編輯器啟動時，移除千分位顯示，顯示純數字
+  setValue (value: any) {
+    const editNumber = value ? value.toString().replace(/,/g, '') : ''
+    super.setValue(editNumber)
+  }
+}
+
+const columns = ref<any>([
+  {
+    data: 'year',
+    readOnly: true
+  },
+  {
+    data: 'airport',
+    readOnly: true
+  },
+  {
+    data: 'price',
+    type: 'numeric',
+    // highlight-start
+    renderer: thousandthPlaceRenderer,
+    editor: numberEditor
+    // highlight-end
+  },
+  {
+    readOnly: true,
+    renderer: createDeleteButton
+  },
+  {
+    readOnly: true,
+    renderer: createUpdateButton
+  }
+])
+
+function thousandthPlaceRenderer (instance: any, td: any, row: any, col: any, prop: any, value: any) {
+  td.innerHTML = value ? value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : ''
+}
+```
+
+---
+
+## 翻譯
+Handsobtable 雖然提供翻譯，但我們仍可使用 vue 最熟悉的 vue-i18n 來進行翻譯。
+
+```ts
+import { useI18n } from 'vue-i18n'
+const { t, locale } = useI18n()
+
+const colHeaders = computed(() => [
+  t('handsontable.year'),
+  t('handsontable.airport'),
+  t('handsontable.price'),
+  t('handsontable.delete'),
+  t('handsontable.update')
+])
+
+// 這函式是用來切換語系的
+function switchLanguage () {
+  if (locale.value === 'en-US') {
+    locale.value = 'zh-TW'
+  } else {
+    locale.value = 'en-US'
+  }
+}
+```
