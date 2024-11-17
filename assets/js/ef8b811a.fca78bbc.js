@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[8947],{56600:t=>{t.exports=JSON.parse('{"authors":[{"name":"Chung-Ying","title":"\u83dc\u9ce5\u524d\u7aef\u5de5\u7a0b\u5e2b","url":"https://github.com/ChungYingHo","imageURL":"https://github.com/ChungYingHo.png","key":"CY","page":null,"count":7}]}')}}]);
