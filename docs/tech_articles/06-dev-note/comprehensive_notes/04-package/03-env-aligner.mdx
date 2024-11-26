@@ -1,0 +1,240 @@
+---
+title: env-aligner - npm 套件製作
+tags: [npm, package, env-aligner]
+---
+
+:::info
+[env-aligner](https://www.npmjs.com/package/env-aligner)
+:::
+先簡介一下這個套件好了，這是一個我自己和一位前端前輩一起開發的環境變數檢查套件，主要是用來檢查 `.env` 跟 `.env.example` 這兩個檔案的環境變數是否有對齊，這樣可以避免在開發或是部署時因為環墋變數對不齊而造成問題。  
+
+會做這個套件其實起因是公司需要一個**工具**可以在前端自己開發、build 或是 CI/CD pipeline 時可以檢查環境變數是否有齊全，沒有齊全的話就噴個錯誤並把流程終止，然後希望這個工具可以在不同專案中使用。  
+於是我寫了一個腳本，後來主管問我，那如果把這個腳本塞進套件裡，它裡面抓檔案路徑的函式能不能正常運作，我想了一下，好問題耶！  
+轉個念一想，不如我做個套件試試看好了 (我自己也不敢直接玩公司的套件 :sweat_smile:)，於是就開始人生初次開發 npm 套件的旅程，中間也邀請了我前端啟蒙的前輩進來幫我把關測試。  
+
+然後小小閒聊一下，其實 npm 已經有類似的套件存在，只是在我測試下實在不符合我要的需求，所以就自己開發了一個。  
+這篇會含括 `env-aligner` 的功能介紹以及如何發布套件。
+
+---
+
+## `env-aligner` 功能介紹
+它會檢查三種情境：
+1. `.env` 跟 `.env.example` 比對後如果有缺少的環境變數就會報錯並終止流程
+2. `.env.example` 的變數如果有值，但是 `.env` 沒有設定值，也會報錯並終止流程
+3.. `.env` 如果有變數是 `.env.example` 沒有的，會報錯 (但不會終止流程)
+
+因為考量到這是個 public 套件，我們開發時將其設計成可以自訂檔案路徑、env 檔案名稱、env schema 檔案名稱、三項檢查的開關，這樣可以讓使用者在不同專案中獲得最大限度的彈性。(比如有人就用 `.env.local` 之類的)  
+總而言之，要用就要先安裝：
+```bash
+npm install env-aligner
+```
+
+### 程式中引入
+最基本的使用就是不傳任何參數，這樣會使用預設的檔案路徑 (`process.cwd()`)、檔案名稱 (`.env`)、schema 檔案名稱 (`.env.example`)、三項檢查都開啟的設定：
+```js
+const envAligner = require('env-aligner')
+
+envAligner()
+```
+
+其他支援客製化的參數如下：
+1. `rootDir`: 一個字串，代表你要檢查的根目錄路徑。預設是 `process.cwd()`。
+2. `fileNames`: 一個物件，裡面包含了檔案名稱的設定。裡面可以傳兩個參數：
+    - `schemaName`: schema 檔案名稱。預設是 `.env.example`。
+    - `envName`: env 檔案名稱。預設是 `.env`。
+3. `checkOptions`: 一個物件，裡面包含了三項檢查的設定。裡面可以傳三個參數：
+    - `isCheckMissing`: 檢查缺少的變數。預設是 `true`。
+    - `isCheckEmptyValue`: 檢查空值的變數。預設是 `true`。
+    - `isCheckExtra`: 檢查多餘的變數。預設是 `true`。
+
+```javascript
+const customRootDir = '/application/frontend'
+const customFileNames = {
+  schemaName: '.env.sample',
+  envName: '.env.local'
+}
+const customCheckOptions = {
+  isCheckExtra: false
+}
+
+
+envAligner({ rootDir: customRootDir, fileNames: customFileNames, checkOptions: customCheckOptions })
+
+// or you can only pass a parameter by this way
+envAligner({fileNames: fileNames})
+```
+
+### CLI 指令
+我們也提供了 CLI 指令，可以在終端機中直接執行：
+```bash
+npx env-aligner
+```
+
+跟程式中引入一樣，CLI 指令也支援客製化參數：
+| Option | Description | Default |
+| --- | --- | --- |
+| -s, --schema | schema 檔案名稱 | `.env.example` |
+| -e, --env | env 檔案名稱 | `.env` |
+| -m, --missing | 檢查缺少的變數 | `true` |
+| -n, --empty | 檢查空值的變數 | `true` |
+| -x, --extra | 檢查多餘的變數 | `false` |
+
+```bash
+# Check the specified .env.sample and .env.local
+npx env-aligner -s .env.sample -e .env.local
+
+# Check the specified .env.example and default .env
+npx env-aligner -s .env.example 
+
+# Do not check missing, empty value, and extra
+npx env-aligner -m false -n false -x false
+```
+
+---
+
+## 發布套件
+其實發布套件比想像中更簡單，我是看著 PJ 老師的部落格一步一步發布的，氮這裡沒做到自動化啦，因為這玩意兒應該不會有很多更新~  
+然後在開始前，可以先去 [npm](https://www.npmjs.com/) 註冊一個帳號，然後在終端機中登入：
+
+```bash
+npm login
+```
+
+### Step 1: 當然是寫好程式碼啦
+這沒什麼好說的，就是把你的程式碼寫好，然後確保它可以正常運作。  
+但這裡我踩到一個坑，就是 CommonJS 跟 ES module 系統的問題。雖說 esm 是現在的趨勢，但不得不說 cjs 還是很多系統的標準，比如 node.js。  
+我一開始用 esm 開發，然後後來遇到 node.js 無法跑 esm 的問題，所以又花了一晚上把程式碼改回 cjs，所以開發時要想好套件目標是要在哪些系統上運作。
+
+:::info
+cjs 跟 esm 最大的差異在 cjs 使用 `require` 跟 `module.exports`，而 esm 使用 `import` 跟 `export`。  
+這式開發時最容易碰到的問題。
+:::
+
+### Step 2: 準備好 `package.json`
+```json
+{
+  "name": "env-aligner", // 這裡是套件名稱
+  "version": "1.0.0-beta.2", // 這裡是套件版本號
+  "description": "A developer-friendly tool.", // 這裡可以寫套件的描述
+  "keywords": [ // 這裡可以指定關鍵字
+    ".env",
+    ".env.example",
+    "dotenv",
+    "environment variables",
+    "check",
+    "align"
+  ],
+  "homepage": "https://github.com/ChungYingHo/env-aligner", // 這裡可以指定套件的首頁 (如果你有單獨做介紹的網頁不然就放 github 也行)
+  "bugs": { // 這裡可以指定 bug 回報的位置
+    "url": "https://github.com/ChungYingHo/env-aligner/issues"
+  },
+  "repository": { // 這裡可以指定套件的 git 位置
+    "type": "git",
+    "url": "https://github.com/ChungYingHo/env-aligner.git"
+  },
+  "contributors": [ // 這裡可以列出貢獻者
+    "Jeremy Ho <ag.cyho@gmail.com>(https://codefictionist.com/)",
+    "MJC <*****@gmail.com>(https://github.com/*****)"
+  ],
+  "license": "MIT", // 這裡可以指定授權方式
+  "main": "dist/index.min.js", // 這裡是指定主要的程式碼路徑
+  "bin": {
+    "env-aligner": "dist/cli.min.js" // 這裡是指定 CLI 指令的路徑
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "rollup -c -w",
+    "build": "rmdir /s /q dist && rollup -c"
+  },
+  "dependencies": {
+    // 這個不用解釋吧
+  },
+  "devDependencies": {
+    // 這個也不用解釋吧
+  },
+  "files": [
+    "dist" // 這裡可以指定要發布的檔案路徑
+  ],
+  "engines": {
+    "node": ">=18.0.0" // 這裡可以指定要安裝這個套件需滿足的 node.js 版本
+  }
+}
+```
+
+### Step 3: 套件打包 (Optional)
+其實如果像是我只輸出一個 js 檔案的話，這步驟可以省略，但如果套件很大的話，通常還是會打包一下，這樣可以減少檔案大小。  
+套件打包通常用 **rollup**，我去了解了一下後，會較少用 webpack 是因為 rollup 較適合打包 library。
+
+1. 安裝 rollup
+```bash
+npm install rollup -D
+```
+
+2. 安裝一些 rollup 的 plugin
+    - rollup-plugin-terser：壓縮 js 檔案
+    - @rollup/plugin-json：讀取 json 檔案
+    - @rollup/plugin-commonjs：讀取 commonjs 檔案
+
+3. 建立一個 `rollup.config.js` 檔案
+```js
+const { terser } = require('rollup-plugin-terser')
+const commonjs = require('@rollup/plugin-commonjs')
+const json = require('@rollup/plugin-json')
+
+module.exports = [
+  {
+    input: 'src/lib/index.js', // 引用的檔案
+    output: {
+      file: 'dist/index.min.js', // 輸出的檔案路徑與名稱
+      format: 'cjs', // 輸出的格式
+      sourcemap: true, // 是否產生 sourcemap
+      exports: 'default' // 輸出的方式，這個跟 cjs 以及 esm 有關
+    },
+    plugins: [ // 使用的 plugin
+      terser(),
+      commonjs()
+    ],
+    external: ['dotenv', 'chalk', 'fs', 'path'] // 這裡是指定外部套件，這樣 rollup 就不會把這些套件打包進去
+  },
+  { // 以下同理，這只是打包 CLI 指令的部分
+    input: 'src/bin/cli.js',
+    output: {
+      file: 'dist/cli.min.js',
+      format: 'cjs',
+      sourcemap: true,
+      exports: 'default',
+      banner: '#!/usr/bin/env node'
+    },
+    plugins: [
+      terser(),
+      commonjs(),
+      json()
+    ],
+    external: ['dotenv', 'chalk', 'fs', 'path', 'commander']
+  }
+]
+```
+
+:::info
+其實 rollup 對 esm 稍微友善一些，但是對 cjs 也是可以的，只是要注意一些額外設定，如 `exports`。  
+但其實如果真的有錯誤之類的，rollup 還是很貼心地會提示你該怎麼改的。
+:::
+
+### Step 4: 發布套件
+發布套件有分 beta 或正式版，指令也會略有不同：
+
+1. 發布 beta 版
+```bash
+npm publish --tag beta
+```
+2. 發布正式版
+```bash
+npm publish
+```
+:::warning
+假設已經發布了兩個 beta 版，這時會發現怎麼第一個 beta 版標籤變 latest 了？  
+這是因為 npm 規定有複數版本時，至少要有一個 latest 版本。
+:::
+
+## Reference
+1. [[Guide] 發佈 npm 套件 - 從手動到自動（0）：專案與套件建置篇](https://pjchender.dev/devops/devops-publish-npm-0/)
