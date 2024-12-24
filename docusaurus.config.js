@@ -8,43 +8,43 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'CodeFictionist',
-  tagline: '寫程式的小說家',
-  favicon: 'img/favicon.ico',
+  title: "CodeFictionist",
+  tagline: "寫程式的小說家",
+  favicon: "img/favicon.ico",
 
-  url: 'https://codefictionist.com/',
-  baseUrl: '/',
+  url: "https://codefictionist.com/",
+  baseUrl: "/",
 
-  organizationName: 'chungyingho',
-  projectName: 'CodeFictionist',
+  organizationName: "chungyingho",
+  projectName: "CodeFictionist",
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenLinks: "throw",
+  onBrokenMarkdownLinks: "warn",
 
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: "en",
+    locales: ["en"],
   },
 
   presets: [
     [
-      'classic',
+      "classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         gtag: {
-          trackingID: 'G-PCHB061PKF',
+          trackingID: "G-PCHB061PKF",
           anonymizeIP: true,
         },
         docs: {
-          sidebarPath: './sidebars.js',
+          sidebarPath: "./sidebars.js",
         },
         blog: {
-          blogSidebarTitle: 'All posts',
-          blogSidebarCount: 'ALL',
+          blogSidebarTitle: "All posts",
+          blogSidebarCount: "ALL",
           showReadingTime: true,
         },
         theme: {
-          customCss: './src/css/custom.css',
+          customCss: "./src/css/custom.css",
         },
       }),
     ],
@@ -59,78 +59,79 @@ const config = {
           hideable: true,
         },
       },
-      image: 'img/fulllogo.jpg',
+      image: "img/fulllogo.jpg",
       navbar: {
-        title: 'CodeFictionist',
+        title: "CodeFictionist",
         logo: {
-          alt: 'My Site Logo',
-          src: 'img/logo.png',
+          alt: "My Site Logo",
+          src: "img/logo.png",
         },
         items: [
           {
-            to: '/about',
-            position: 'left',
-            label: 'About Me',
+            to: "/about",
+            position: "left",
+            label: "About Me",
           },
           {
-            to: '/bookList',
-            position: 'left',
-            label: 'Book List',
+            to: "/bookList",
+            position: "left",
+            label: "Book List",
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'programSidebar',
-            position: 'left',
-            label: 'Tech Articles',
+            type: "docSidebar",
+            sidebarId: "programSidebar",
+            position: "left",
+            label: "Tech Articles",
           },
           {
-            type: 'docSidebar',
-            sidebarId: 'thirtySeriesSidebar',
-            position: 'left',
-            label: '30 Days Series',
+            type: "docSidebar",
+            sidebarId: "thirtySeriesSidebar",
+            position: "left",
+            label: "30 Days Series",
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          { to: "/blog", label: "Blog", position: "left" },
           {
-            href: 'https://codefictionist-novel.vercel.app/',
-            position: 'right',
-            label: 'Novel',
-          },
-          {
-            href: 'https://github.com/ChungYingHo',
-            label: 'GitHub',
-            position: 'right',
+            href: "https://codefictionist-novel.vercel.app/",
+            position: "right",
+            label: "Novel",
           },
           {
-            href: 'https://www.linkedin.com/in/chung-ying-ho',
-            label: 'LinkedIn',
-            position: 'right',
+            href: "https://github.com/ChungYingHo",
+            label: "GitHub",
+            position: "right",
+          },
+          {
+            href: "https://www.linkedin.com/in/chung-ying-ho",
+            label: "LinkedIn",
+            position: "right",
           },
         ],
       },
       footer: {
-        style: 'dark',
+        style: "dark",
         copyright: `Copyright © ${new Date().getFullYear()} CodeFictionist. Built with Docusaurus.`,
       },
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ["csharp", 'dart'],
       },
     }),
-    markdown: {
-      mermaid: true,
-    },
-    themes: [
-      '@docusaurus/theme-mermaid',
-      [
-        "@easyops-cn/docusaurus-search-local",
-        {
-          hashed: true,
-          language: ["en", "zh"],
-          highlightSearchTermsOnTargetPage: true,
-          explicitSearchResultPath: true,
-        },
-      ],
+  markdown: {
+    mermaid: true,
+  },
+  themes: [
+    "@docusaurus/theme-mermaid",
+    [
+      "@easyops-cn/docusaurus-search-local",
+      {
+        hashed: true,
+        language: ["en", "zh"],
+        highlightSearchTermsOnTargetPage: true,
+        explicitSearchResultPath: true,
+      },
     ],
+  ],
 };
 
 export default config;

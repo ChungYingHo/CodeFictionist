@@ -9,7 +9,7 @@ Dart 是 OOP 語言，這意味著 `class` 跟 `object` 是 Dart 的根基。
 類可以包含方法（functions）和實例變數（instance variables），方法用於定義物件的操作，而實例變數用於存儲物件的狀態。
 
 ### Instance variables (實例變數)
-```ts
+```dart
 class Point {
   double? x; // Declare instance variable x, initially null.
   double? y; // Declare y, initially null.
@@ -25,7 +25,7 @@ void main() {
 ```
 :::warning
 **this 指向性**
-```ts
+```dart
 double initialX = 1.5;
 
 class Point {
@@ -46,7 +46,7 @@ class Point {
 
 ### Using class members
 使用點運算符 `.` 可以訪問物件的實例變數和方法：
-```ts
+```dart
 // p 是一個 Point 物件，有兩個實例變數 x 和 y
 var p = Point(2, 2);
 
@@ -58,13 +58,13 @@ double distance = p.distanceTo(Point(4, 4));
 ```
 :::tip
 使用 `?` 來安全訪問：
-```ts
+```dart
 var a = p?.y;
 ```
 :::
 
 ### Using constructors
-```ts
+```dart
 // method1
 var p1 = Point(2, 2);
 var p2 = Point.fromJson({'x': 1, 'y': 2});
@@ -79,7 +79,7 @@ var p = const ImmutablePoint(2, 2);
 
 ### Getting an object's type
 使用 `runtimeType` 來獲得物件的 class：
-```ts
+```dart
 print('The type of a is ${a.runtimeType}');
 ```
 
@@ -88,7 +88,7 @@ print('The type of a is ${a.runtimeType}');
 我們可以通過實現這個介面來讓其他類擁有這些方法和屬性，而不需要繼承這個類。
 
 1. 先定義一個 class **Person**：
-```ts
+```dart
 class Person {
   final String _name;
 
@@ -98,7 +98,7 @@ class Person {
 }
 ```
 2. 再定義一個 class **Impostor**：
-```ts
+```dart
 class Impostor implements Person {
   String get _name => '';
 
@@ -110,12 +110,12 @@ Impostor class 聲明它實現了 Person class（或者更準確地說，實現�
 - 定義了一個 `_name` 的 getter，但這裡 _name 返回一個空字串。
 
 3. 宣告一個函式 **greetBob**，這個函式可以接受任何實現了 Person 介面的對象，無論它實際上是 Person 還是 Impostor。這使得 greetBob 可以處理不同類型的對象，而不需要知道它們的具體類型：
-```ts
+```dart
 String greetBob(Person person) => person.greet('Bob');
 ```
 
 4. 運行 **main()** 函式：
-```ts
+```dart
 void main() {
   print(greetBob(Person('Kathy'))); // Hello, Bob. I am Kathy.
   print(greetBob(Impostor())); // Hi Bob. Do you know who I am?

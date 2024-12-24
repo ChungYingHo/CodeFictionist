@@ -17,7 +17,7 @@ Dart 提供了兩個主要的異常類型：
 
 ### Catch 捕獲異常
 Dart 捕獲異常是使用 `try` 配合 `on` 跟 `catch`：
-```ts
+```dart
 try {
   breedMoreLlamas();
 } on OutOfLlamasException {
@@ -25,7 +25,7 @@ try {
 }
 ```
 也可以使用多個 `catch` 來處理不同類型的異常：
-```ts
+```dart
 try {
   breedMoreLlamas();
 } on OutOfLlamasException {
@@ -50,7 +50,7 @@ try {
 
 ### Throw 拋出異常
 以下是拋出異常的範例：
-```ts
+```dart
 // example1
 throw FormatException('Expected at least 1 section');
 
@@ -61,7 +61,7 @@ throw 'Out of llamas!';
 void distanceTo(Point other) => throw UnimplementedError();
 ```
 也可以透過 `rethrow` 在異常處理過程中重新抛出異常，以便讓上層調用者能夠感知和處理這個異常：
-```ts
+```dart
 void misbehave() {
   try {
     dynamic foo = true;
@@ -95,7 +95,7 @@ void main() {
 `finally` 用於確保某些程式碼**無論異常是否被拋出**都會執行。  
 這意味著即使在 `try` 區塊中的程式碼引發異常，`finally` 中的程式碼仍然會被執行。  
 如果沒有 `catch` 子句去捕獲異常，則 `finally` 執行完畢後，該異常會繼續向外傳遞。
-```ts
+```dart
 try {
   breedMoreLlamas();
 } finally {
