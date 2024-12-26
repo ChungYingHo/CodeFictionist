@@ -1,0 +1,243 @@
+---
+title: C# - 型別
+tags: [cs]
+---
+
+## 型別
+| 類型分類 | 型別              | 範例值                      | 說明                                      |
+|----------|-------------------|----------------------------|-------------------------------------------|
+| 值型別   | `int`             | `42`                      | 整數型別，用於儲存整數值。                |
+| 值型別   | `double`          | `3.14`                    | 浮點數型別，用於儲存高精度的小數值。      |
+| 值型別   | `char`            | `'A'`                     | 字元型別，用於儲存單一字元。              |
+| 值型別   | `bool`            | `true` 或 `false`         | 布林型別，用於儲存邏輯值。                |
+| 值型別   | `decimal`         | `99.99m`                  | 高精度小數型別，適用於金融計算。          |
+| 值型別   | `float`           | `1.23f`                   | 單精度浮點數型別，用於儲存小數值。        |
+| 參考型別 | `string`          | `"Hello, World"`          | 字串型別，用於儲存文字資料。              |
+| 參考型別 | `object`          | `new object()`            | 所有型別的基類，可用於儲存任何型別值。    |
+| 參考型別 | `List<T>`         | `List<int> nums = new();` | 動態集合，可儲存同類型的多個元素。        |
+| 參考型別 | `Array`           | `int[] nums = {1, 2, 3};` | 固定大小的陣列，用於儲存同型別的元素集合。|
+| 空值型別 | `null`            | 無                       | 特殊值，表示物件沒有任何參考。            |
+
+---
+
+## 變數宣告
+C# 的變數宣告必定使用**型別** (ex: `int`, `string`) 或是 `var` 關鍵字做開頭。  
+使用 `var` 關鍵字宣告變數時，編譯器會根據變數的初始值來決定變數的型別，所以使用 `var` 宣告變數時是一定要給預設值的。  
+
+```cs
+using System;
+
+string name;
+name = "Jeremy";
+Console.WriteLine("Hello, " + name); // Hello, Jeremy
+
+var myFriend = "Scott";
+// 字串插補的寫法
+Console.WriteLine($"Hello, {myFriend}"); // Hello, Scott
+```
+
+---
+
+## 字串 (String)
+C# 的字串以 `string` 關鍵字宣告，可以說是 C# 最常用的型別之一，上述**變數宣告**的範例就是宣告**字串**型別的變數。  
+字串可以用 `+` 來串接，也可以用 `$` 來做字串插補 (同見上面的範例)。  
+C# 的字串不能用單引號 `'`，只能用雙引號 `"`，單引號是用來宣告字元的，這點跟 Javascript 不同。
+
+### 去空白 (Trim)
+`Trim` 方法可以去除字串前後的空白字元：
+
+```cs
+using System;
+
+string greeting = "    Hello, world!     ";
+
+// 去頭部空白
+string trimStartGreeting = greeting.TrimStart();
+
+// 去尾巴空白
+string trimEndGreeting = greeting.TrimEnd();
+
+// 去兩邊空白
+string trimGreeting = greeting.Trim();
+
+
+Console.WriteLine($"-{greeting}-"); // -    Hello, world!     -
+Console.WriteLine($"-{trimStartGreeting}-"); // -Hello, world!     -
+Console.WriteLine($"-{trimEndGreeting}-"); // -    Hello, world!-
+Console.WriteLine($"-{trimGreeting}-"); // -Hello, world!-
+```
+
+### 字串替換 (Replace)
+`Replace` 方法可以將字串中的指定字串取代成另一個字串，如下面範例可以指定將 **Hi** 換成 **Hello**：
+
+```cs
+string sayHi = "Hi, my friend";
+sayHi = sayHi.Replace("Hi", "Hello");
+Console.WriteLine(sayHi); // Hello, my friend
+```
+
+同樣類似的替換字串還有全部變大寫的 `ToUpper` 和全部變小寫的 `ToLower` 方法：
+
+```cs
+string sayHi = "Hi, my friend";
+sayHi = sayHi.ToUpper();
+Console.WriteLine(sayHi); // HI, MY FRIEND
+
+sayHi = sayHi.ToLower();
+Console.WriteLine(sayHi); // hi, my friend
+```
+
+### 字串搜尋 (Contains)
+`Contains` 方法可以檢查字串中是否包含指定的字串，如果包含則回傳 `true`，否則回傳 `false`：
+
+```cs
+string sayHi = "Hi, my friend";
+Console.WriteLine(sayHi.Contains("Hi")); // True
+Console.WriteLine(sayHi.Contains("Hello")); // False
+```
+
+其他還有 `StartsWith` 和 `EndsWith` 方法可以檢查字串是否以指定字串開頭或結尾：
+
+```cs
+string sayHi = "Hi, my friend";
+Console.WriteLine(sayHi.StartsWith("Hi")); // True
+Console.WriteLine(sayHi.EndsWith("friend")); // True
+```
+
+---
+
+## 數字
+### 整數 (Integer)
+如同可以用 `string` 來宣告字串變數，我們也可以用 `int` 來宣告整數變數。整數變數可以用來儲存整數值，例如 `1`、`2`、`3` 等等。
+
+```cs
+int a = 1;
+int b = 2;
+int c = a + b;
+Console.WriteLine(c); // 3
+```
+
+C# 的整數會有最小值和最大值，可以透過 `int.MinValue` 和 `int.MaxValue` 來取得。這點滿特殊的，所以 C# 在計算時要注意是否會超過這個範圍，超出範圍的計算結果會不準確。
+
+```cs
+Console.WriteLine(int.MinValue); // -2147483648
+Console.WriteLine(int.MaxValue); // 2147483647
+```
+
+### 雙精確度浮點數 (Double)
+所謂浮點數就是帶小數點的數字。一般其實常會聽到的浮點數是 **float**，這是單精確度浮點數。而 C# 的 **double** 是雙精確浮點數，位元數是單精確度的兩倍。  
+另外，`double` 宣告的變數值範圍比 `int` 還要大，可以儲存更大的數字。
+
+```cs
+double a = 5;
+double b = 4;
+double c = 2;
+double d = (a + b) / c;
+Console.WriteLine(d); // 4.5
+```
+
+
+### 十進位 (Decimal)
+`decimal` 的精度比 `double` 還要高，可以儲存更多位數的小數，但是範圍比 `double` 小。
+
+```cs
+double a = 1.0;
+double b = 3.0;
+Console.WriteLine(a / b); // 0.3333333333333333
+
+decimal c = 1.0M;
+decimal d = 3.0M;
+Console.WriteLine(c / d); // 0.3333333333333333333333333333
+```
+
+---
+
+## 清單 (List)
+我們可以使用 `List` 來儲存一組同樣型別的資料，並且可以動態增加或刪除資料。
+:::warning
+記得先在檔案最上方加上 `using System.Collections.Generic;`，才能使用 `List`。
+:::
+
+```cs
+List<int> numbers = new List<int>();
+numbers.Add(1);
+numbers.Add(2);
+numbers.Add(3);
+foreach (int number in numbers)
+{
+  Console.WriteLine(number);
+}
+```
+
+也可以一開始就初始化 `List`：
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+foreach (var name in names)
+{
+  Console.WriteLine(name.ToUpper());
+}
+```
+
+### 新增元素
+`Add` 方法可以將元素加入 `List` 的尾端。
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+names.Add("Jerry");
+Console.WriteLine(names[3]); // Jerry
+```
+
+### 移除元素
+`Remove` 方法可以移除指定的元素。
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+names.Remove("Mary");
+foreach (var name in names)
+{
+  Console.WriteLine(name); // John Tom
+}
+```
+
+### 更新元素
+`List` 的元素可以透過 `[]` 來取得或更新。
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+names[1] = "Jerry";
+foreach (var name in names)
+{
+  Console.WriteLine(name); // John Jerry Tom
+}
+```
+
+### 取得 List 長度
+可以透過 `Count` 屬性取得 `List` 的長度。
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+Console.WriteLine(names.Count); // 3
+```
+
+### 搜尋元素
+可以透過 `IndexOf` 方法來搜尋元素的位置，若找不到會回傳 `-1`。
+
+```cs
+var names = new List<string> { "John", "Mary", "Tom" };
+Console.WriteLine(names.IndexOf("Mary")); // 1
+Console.WriteLine(names.IndexOf("Jerry")); // -1
+```
+
+### 排序
+可以透過 `Sort` 方法來排序 `List`。  
+如果是 `string` 的 List，`Sort` 預設會以字母順序排序。
+
+```cs
+var names = new List<string> { "Mary", "Emily", "Tom" };
+names.Sort();
+foreach (var name in names)
+{
+  Console.WriteLine(name); // Emily Mary Tom
+}
+```

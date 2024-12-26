@@ -1,0 +1,133 @@
+---
+title: C# - 語言結構
+tags: [cs]
+---
+
+
+:::info
+[C# 線上練習網站](https://dotnetfiddle.net/)
+:::
+
+## 認識 C# 架構
+```csharp
+using System;
+
+class Hello
+{
+static void Main()
+  {
+    // This line prints "Hello, World" 
+    Console.WriteLine("Hello, World");
+  }
+}
+```
+這是最基礎的 C# 程式碼架構，也是微軟 C# 官方教學的第一個範例，這個範例中有幾個重要的元素：
+- `using System;`：這是引用命名空間的語法，`System` 是 C# 的核心命名空間，這個命名空間中包含了很多基本的類別，例如 `Console` 類別。本來的 code 可以寫成 `System.Console.Writeline`，但是因為引用了 `System` 命名空間，所以可以直接寫成 `Console.Writeline`。
+- `class Hello`：這是一個類別的宣告，類別是 C# 的基本結構，所有的程式都是寫在類別中的。類別用於封裝方法、屬性和其他類別。
+- `static void Main()`：`Main` 方法是 C# 程式的進入點，C# 的執行流程會從這個方法開始執行，所以一個 C# 專案中至少需要有一個 Main 方法作為程式的起始點。
+
+:::warning
+好像是 .NET 6.0 提供了一種叫**最上層陳述式**的語法，可以不用寫 `class` 這個關鍵字，直接寫方法，算是省去了一些程式碼吧，但大家都推薦還是要先學基礎的傳統語法。  
+順道一提，為 Unity 學 C# 的夥伴，Unity 自己產生的 cs file 是屬於傳統式寫法。
+
+```cs
+using System;
+
+// This line prints "Hello, World" 
+Console.WriteLine("Hello, World");
+```
+:::
+
+---
+
+## 判別式
+### if-else
+最基本的判別式，如果條件為 `true` 則執行 `if` 的 code，否則執行 `else` 的 code：
+```cs
+int a = 1;
+int b = 2;
+if (a > b)
+{
+    Console.WriteLine("a > b");
+}
+else
+{
+    Console.WriteLine("a <= b");
+}
+```
+
+### switch-case
+`switch` 會根據變數的值來執行對應的 `case`，如果沒有符合的 `case` 則會執行 `default`：
+```cs
+int day = 4;
+switch (day)
+{
+    case 1:
+        Console.WriteLine("Monday");
+        break;
+    case 2:
+        Console.WriteLine("Tuesday");
+        break;
+    case 3:
+        Console.WriteLine("Wednesday");
+        break;
+    case 4:
+        Console.WriteLine("Thursday");
+        break;
+    case 5:
+        Console.WriteLine("Friday");
+        break;
+    case 6:
+        Console.WriteLine("Saturday");
+        break;
+    case 7:
+        Console.WriteLine("Sunday");
+        break;
+    default:
+        Console.WriteLine("Invalid day");
+        break;
+}
+```
+
+---
+
+## 迴圈
+### while
+`while` 會在條件為 `true` 時一直執行直到條件為 `false`：
+```cs
+int i = 0;
+while (i < 5)
+{
+  Console.WriteLine(i);
+  i++;
+}
+```
+
+### do-while
+`do-while` 會先執行一次 code，再檢查條件是否為 `true`：
+```cs
+int i = 0;
+do
+{
+  Console.WriteLine(i);
+  i++;
+} while (i < 5);
+```
+
+### for
+```cs
+for (int i = 0; i < 5; i++)
+{
+  Console.WriteLine(i);
+}
+```
+
+### foreach
+`foreach` 用來遍歷集合的元素：
+```cs
+var numbers = new List<int> { 1, 2, 3, 4, 5 };
+foreach (int number in numbers)
+{
+  Console.WriteLine(number);
+}
+```
