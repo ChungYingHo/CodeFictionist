@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkcode_fictionist=self.webpackChunkcode_fictionist||[]).push([[8121],{68070:l=>{l.exports=JSON.parse('{"tags":[{"label":"life","permalink":"/blog/tags/life","count":4},{"label":"tools","permalink":"/blog/tags/tools","count":1},{"label":"books","permalink":"/blog/tags/books","count":1},{"label":"tech","permalink":"/blog/tags/tech","count":2}]}')}}]);
