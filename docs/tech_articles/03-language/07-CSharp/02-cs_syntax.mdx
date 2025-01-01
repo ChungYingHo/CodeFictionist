@@ -9,6 +9,7 @@ tags: [cs]
 :::
 
 ## 認識 C# 架構
+### Basic Structure
 ```csharp
 using System;
 
@@ -16,7 +17,6 @@ class Hello
 {
 static void Main()
   {
-    // This line prints "Hello, World" 
     Console.WriteLine("Hello, World");
   }
 }
@@ -26,6 +26,10 @@ static void Main()
 - `class Hello`：這是一個類別的宣告，類別是 C# 的基本結構，所有的程式都是寫在類別中的。類別用於封裝方法、屬性和其他類別。
 - `static void Main()`：`Main` 方法是 C# 程式的進入點，C# 的執行流程會從這個方法開始執行，所以一個 C# 專案中至少需要有一個 Main 方法作為程式的起始點。
 
+:::tip
+現在用 VS 建 C# 專案，你會發現在最一開始的 **Program.cs**，也就是 VS 預設幫忙建有 `Main` 方法的檔案，它頂層不會有有 `using system`，但當我們自己在這個專案下又建立其它新的 cs file 來撰寫不同邏輯時，VS 卻又自己幫我們引進許多 namespace，這是因為 VS 幫我們初始化專案時會有一行這樣的設定：`<ImplicitUsings>enable</ImplicitUsings>`。這個設定會讓系統自動在我們的 Program.cs (專案的入口) **隱式**做 `using...` 的動作，但其它 cs 檔案就沒享受到這個福利了。
+:::
+
 :::warning
 好像是 .NET 6.0 提供了一種叫**最上層陳述式**的語法，可以不用寫 `class` 這個關鍵字，直接寫方法，算是省去了一些程式碼吧，但大家都推薦還是要先學基礎的傳統語法。  
 順道一提，為 Unity 學 C# 的夥伴，Unity 自己產生的 cs file 是屬於傳統式寫法。
@@ -33,9 +37,13 @@ static void Main()
 ```cs
 using System;
 
-// This line prints "Hello, World" 
 Console.WriteLine("Hello, World");
 ```
+:::
+
+### Full Structure
+:::info
+待補充
 :::
 
 ---
