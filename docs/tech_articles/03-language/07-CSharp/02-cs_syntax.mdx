@@ -3,7 +3,6 @@ title: C# - 語言結構
 tags: [cs]
 ---
 
-
 :::info
 [C# 線上練習網站](https://dotnetfiddle.net/)
 :::
@@ -42,9 +41,156 @@ Console.WriteLine("Hello, World");
 :::
 
 ### Full Structure
-:::info
-待補充
-:::
+但通常一個方案下都會有 N 個專案，每個專案又都有 N 個 cs 檔案各司其職，比如一個遊戲方案下可能有一個專案負責卡牌遊戲的邏輯、一個負責跑酷遊戲的邏輯，這兩個專案下在由複數隻負責不同功能的 cs 檔案組成一個完整的遊戲功能。  
+有一個重點是，通常一個專案就會視為一個 namespace，也都會有獨立一個含有 `Main` 方法的 Program.cs。
+
+現在假設有一個方案為 **cs_practice**，裡面有兩個專案，分別是 **test** 跟 **test2**，裡面又有複數個 cs 檔案，下面透過範例介紹怎麼在同一個專案中引用其它 cs 檔案的方法以及怎麼在其他專案中引用另一專案的方法。
+```xml title="方案架構"
+--- cs_practice
+    ---- test
+        ---- Program.cs
+        ---- Calculator.cs
+        ---- Greeting.cs
+    ---- test2
+        ---- Program.cs
+        ---- HiFriend.cs
+```
+
+- test 專案
+```cs title="Program.cs"
+using test2;
+
+namespace test
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Calculator calculator = new();
+            Greeting greeting = new();
+            HiFriend hiFriend = new();
+
+            Console.WriteLine(calculator.Add(1, 2));
+            greeting.SayHello();
+            hiFriend.SayHi();
+        }
+    }
+}
+```
+```cs title="Calculator.cs"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace test
+{
+    internal class Calculator
+    {
+        public int Add(int a, int b)
+        {
+            return a + b;
+        }
+    }
+}
+```
+```cs title="Greeting.cs"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace test
+{
+    internal class Greeting
+    {
+        public void SayHello()
+        {
+            Console.WriteLine("Hello, World!");
+        }
+    }
+}
+```
+
+- test2 專案
+```cs title="Program.cs"
+namespace test2
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Hello, World!");
+        }
+    }
+}
+```
+```cs title="HiFriend.cs"
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace test2
+{
+    public class HiFriend
+    {
+        public void SayHi()
+        {
+            Console.WriteLine("Hi, Friend!");
+        }
+    }
+}
+```
+
+現在來專注看回 **test** 專案的 `Program.cs`：
+```cs title="Program.cs"
+using test2;
+
+namespace test
+{
+    internal class Program
+    {
+        static void Main()
+        {
+            Calculator calculator = new();
+            Greeting greeting = new();
+            HiFriend hiFriend = new();
+
+            Console.WriteLine(calculator.Add(1, 2));
+            greeting.SayHello();
+            hiFriend.SayHi();
+        }
+    }
+}
+```
+已知 `Calculator` 跟 `Greeting` 都同樣是 test 專案下的其他 cs 檔案中的 class，在 `Program.cs` 中可以直接使用 `Calculator calculator = new();` 來在 `Main` 方法中實例化 `Calculator` 這個 class。  
+而 `HiFriend` 是 test2 專案下的 class，所以要先引用 `using test2;`，才能在 `Main` 方法中實例化 `HiFriend` 這個 class。
+
+有一個重點是，不是說直接 `using test2` 就能將 **test2** 專案的東西引入 **test** 專案中。首先必須在 VS 中在 test 專案上按右鍵，選擇**加入**，然後選擇**專案參考**，這時打開 **test.cs.prog** 會看到多一行 `<ProjectReference Include="..\test2\test2.csproj" />`，這樣才能在 test 專案中寫 `using test2;` ，然後使用 test2 專案的東西。
+
+```cs title="test.csproj"
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+  // highlight-next-line
+    <ProjectReference Include="..\test2\test2.csproj" />
+  </ItemGroup>
+
+</Project>
+```
+
+![](./assets/01-cs_project.png)
 
 ---
 
