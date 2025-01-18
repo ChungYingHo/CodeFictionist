@@ -3,20 +3,23 @@ title: Vue3 - 專案建立與響應式資料
 tags: [vue3]
 ---
 ## Create a Vue3 project
-1. Run the code below in the terminal:
+1. 透過 npm 建立一個 Vue3 專案，指令如下：
 ```powershell
 npm create vue@latest
 ```
-2. `cd` into the project path, run the instruction below:
+
+2. `cd` 到專案位置，執行以下指令：
 ```powershell
 npm install
 ```
-3. Type `npm run dev`, you can now see the vue3 website run on the browser.
+
+3. 執行 `npm run dev` 即可啟動專案。
 
 ---
 
 ## Syntax
-Vue3 has the powerful syntax - composition api, it's very different with the options api of Vue2, but you still can write options api in Vue3 (not recommend).
+Vue3 提供了強大的語法 - composition api，這和 Vue2 的 options api 有很大的不同。  
+雖然仍然可以在 Vue3 中使用 options api，但這通常只會在那些 Vue3 剛出來的專案中看到。
 
 ```xml title='composition api'
 <script setup>
@@ -33,57 +36,55 @@ Vue3 has the powerful syntax - composition api, it's very different with the opt
 ```
 
 ### Text Interpolation
-In the template, if there have a variable you want to render, use `{{...}}`, like below:
+在 `template` 中若要使用變數，可以使用 `{{...}}`，如下：
 ```xml
 <span>Message: {{ msg }}</span>
 ```
 
 ### Raw HTML
-If your variable contains HTML content, you should not use `{{...}}` since it will treat the variable's content as plain text.  
-Instead, you should use the `v-html` directive to insert HTML content：
+如果變數包含 HTML 內容，則不應使用 `{{...}}`，因為它會將變數的內容視為純文本。這時應使用 `v-html` 指令插入 HTML 內容：
 ```xml
 <!-- rawHtml = <span style="color: red">This should be red.</span> -->
 <p>Using v-html directive: <span v-html="rawHtml"></span></p>
 ```
 
 ### Attribute Bindings
-If you want to binding a variable on the attribute, use `v-bind`. For example:
+如果要綁定變數到 `attribute` 上，可以使用 `v-bind`。例如：
 ```xml
 <h1 v-bind:class="{addColor: changed}">I will change my color</h1>
 ```
-Here means: when changed is `true`, this `<h1>` will add a class name `addColor`.  
-You can use a shorthand for `v-bind` as shown below:
+這個範例表示當 `changed` 為 `true` 時，`<h1>` 會加上 `addColor` 這個 class。  
+也可以使用 `v-bind` 的簡寫方式：
 ```xml
 <h1 :class="{addColor: changed}">I will change my color</h1>
 ```
 
 :::info
-There are many directives in Vue. For example:  
-1. `v-for`:  This is a loop used to create multiple elements.
-2. `v-if` or `v-show`: These are used to conditionally display elements.
-3. `v-on`:  This is used to bind an event handler.
+Vue 還提供很多很好用的指令，例如：
+1. `v-for`:  這是用來在 `template` 中做迭代的指令
+2. `v-if` or `v-show`: 這是用來在 `template` 中做條件判斷的指令
+3. `v-on`: 這是用來在 `template` 中做事件綁定的指令
 :::
 
 ---
 
 ## Reactivity Fundamentals
-Reactivity is a crucial concept in Vue.  
-We use `useState` to manage reactive data in React. However, in Vue3, it use `ref`, `reactive` and `computed` for this purpose.
+響應式是 Vue 中的一個重要概念。在 React 中會用 `useState` 來管理響應式數據。但在 Vue3 中，則使用 `ref`、`reactive` 和 `computed` 來達到響應式狀態的管理。
 
 ### ref
-It can store any type of data.  
-However, when storing objects or arrays that require reactive properties, reactive is often preferred.
+`ref` 可以儲存任何類型的數據。但有些人會偏好把 object 或 array 交給 `reactive` 來管理，但這裡還是先來講 `ref`。例如：
 
-Note that when accessing the value of a ref in `<script setup>`, you should append .value to it.  
-However, in `<template>`, you can directly use `{{ref}}` to access the value without .value.
+`ref` 的使用上，當在 `<script setup>` 中使用 `ref` 的值時，應該在其後加上 `.value`。而在 `<template>` 中，則可以直接使用 `{{ref}}` 來取得值。
 ```xml
 <script setup>
   import { ref } from 'vue';
   const num = ref(0)
+  <!-- highlight-next-line -->
   const changeNum = () => num.value += 1
 </script>
 
 <template>
+ <!-- highlight-next-line -->
   <h1>{{ num }}</h1>
   {/* these two lines of code do the same thing */}
   <button @click="changeNum">Add one</button>
@@ -92,11 +93,13 @@ However, in `<template>`, you can directly use `{{ref}}` to access the value wit
 ```
 
 :::warning
-Please use `const` to declare a `ref`. Do not use `let` or `var`!
+注意必須使用 `const` 來宣告 `ref`，不可使用 `let` 或 `var`！
 :::
 
 ### reactive
-When accessing properties of a reactive object, unlike with `ref`, there's no need to append `.value`.
+`reactive` 可以儲存 object 或 array。  
+使用 `reactive` 的值時，不需要在其後加上 `.value`。
+
 ```xml
 <script setup>
   import { reactive } from 'vue';
@@ -119,13 +122,11 @@ When accessing properties of a reactive object, unlike with `ref`, there's no ne
 ```
 :::info
 ### Difference between `ref` and `reactive`
-Not just if you need to append `.value` or not.  
-When a `ref` is used to store an object, deep changes within the object's properties might not be detected by `watch`, as ref is primarily designed to track direct assignments to its value.  
-In contrast, an object made reactive with `reactive` can more effectively track changes to its internal properties.
+這兩者之間的差異不只體現在是否取值時需要加上 `.value`。當 `ref` 用來儲存 object 時，object 內部的屬性變化可能不會被 `watch` 檢測到，因為 `ref` 主要是用來追蹤直接對其值的賦值。反之，使用 `reactive` 使得 object 內部屬性的變化更容易被檢測到。
 
-But, if you add the third parameter `deep: true` when using `watch` to observe a `ref` object, `watch` will be able to detect changes within the properties of the `ref` object. This is because adding `deep: true` enables `watch` to perform deep observation.
+但是但是~ 實務上還是很喜歡直接無腦用 `ref` 來存 object 或 array，又想要 `watch` 能夠偵測到 object 內部屬性的變化怎麼辦？這時可以在使用 `watch` 時加上第三個參數 `deep: true`，這樣 `watch` 就能夠偵測到 `ref` object 內部屬性的變化了。
 
-```xml
+```js
 watch(people1, () => {
   console.log('something changed')
 }, {deep : true})
@@ -133,9 +134,10 @@ watch(people1, () => {
 :::
 
 ### computed
-In Vue, `computed` is a method used to define reactive properties that can be computed.  
-Computed properties automatically recalculate their value when the data they depend on changes.  
-This is particularly useful for complex logic that needs to update automatically based on certain data.
+Vue 還提供了 `computed` 這個屬性，`computed` 會在其依賴的數據發生變化時自動重新計算。  
+`computed` 通常用於需要根據某些數據自動更新的複雜邏輯，實務上也挺常用在 i18n 切換語系 (怎麼實做不是這篇重點 www)。  
+以下範例示範未使用 `computed` 和使用 `computed` 的差異：
+
 ```xml title='Before use computed'
 <script setup>
   import { ref } from 'vue';
@@ -167,13 +169,13 @@ This is particularly useful for complex logic that needs to update automatically
   <h1>Num1 + Num2 = {{ numPlus }}</h1>
 </template>
 ```
-You can see after we use `computed`, we put all the logic into `<script setup>`.
+可以從上面的範例中觀察到，使用 `computed` 後可以把所有邏輯都放在 `<script setup>` 中。
 
 :::info
 ### Difference between method and computed
-1. `computed` only works when the reactive data changes.
-2. You cannot pass any parameters to `computed`.
-3. By default, `computed` only has a `getter`.
+1. `computed` 只有在其依賴的數據發生變化時才會執行。
+2. `computed` 不可以傳參數。
+3. `computed` 預設只有 `getter`。
 :::
 
 ## Reference

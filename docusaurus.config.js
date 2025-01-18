@@ -91,11 +91,6 @@ const config = {
           },
           { to: "/blog", label: "Blog", position: "left" },
           {
-            href: "https://codefictionist-novel.vercel.app/",
-            position: "right",
-            label: "Novel",
-          },
-          {
             href: "https://github.com/ChungYingHo",
             label: "GitHub",
             position: "right",

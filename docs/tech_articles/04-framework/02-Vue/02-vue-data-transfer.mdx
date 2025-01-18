@@ -3,11 +3,12 @@ title: Vue3 - 元件與資料傳遞
 tags: [vue3]
 ---
 ## Component
-The core architecture of Vue (also in React) revolves around components, which encapsulate reusable logic, styles, and content.  
-By packaging these elements into individual components, Vue enhances code reusability and development efficiency. Simply put, a webpage created with Vue is assembled from many such components, with data flowing between them to alter and render our view.
+元件是 Vue (和 React) 的核心架構，它將可重複使用的邏輯、樣式和內容封裝在一起。  
+通過將這些元素打包到單獨的元件中，Vue 提高了 code 的複用性和開發效率。  
+簡單來說，Vue 創建的網頁是由許多這樣的元件組成，然後數據在這些元件之間傳遞，最後產生了我們眼前的畫面。
 
 ### Simple use of component
-Below are is a simple component for example:
+一個 **.vue** 檔案通常就構成一個元件，它包含了三個部分：`<script setup>`, `<template>`, `<style>`。
 ```xml title='PeopleBlock.vue'
 <script setup>
     <!-- Javascript here -->
@@ -22,7 +23,8 @@ Below are is a simple component for example:
 </style>
 ```
 
-Then, we can import this component (`PeopleBlock.vue`) into `App.vue`, now we can call `App.vue` is a parent component and `PeopleBlock.vue` is a child component.
+接著，我們可以將這個元件 (`PeopleBlock.vue`) 引入到 `App.vue` 中，這樣我們就可以稱 `App.vue` 為父元件，`PeopleBlock.vue` 為子元件。
+
 ```xml title='App.vue'
 <script setup>
   import PeopleBlock from './components/PeopleBlock.vue';
@@ -34,10 +36,10 @@ Then, we can import this component (`PeopleBlock.vue`) into `App.vue`, now we ca
 ```
 
 ### Globally import a component
-Sometimes, certain components need to be imported in many places. To avoid writing numerous `import` statements, we can configure our application to globally import these components.
+有時候呢 (真的是有時候)，會有一些元件需要在很多地方引入，這時候我們可以設定全局引入這些元件以避免要在很多檔案中寫很多 `import` 的語句。
 
-Now, go to modify the `main.js`.  
-The first code block below is the configuration before modification:
+首先，我們需要在 `main.js` 中設定全局引入的元件。  
+以下是修改前的設定：
 ```js title='Before'
 import './assets/main.css'
 
@@ -47,7 +49,7 @@ import App from './App.vue'
 createApp(App).mount('#app')
 ```
 
-Now, we configure the application to globally import `PeopleBlock.vue`:
+接著，我們設定應用程式全局引入 `PeopleBlock.vue`：
 ```js title='After'
 import './assets/main.css'
 
@@ -61,12 +63,35 @@ app.component('PeopleBlock', PeopleBlock)
 app.mount('#app')
 ```
 
+### `<component :is>` dynamic component
+在 Vue 中，我們可以使用 `<component :is>` 來動態切換元件，我最早碰到這玩意兒是我還在某家做 GIS 的公司時拿來切換地圖圖層元件，但事實上這真的是一個很方便的功能。  
+以下範例是我之前寫的一個 quasar demo 中的其中一段，可以觀察到 `<component :is>` 在這個應用中是透過 `switchComponentName` 來判斷要使用 **HandsonTableCrudComponent** 還是 **HandsonTableComponent** 這兩個元件。
+
+```xml
+<template>
+  <q-page class="row items-center justify-evenly">
+    <q-btn @click="switchComponent">Switch to {{ switchComponentName }}</q-btn>
+    <div>
+    <!-- highlight-next-line -->
+      <component :is="switchComponentName === 'Filter & Export' ? HandsonTableCrudComponent : HandsonTableComponent" ref="componentRef" />
+      <q-btn
+        v-if="switchComponentName === 'CRUD'"
+        color="warning"
+        class="q-mt-sm row"
+        @click="exportToCsv"
+      >
+        Export
+      </q-btn>
+    </div>
+</q-page>
+</template>
+```
+
 ---
 
 ## Data Transmission
 ### props
-`props` is a mechanism for passing data from a parent component to a child component.  
-For example:
+`props` 是一種從父元件傳遞數據到子元件的機制。
 ```xml title='App.vue (parent)'
 <template>
   <PeopleBlock name="Jeremy"/>
@@ -82,8 +107,8 @@ For example:
 </template>
 ```
 
-In Vue, you can use `defineProps` in child components to define the properties received from the parent component.  
-These properties can be defined either as an array or as an object：
+在 Vue 中，必須使用 `defineProps` 在子元件中定義要從父元件接收的 `props`。  
+這些 `props` 可以定義為陣列或物件：
 ```js title='defineProps as an object'
 const props = defineProps({
     name:{
@@ -96,9 +121,8 @@ const props = defineProps({
 ### emit
 > Props in, Events out.  
 
-The principle of `Props in, Events out` in Vue refers to using `props` to pass data from the parent to the child component, and using `emit` to send events from the child back to the parent component for data modification."
+Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `props` 從父元件傳遞數據到子元件，並使用 `emit` 從子元件發送事件到父元件進行數據修改。
 
-For example:
 ```xml title='App.vue (parent)'
 <script setup>
   import { ref } from 'vue';
@@ -127,15 +151,15 @@ For example:
 </template>
 ```
 
-Let me explain it:  
-1. In the example, `defineEmits` is used in `PeopleBlock.vue` (child component) to define a custom event named `update-name`.
-2. When the button in the child component's template is clicked, the `update-name event` is emitted to the parent component using `$emit`.
-3. In the parent component `App.vue`, the event `update-name` is listened for with `@update-name`, and it is bound to the `changeName` function for data modification
+我們來看一下上面發生什麼事：
+1. 在這個範例中，`defineEmits` 在 `PeopleBlock.vue` (子元件) 義了一個名為 `update-name` 的自定義事件。
+2. 當子元件的模板中的按鈕被點擊時，使用 `$emit` 發送 `update-name` 事件到父元件。
+3. 在父元件 `App.vue` 中，使用 `@update-name` 監聽 `update-name` 事件，並將其綁定到 `changeName` 函數進行數據修改。
 
 :::info
 ### Can we pass the function from parent to child with `props`?
-If you have a background in React and are transitioning to Vue, you might wonder if you can pass functions from parent to child components via `props`, as is commonly done in React.  
-Indeed, it is technically possible in Vue.
+會有這個疑問是因為我是先會 React 再來學 Vue 的。而在 React 中，透過 `props` 傳遞函數是很常見的事情。經過測試，我發現在 Vue 中也是可以透過 `props` 傳遞函數的。
+
 ```xml title='parent'
 <script setup>
   import { ref } from 'vue';
@@ -166,17 +190,14 @@ Indeed, it is technically possible in Vue.
     <button @click="changeName('Joanna')">click</button>
 </template>
 ```
-However, Vue recommends a different approach known as `Props in, Events out`, which I have explained above.  
-Just follow what the Vue officials say to avoid some unexpected mistakes.
+
+然而，Vue 官方還是建議使用 `Props in, Events out` 的方式，說是這樣可以避免一些意外的錯誤，大家就還是乖乖遵守以免 debug 到天荒地老才發現問題。
 :::
 
 ### v-model
-In Vue, `v-model` is a directive used for creating two-way bindings on form input, textarea, and select elements.  
-It automatically picks the correct way to update the element based on the input type.
+在 Vue 中，`v-model` 用於在表單輸入、文本區域和下拉列表...等元素上進行資料的**雙向綁定**。  
+當表單元素的值發生變化時，綁定的 Vue 實例數據會自動更新，反之亦然。這使得 Vue 在處理表單數據時更加地方便和效率。
 
-When the value of the form element changes, the bound Vue instance data is automatically updated, and vice versa.  
-This makes handling form data in Vue applications more convenient and efficient.  
-For example:
 ```xml
 <script setup>
   import { ref } from 'vue';
@@ -189,15 +210,15 @@ For example:
 </template>
 ```
 
-Moreover, `v-model` provides three modifiers to assist with form handling:  
-1. `.lazy`: Changes the way Vue synchronizes the input with the data, from updating on every input event to updating on change events. This means the data is updated when the input field loses focus or the input is completed.
-2. `.number`: Attempts to convert the user's input into a number. This is especially useful for numeric inputs, avoiding extra type conversion during form submission.
-3. `.trim`: Automatically removes any leading and trailing whitespace from the user's input. This is helpful for processing user input, reducing the need for additional string manipulation on the backend."
+此外，`v-model` 還提供了三個修飾符來幫助處理表單：
+1. `.lazy`: 改變 Vue 同步輸入和數據的方式，從在**每次輸入事件時更新**到在**更改事件完成時更新**。這換句話說就是當輸入字段失去焦點或輸入完成時，數據才會更新。
+2. `.number`: 嘗試將用戶的輸入轉換為數字。這對於數字輸入特別有用，避免在表單提交時進行額外的類型轉換。
+3. `.trim`: 自動刪除用戶輸入的前導和尾隨空格。這有助於處理用戶輸入，減少後端的額外字符串操作。
 
 ### How to pass the `v-model` between components?
-To pass `v-model` between components in Vue, I define a prop named `modelValue` in the child component to receive the value from the parent component and an emit event (like `update:modelValue`) to notify the parent component about data changes in the child component.  
+在 Vue 中，要在組件之間傳遞 `v-model`，我們需要在子組件中定義一個名為 `modelValue` 的 prop 來接收父組件的值，並使用一個 emit event (如 `update:modelValue`) 來通知父組件子組件中的數據變化。  
+在子組件中，`<input>` 元素將其值綁定到 `modelValue`，並在其輸入事件中觸發 `update:modelValue event`，將更新的值發送回父組件。
 
-In the child component, the `<input>` element binds its value to `modelValue` and triggers the `update:modelValue event` in its input event, sending the updated value back to the parent. 
 ```xml title='parent'
 <script setup>
   import { ref } from 'vue';
@@ -222,7 +243,7 @@ In the child component, the `<input>` element binds its value to `modelValue` an
 ```
 
 ### Can we binding multiple `v-model`?
-Sure, the example from Vue official:
+啊，當然可以，Vue 官方有提供範例：
 ```xml title='App.vue'
 <script setup>
   import { ref } from 'vue';
@@ -262,33 +283,16 @@ Sure, the example from Vue official:
   <h1>{{ firstName }} {{ lastName }}</h1>
 </template>
 ```
-:::warning
-Maybe you will notice that the `v-model` binding variable is different in topic `How to pass the v-model between components?` and this example:
-```xml title='How to pass the v-model between components?'
-<InputArea v-model="name"/>
-```
-```xml title='In this example'
-<InputArea
-    v-model:first-name="first"
-    v-model:last-name="last"
-/>
-```
-In Vue, `v-model` is used for two-way data binding. When you need to handle multiple `v-model` bindings within a single child component, you can use `v-model` with modifiers, such as `v-model:first-name="first"` and `v-model:last-name="last"`.  
-In this case, you need to use custom prop names in the child component via defineProps to receive these values.
-
-With a non-modified v-model (like `v-model="name"`), the corresponding prop in the child component must be named `modelValue`.  
-However, with a modified v-model (such as `v-model:first-name="first"`), you can define props in the child component with custom names, like firstName.
-:::
 
 ### provide-inject
-In Vue, when you need to pass data across distant component levels (such as from a grandparent to a grandchild component), using props becomes complicated.  
-In these situations, Vue's provide and `inject` features can be used for data transmission.
+在 Vue 中，當需要在遠端組件層級之間傳遞數據時 (例如從祖父組件到孫子組件)，使用 `props` 傳遞數據會需要傳很多多多多多...層，然後資料流就會變成一團糟。  
+所幸 Vue 提供了 `provide` 和 `inject` 來進行這種遠端的數據傳遞。
 
-In the higher-level component (like the grandparent), you use the `provide` function to supply data.  
-This function accepts two arguments: the first is the name under which the data will be provided, and the second is the actual data to be provided.
+在層級較高的組件 (如祖父組件) 中，使用 `provide` 函數提供數據。  
+這個函數接受兩個參數：第一個是提供數據的名稱，第二個是要提供的實際數據。
 
-In the lower-level component (like the grandchild), you use the `inject` function to inject the provided data.  
-This function takes one argument, which is the name of the provided data.
+在層級較低的組件 (如孫子組件) 中，使用 `inject` 函數來注入提供的數據。
+這個函數接受一個參數，即提供的數據的名稱。
 
 For example:
 ```xml title='parent'
@@ -314,6 +318,78 @@ const msg = inject('msg')
   <h1>{{ msg }}</h1>
 </template>
 ```
+
+### `defineExpose`
+這是一個把子組件的方法暴露給父組件的方法，這樣父組件就可以調用子組件的方法。  
+直接看我在 quasar demo 寫的範例會更好理解，這邊我要把 `exportToCsv` 方法暴露給父組件。
+
+```js title='child component'
+const exportToCsv = () => {
+  // 略
+}
+
+// highlight-start
+defineExpose({
+  exportToCsv
+})
+// highlight-end
+```
+
+```xml title='parent component'
+<template>
+  <q-page class="row items-center justify-evenly">
+    <q-btn @click="switchComponent">Switch to {{ switchComponentName }}</q-btn>
+    <div>
+    <!-- highlight-start -->
+      <component :is="switchComponentName === 'Filter & Export' ? HandsonTableCrudComponent : HandsonTableComponent" ref="componentRef" />
+      <q-btn
+        v-if="switchComponentName === 'CRUD'"
+        color="warning"
+        class="q-mt-sm row"
+        @click="exportToCsv"
+      >
+        Export
+      </q-btn>
+      <!-- highlight-end -->
+    </div>
+</q-page>
+</template>
+
+<script setup lang="ts">
+import HandsonTableComponent from 'src/components/handsontable/HandsonTableComponent.vue'
+import HandsonTableCrudComponent from 'src/components/handsontable/HandsonTableCrudComponent.vue'
+import { ref } from 'vue'
+
+import type { ComponentPublicInstance } from 'vue'
+
+interface ExportableComponent extends ComponentPublicInstance {
+  exportToCsv: () => void
+}
+
+<!-- highlight-next-line -->
+const componentRef = ref<ExportableComponent | null>(null)
+const switchComponentName = ref('Filter & Export')
+
+const switchComponent = () => {
+  if (switchComponentName.value === 'Filter & Export') {
+    switchComponentName.value = 'CRUD'
+  } else {
+    switchComponentName.value = 'Filter & Export'
+  }
+}
+
+<!-- highlight-start -->
+const exportToCsv = () => {
+  if (switchComponentName.value === 'CRUD') {
+    if (componentRef.value) {
+      componentRef.value.exportToCsv()
+    }
+  }
+}
+<!-- highlight-end -->
+</script>
+```
+
 
 ## Reference
 1. [Vue.js](https://cn.vuejs.org/guide/quick-start.html)

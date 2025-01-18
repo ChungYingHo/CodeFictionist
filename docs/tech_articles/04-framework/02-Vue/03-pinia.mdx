@@ -3,16 +3,14 @@ title: Vue3 - Pinia 管理資料
 tags: [vue3, pinia]
 ---
 ## Why Pinia?
-Using Pinia for state management in Vue.js applications offers a unified and manageable approach to share data across multiple components. While props, emit, and provide/inject mechanisms are suitable for parent-child component communication, they can become cumbersome when dealing with complex data sharing needs.
-
-Pinia provides a centralized store to facilitate data sharing among any components, simplifying cross-component communication and enhancing maintainability, especially in large-scale applications.
+雖然 Vue 本身有 `props`, `emit`, `provide/inject` 等機制可以在父子等**直系血親**元件中進行資料傳遞，但是一旦涉及親屬關係過遠 (ex: 父元件的父元件的父元件...) 或是兩個元件之間根本沒親緣關係以及其他關係複雜的資料流，Vue 本身提供的資料傳遞機制就會變得沒那麼理想 (甚至可以說是會讓 code 成為一團毛線球)。  
+Pinia 的優點就是把這些複數元件會用到的狀態統一給抽出來由 `store` 來管理，有了一個單一的狀態管理中心，元件就只需要跟 `store` 溝通，可以規避複數元件產生的龐大又雜亂的資料流。
 
 ---
 
 ## How to use Pinia?
-When creating a Vue project, you have the option to use Pinia for state management. If selected, upon project initialization, a stores directory will be automatically created under the /src folder to house state management files.
-
-Additionally, Pinia will be automatically imported in the main.js file, allowing for its use throughout the application.
+當開始建立一個 Vue 專案，系統其時就會詢問是否要使用 Pinia 來管理狀態。若選擇使用，系統就會自動在 `/src` 資料夾下建立 `stores` 資料夾，用來放置狀態管理的檔案。  
+同時，Pinia 也會自動在 `main.js` 檔案中 import，讓整個專案都可以使用 Pinia。
 
 ```js
 import './assets/main.css'
@@ -27,7 +25,8 @@ app.mount('#app')
 ```
 
 :::info
-For existing Vue projects wishing to adopt Pinia for state management, Pinia can be added by installing it via npm or yarn. After installation, manual modifications to main.js or main.ts (depending on project configuration) are required to import and activate Pinia.
+對於已經存在的 Vue 專案若想要採用 Pinia 來管理狀態，可以透過 npm 或 yarn 來安裝 Pinia。  
+安裝完成後，需要手動修改 `main.js` 或 `main.ts` (視專案設定而定) 來 import 並啟用 Pinia。
 
 ```powershell
 npm install pinia
@@ -37,16 +36,13 @@ npm install pinia
 ---
 
 ## What is store?
-In a new project, a **counter.js** file is typically created by default under the `/src/stores` directory as an example of a store.
+在新的專案中，系統會自動在 `/src/stores` 資料夾下建立一個 `counter.js` 檔案作為 store 的範例。  
+`store` 是 Pinia 中用來存放狀態和邏輯的地方，可以存取的內容包含資料、計算屬性和方法，且可以被全域存取。
 
-Stores are responsible for storing states and logic that can be globally accessed. In other words, they can contain data, computed properties, and methods.
+要建立一個 `store`，首先要從 `pinia` 中 import `defineStore`。  
+通常 store 的命名會習慣以 **use** 開頭，接著是 store 的主要用途，最後以 **Store** 結尾。
 
-To define a store, you must first import `defineStore` from pinia.  
-The naming convention usually starts with **use** followed by the main purpose of the store and ends with **Store**. 
-
-`defineStore` accepts two parameters: the first one is the store ID, which can be the name without the "use" prefix; the second is an arrow function that contains the data or logic to be stored.
-
-Let's take a closer look at the example provided by Pinia in the project:
+`defineStore` 接受兩個參數：第一個是 store 的 ID，可以是名稱去掉 **use** 前綴；第二個是一個箭頭函數，裡面包含要存放的資料或邏輯。以下為範例：
 
 ```js
 import { ref, computed } from 'vue'
@@ -66,7 +62,8 @@ export const useCounterStore = defineStore('counter', () => {
 ---
 
 ## Access the data inside a store
-To access the data or logic inside a store, we can directly import the required store into a component and assign its content to a variable (typically named with a 'Store' suffix, like xxStore). Afterwards, this variable can be used within the component to access the data or logic contained in xxStore.
+要存取 store 內的資料或邏輯，可以直接在元件中 import 所需的 `store`，並將其內容指派給一個變數 (通常以 **Store** 結尾，如 xxStore)。  
+之後，這個變數就可以在元件中使用、存取 xxStore 中包含的資料或邏輯。
 
 ```xml title='App.vue'
 <script setup>
@@ -83,7 +80,7 @@ const store = useCounterStore()
 ---
 
 ## Deconstruction of a store
-The deconstruction of a store depends on whether you're extracting data or methods. For methods, direct deconstruction can be used. However, for reactive data (including computed properties), it's necessary to use `storeToRefs` to extract them in order to preserve their reactivity. Here's an example from the official documentation.
+當需要從 `store` 中提取一般資料或方法時，可以使用直接的解構方式。但是對於響應式資料 (包括 `computed`) 則需要使用 `storeToRefs` 來提取，以保持其響應性。以下是官方文件中的範例：
 
 ```xml title='App.vue'
 <script setup>
@@ -104,7 +101,7 @@ const {increment} = store
 ---
 
 ## Reset the statement of store
-We can define a `$reset` method in our store to reset its state. This allows for an easy way to revert the store back to its initial state.
+在 store 中定義一個 `$reset` 方法，可以讓 store 回復到初始狀態。這樣就可以輕鬆地將 store 重置為初始狀態。
 
 ```js title='Counter.js'
 export const useCounterStore = defineStore('counter', () => {
@@ -137,17 +134,21 @@ const store = useCounterStore()
 ---
 
 ## Modify the state
-Managing and modifying the state within a Pinia store can be approached in several ways, each with its use cases and considerations.  
-Here's an explanation and some linguistic adjustments for the methods you've mentioned:
-1. Direct modification (Not recommended): Although straightforward, directly modifying the store's state from outside components is generally discouraged. This approach bypasses Vue's reactivity system, potentially leading to situations where the UI does not update to reflect changes immediately.
+在 Pinia store 中管理和修改狀態可以有幾種方式，每種方式都有其用途和考量。以下提供三種 Pinia 官方提到的方式：
+
+1. 直接修改 (不建議)：雖然直接修改狀態是最直接的方式，但是這樣做會繞過 Vue 的響應式系統，可能導致 UI 不會立即反映變化。
+
 ```xml
 <button @click="store.count++">Add</button>
 ```
-2. Modification through methods: This is a more recommended approach, especially when the logic for changing the state is complex. It maintains the encapsulation and maintainability of operations.
+
+2. 透過函式修改：較推薦，特別是當改變狀態的邏輯較為複雜時。這樣可以保持狀態操作的封裝性和可維護性。
+
 ```xml
 <button @click="store.increment()">Increase</button>
 ```
-3. Using the `$patch` method: The `$patch` method allows for a more declarative way of updating multiple states within the store, which is particularly useful for scenarios requiring bulk state updates.
+
+3. 使用 `$patch` 方法：這個方法官方是說可以特別適用於需要批量更新狀態的情況。但老實說我幾乎沒看到有人用過這個方法...。
 ```js
 const addCount = () => {
   store.$patch((state) => {
@@ -162,14 +163,15 @@ const addCount = () => {
 ---
 
 ##  Listen to state changes
-It is possible to use `watch`, but Pinia offers its own method for this purpose, called `$subscribe`.
+雖然也可以使用 `watch` 來監聽狀態的變化，但是 Pinia 提供了自己的方法來達到這個目的，叫做 `$subscribe`。
 
-The `$subscribe` method accepts two parameters: one for the mutation and another for the object to observe. When logging the mutation to the console, it reveals three key properties:  
-1. type: Indicates how the data change was made.
-2. storeId: Identifies the current store.
-3. events: Details the specific data changes within the state.
+`$subscribe` 方法接受兩個參數：一個是 mutation，另一個是要監聽的對象。mutation 印出來會有三個主要屬性：
+1. type：表示資料變更的方式。
+2. storeId：識別當前的 store。
+3. events：詳細說明狀態中的特定資料變更。
 
-This feature allows developers to reactively listen to state changes within their Pinia stores, providing a more integrated and Pinia-centric way of handling state changes compared to the generic Vue watch utility.
+這些狀態變更的資訊可以幫助開發者更好地了解狀態的變化，並且可以更好地進行狀態管理。  
+(雖然大家還是都用 `watch`...)
 
 ```js title='$subscribe'
 store.$subscribe((mutation, state) =>{
@@ -185,7 +187,9 @@ watch(store, state =>{
 ---
 
 ## Listen to action(method) change
-Just like observing data changes, Vue can use `$onAction` to monitor the invocation of actions. For instance, to track the execution time of the increment function:
+`$onAction` 是拿來監聽方法的執行的，可以在方法執行前或執行後執行一些操作。  
+比如說下面範例監聽了 `increment` 方法的執行，並在執行後印出執行時間。
+
 ```js
 store.$onAction(({ name, after }) => {
   if (name === 'increment') {
