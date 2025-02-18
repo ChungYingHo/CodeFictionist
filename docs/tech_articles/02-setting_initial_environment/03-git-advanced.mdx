@@ -7,17 +7,24 @@ tags: [初始環境建立, git]
 :::
 
 ## 常用 Git 指令
+### 與分支相關
 1. `git branch`: 檢查本地目錄下有哪些分支。
 2. `git branch develop`: 創建 XXX 分支。
 3. `git branch -d develop`: 刪除 XXX 分支。
     - `-d`：只能刪除已經合併的分支。
     - `-D`：強制刪除分支。
+
+### 與分支切換相關
 4. `git switch develop`: 切換路徑到 XXX 分支。
     - 同`git checkout develop`。
 5. `git checkout -b develop`: 建立並更換路徑。
     - 同`git switch -c`。
+
+### 與遠端 repo 相關
 6. `git remote -v`: 查詢連線的遠端 repo。
 7. `git remote remove origin`: 解除跟遠端 repo 的連線。
+
+### 與變更相關
 8. `git log --oneline`: 查詢 commit 紀錄 (行列式)。
 9. `git reset --hard <commit>`: 回到指定 commit。
     - `git reset --soft HEAD~1`: 回到上一個 commit，並保留變更。
@@ -25,6 +32,9 @@ tags: [初始環境建立, git]
     - `git stash list`: 查看暫存清單。
     - `git stash apply stash@{0}`: 恢復某暫存。
     - `git stash drop stash@{0}`: 刪除某暫存。
+11. `git merge xxx`: 合併 xxx 分支到目前分支。
+12. `git rebase xxx`: 將目前分支的 commit 移到 xxx 分支後面。
+    - `git merge --no-edit xxx`: 合併時使用預設 commit。
 
 :::tip
 如果今天突然跟我一樣想把舊專案整合到一個新資料夾中推送到遠端 repo 做整合，記得先刪除舊專案的 `.git` 資料夾，如果發現推上去後有一個小箭頭圖標可以執行 `git rm --cache <<client_folder>>`。  
