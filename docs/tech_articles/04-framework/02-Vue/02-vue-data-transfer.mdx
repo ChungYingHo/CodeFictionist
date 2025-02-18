@@ -2,12 +2,12 @@
 title: Vue3 - 元件與資料傳遞
 tags: [vue3]
 ---
-## Component
+## 元件 (Component)
 元件是 Vue (和 React) 的核心架構，它將可重複使用的邏輯、樣式和內容封裝在一起。  
 通過將這些元素打包到單獨的元件中，Vue 提高了 code 的複用性和開發效率。  
 簡單來說，Vue 創建的網頁是由許多這樣的元件組成，然後數據在這些元件之間傳遞，最後產生了我們眼前的畫面。
 
-### Simple use of component
+### 元件的基本用法
 一個 **.vue** 檔案通常就構成一個元件，它包含了三個部分：`<script setup>`, `<template>`, `<style>`。
 ```xml title='PeopleBlock.vue'
 <script setup>
@@ -35,7 +35,7 @@ tags: [vue3]
 </template>
 ```
 
-### Globally import a component
+### 全域引用元件
 有時候呢 (真的是有時候)，會有一些元件需要在很多地方引入，這時候我們可以設定全局引入這些元件以避免要在很多檔案中寫很多 `import` 的語句。
 
 首先，我們需要在 `main.js` 中設定全局引入的元件。  
@@ -63,7 +63,7 @@ app.component('PeopleBlock', PeopleBlock)
 app.mount('#app')
 ```
 
-### `<component :is>` dynamic component
+### `<component :is>` - 動態元件
 在 Vue 中，我們可以使用 `<component :is>` 來動態切換元件，我最早碰到這玩意兒是我還在某家做 GIS 的公司時拿來切換地圖圖層元件，但事實上這真的是一個很方便的功能。  
 以下範例是我之前寫的一個 quasar demo 中的其中一段，可以觀察到 `<component :is>` 在這個應用中是透過 `switchComponentName` 來判斷要使用 **HandsonTableCrudComponent** 還是 **HandsonTableComponent** 這兩個元件。
 
@@ -89,8 +89,8 @@ app.mount('#app')
 
 ---
 
-## Data Transmission
-### props
+## 資料流
+### `props`
 `props` 是一種從父元件傳遞數據到子元件的機制。
 ```xml title='App.vue (parent)'
 <template>
@@ -118,7 +118,7 @@ const props = defineProps({
 })
 ```
 
-### emit
+### `emit`
 > Props in, Events out.  
 
 Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `props` 從父元件傳遞數據到子元件，並使用 `emit` 從子元件發送事件到父元件進行數據修改。
@@ -157,7 +157,7 @@ Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `
 3. 在父元件 `App.vue` 中，使用 `@update-name` 監聽 `update-name` 事件，並將其綁定到 `changeName` 函數進行數據修改。
 
 :::info
-### Can we pass the function from parent to child with `props`?
+### 我們可以透過 `props` 傳遞 method 嗎？
 會有這個疑問是因為我是先會 React 再來學 Vue 的。而在 React 中，透過 `props` 傳遞函數是很常見的事情。經過測試，我發現在 Vue 中也是可以透過 `props` 傳遞函數的。
 
 ```xml title='parent'
@@ -194,7 +194,7 @@ Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `
 然而，Vue 官方還是建議使用 `Props in, Events out` 的方式，說是這樣可以避免一些意外的錯誤，大家就還是乖乖遵守以免 debug 到天荒地老才發現問題。
 :::
 
-### v-model
+### `v-model`
 在 Vue 中，`v-model` 用於在表單輸入、文本區域和下拉列表...等元素上進行資料的**雙向綁定**。  
 當表單元素的值發生變化時，綁定的 Vue 實例數據會自動更新，反之亦然。這使得 Vue 在處理表單數據時更加地方便和效率。
 
@@ -215,7 +215,7 @@ Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `
 2. `.number`: 嘗試將用戶的輸入轉換為數字。這對於數字輸入特別有用，避免在表單提交時進行額外的類型轉換。
 3. `.trim`: 自動刪除用戶輸入的前導和尾隨空格。這有助於處理用戶輸入，減少後端的額外字符串操作。
 
-### How to pass the `v-model` between components?
+### 怎麼在組件間傳遞 `v-model`？
 在 Vue 中，要在組件之間傳遞 `v-model`，我們需要在子組件中定義一個名為 `modelValue` 的 prop 來接收父組件的值，並使用一個 emit event (如 `update:modelValue`) 來通知父組件子組件中的數據變化。  
 在子組件中，`<input>` 元素將其值綁定到 `modelValue`，並在其輸入事件中觸發 `update:modelValue event`，將更新的值發送回父組件。
 
@@ -242,7 +242,7 @@ Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `
 </template>
 ```
 
-### Can we binding multiple `v-model`?
+### 可以把同一個 input 綁定複數 `v-model` 嗎？
 啊，當然可以，Vue 官方有提供範例：
 ```xml title='App.vue'
 <script setup>
@@ -284,7 +284,7 @@ Vue 有一個很有名的口訣就是 `Props in, Events out`，這是指使用 `
 </template>
 ```
 
-### provide-inject
+### `provide`-`inject`
 在 Vue 中，當需要在遠端組件層級之間傳遞數據時 (例如從祖父組件到孫子組件)，使用 `props` 傳遞數據會需要傳很多多多多多...層，然後資料流就會變成一團糟。  
 所幸 Vue 提供了 `provide` 和 `inject` 來進行這種遠端的數據傳遞。
 

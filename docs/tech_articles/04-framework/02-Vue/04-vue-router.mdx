@@ -293,20 +293,6 @@ defineProps(['id'])
 
 ---
 
-## 導航守衛
-:::warning
-僅為先紀錄放著，沒實際操作過這部分。
-:::
-Vue router 提供了四個函數用來幫助切換頁面時進行一些操作或檢查。如果把路由想像成公路，導航守衛就是每條公路上的警察。
-
-1. **全局前置守衛 (beforeEach)**：會在每次路由切換之前執行，這項功能都常用在換頁的時候檢查使用者權限是否足以訪問該頁面。
-2. **全局解析守衛 (beforeResolve)**：在路由確定之前執行，通常用來確保所有內容都已加載完畢。
-3. **全局後置守衛 (afterEach)**：在每次路由切換之後執行，可以用來記錄用戶行為，或在頁面切換後做些操作。
-4. **路由獨享守衛 (beforeEnter)**：在特定路由設定中使用，用於對該路由進行獨立的前置檢查或操作。
-要注意的是，在 `<script setup>` 寫法中，`beforeRouteLeave`、`beforeRouteUpdate` 要改成 `onBeforeRouteLeave`、`onBeforeRouteUpdate`。
-
----
-
 ## 路由轉場動畫
 Vue 的轉場 `<Transition>` 組件同樣可以使用在路由的轉場上，但必須在 `<RouterView>` 上使用 `v-slot`：
 ```xml
@@ -334,6 +320,8 @@ const router = createRouter({
     }
   })
 ```
+
+---
 
 ## 參考資料
 1. [Vue Router](https://router.vuejs.org/zh/introduction.html)

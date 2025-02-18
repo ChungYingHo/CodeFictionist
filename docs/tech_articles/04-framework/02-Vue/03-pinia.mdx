@@ -8,8 +8,8 @@ Pinia 的優點就是把這些複數元件會用到的狀態統一給抽出來�
 
 ---
 
-## How to use Pinia?
-當開始建立一個 Vue 專案，系統其時就會詢問是否要使用 Pinia 來管理狀態。若選擇使用，系統就會自動在 `/src` 資料夾下建立 `stores` 資料夾，用來放置狀態管理的檔案。  
+## 在專案中引入 Pinia
+當開始建立一個 Vue 專案，系統其實就會詢問是否要使用 Pinia 來管理狀態。若選擇使用，系統就會自動在 `/src` 資料夾下建立 `stores` 資料夾，用來放置狀態管理的檔案。  
 同時，Pinia 也會自動在 `main.js` 檔案中 import，讓整個專案都可以使用 Pinia。
 
 ```js
@@ -35,12 +35,24 @@ npm install pinia
 
 ---
 
-## What is store?
+## store 又是什麼?
+
+:::info
+Pinia 的 store 其實有 options store 跟 setup store 兩種。這裡只紀錄 setup store 的用法，因為它最貼近 vue3 `<script setup>` 的寫法。
+:::
+
 在新的專案中，系統會自動在 `/src/stores` 資料夾下建立一個 `counter.js` 檔案作為 store 的範例。  
-`store` 是 Pinia 中用來存放狀態和邏輯的地方，可以存取的內容包含資料、計算屬性和方法，且可以被全域存取。
+`store` 是 Pinia 中用來存放狀態和邏輯的地方，可以存取的內容包含資料 (`ref`、`reactive`)、計算屬性 (`computed`) 和方法 (`method`)，且可以被全域存取。
+
+:::info
+對那些使用 options store 的用戶，如果要轉 setup store，Pinia 官方有說：
+> `ref()` 就是 state 属性  
+> `computed()` 就是 getters  
+> `function()` 就是 actions
+:::
 
 要建立一個 `store`，首先要從 `pinia` 中 import `defineStore`。  
-通常 store 的命名會習慣以 **use** 開頭，接著是 store 的主要用途，最後以 **Store** 結尾。
+通常 store 的命名會習慣以 **use** 開頭，接著是 store 的主要用途，最後以 **Store** 結尾，ex: `useCounterStore` 或是登入常會使用的 `useAuthStore`。
 
 `defineStore` 接受兩個參數：第一個是 store 的 ID，可以是名稱去掉 **use** 前綴；第二個是一個箭頭函數，裡面包含要存放的資料或邏輯。以下為範例：
 
@@ -61,9 +73,9 @@ export const useCounterStore = defineStore('counter', () => {
 
 ---
 
-## Access the data inside a store
-要存取 store 內的資料或邏輯，可以直接在元件中 import 所需的 `store`，並將其內容指派給一個變數 (通常以 **Store** 結尾，如 xxStore)。  
-之後，這個變數就可以在元件中使用、存取 xxStore 中包含的資料或邏輯。
+## 在元件中使用 store
+要存取 store 內的資料或邏輯，可以直接在元件中 import 所需的 `store`，並將其內容指派給一個變數 (通常以 **Store** 結尾，如 `xxStore`)。  
+之後，這個變數就可以在元件中使用、存取 `xxStore` 中包含的資料或邏輯。
 
 ```xml title='App.vue'
 <script setup>
@@ -79,16 +91,25 @@ const store = useCounterStore()
 
 ---
 
-## Deconstruction of a store
-當需要從 `store` 中提取一般資料或方法時，可以使用直接的解構方式。但是對於響應式資料 (包括 `computed`) 則需要使用 `storeToRefs` 來提取，以保持其響應性。以下是官方文件中的範例：
+## store 資料的解構
+當需要使用 `store` 中的方法時，可以使用直接的解構方式。  
+但是對於響應式資料 (包括 `computed`) 則需要使用 `storeToRefs` 來提取，以保持其響應性。  
+以下是官方文件中的範例：
 
 ```xml title='App.vue'
 <script setup>
+<!-- highlight-next-line -->
 import { storeToRefs } from 'pinia'
 import {useCounterStore} from '@/stores/counter'
 
 const store = useCounterStore()
+
+<!-- 響應式資料的解構 -->
+<!-- highlight-next-line -->
 const {count, doubleCount} = storeToRefs(store)
+
+<!-- method 的解構 -->
+<!-- highlight-next-line -->
 const {increment} = store
 </script>
 
@@ -100,7 +121,7 @@ const {increment} = store
 
 ---
 
-## Reset the statement of store
+## 重置 store 中的狀態
 在 store 中定義一個 `$reset` 方法，可以讓 store 回復到初始狀態。這樣就可以輕鬆地將 store 重置為初始狀態。
 
 ```js title='Counter.js'
@@ -110,7 +131,9 @@ export const useCounterStore = defineStore('counter', () => {
   function increment() {
     count.value++
   }
+
   //  add a reset method
+  // highlight-next-line
   const $reset = () => count.value = 0
 
   return { count, doubleCount, increment, $reset }
@@ -133,36 +156,23 @@ const store = useCounterStore()
 
 ---
 
-## Modify the state
-在 Pinia store 中管理和修改狀態可以有幾種方式，每種方式都有其用途和考量。以下提供三種 Pinia 官方提到的方式：
+## 修改狀態 (即 `ref` or `reactive`)
+在我 2025 因為公司新開專案第一次引入 setup store 的寫法，我又回來重新看了次 Pinia 的官方文件，發現了一個超神奇的更新。  
+以前官方會說：「直接修改狀態是最直接的方式，但是這樣做會繞過 Vue 的響應式系統，可能導致 UI 不會立即反映變化。」  
+但現在這些段落在官方文件中直接消失了，官方甚至現在開宗明義直接說：「預設情況下，你可以透過store實例存取state，直接對其進行讀寫。」
+酷，所以我回來修改一下這篇筆記 www
 
-1. 直接修改 (不建議)：雖然直接修改狀態是最直接的方式，但是這樣做會繞過 Vue 的響應式系統，可能導致 UI 不會立即反映變化。
-
-```xml
-<button @click="store.count++">Add</button>
-```
-
-2. 透過函式修改：較推薦，特別是當改變狀態的邏輯較為複雜時。這樣可以保持狀態操作的封裝性和可維護性。
-
+除了直接修改，實務上因為對狀態的操作較為複雜，比如需要一堆判斷式之類的，所以通常會寫成函式來修改狀態，ex:
 ```xml
 <button @click="store.increment()">Increase</button>
 ```
 
-3. 使用 `$patch` 方法：這個方法官方是說可以特別適用於需要批量更新狀態的情況。但老實說我幾乎沒看到有人用過這個方法...。
-```js
-const addCount = () => {
-  store.$patch((state) => {
-    state.count++
-  })
-}
-```
-```xml
-<button @click="addCount">Increase</button>
-```
+另外官方還提供了一種特殊的方法 `$patch`，說是可以用來批量更新狀態。但老實說 2025 了我還是幾乎沒看到有人用過這個方法...  
+但是齁，實務上這種大量修改通常伴隨複雜邏輯，會直接用 method 處理，所以 `$patch` 這裡就不贅述了。
 
 ---
 
-##  Listen to state changes
+##  監聽狀態的變化
 雖然也可以使用 `watch` 來監聽狀態的變化，但是 Pinia 提供了自己的方法來達到這個目的，叫做 `$subscribe`。
 
 `$subscribe` 方法接受兩個參數：一個是 mutation，另一個是要監聽的對象。mutation 印出來會有三個主要屬性：
@@ -176,7 +186,7 @@ const addCount = () => {
 ```js title='$subscribe'
 store.$subscribe((mutation, state) =>{
   console.log('Something changed!')
-})
+}, { detached: true })
 ```
 ```js title='watch'
 watch(store, state =>{
@@ -186,22 +196,14 @@ watch(store, state =>{
 
 ---
 
-## Listen to action(method) change
-`$onAction` 是拿來監聽方法的執行的，可以在方法執行前或執行後執行一些操作。  
-比如說下面範例監聽了 `increment` 方法的執行，並在執行後印出執行時間。
+## Notice
+這是一點小備註，算是一個不小心就可能做錯，但發現好像無事發生，但官方就是說這樣可能出 bug 的事情。
 
-```js
-store.$onAction(({ name, after }) => {
-  if (name === 'increment') {
-    const startTime = Date.now();
+> 要讓 pinia 正確識別 state，你必須在 setup store 中傳回 state 的所有屬性。這意味著，你不能在 store 使用私有屬性。不完整回傳會影響 SSR，開發工具和其他外掛程式的正常運作。
 
-    after(() => {
-      console.log(
-        `Finished "${name}" after ${
-          Date.now() - startTime
-        }ms.`
-      );
-    });
-  }
-})
-```
+上述為官方原文，在 setup store 中設定了哪些 `ref`、`computed`、`method`，通通把它 return 拋出來就對了。
+
+---
+
+## Reference
+1. [Pinia](https://pinia.vuejs.org/zh/)
