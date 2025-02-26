@@ -2,11 +2,73 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://codefictionist.com/blog</id>
     <title>CodeFictionist Blog</title>
-    <updated>2025-01-29T00:00:00.000Z</updated>
+    <updated>2025-02-26T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://codefictionist.com/blog"/>
     <subtitle>CodeFictionist Blog</subtitle>
     <icon>https://codefictionist.com/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[聽說有一種遊戲叫買書的遊戲]]></title>
+        <id>https://codefictionist.com/blog/2025-books-to-read</id>
+        <link href="https://codefictionist.com/blog/2025-books-to-read"/>
+        <updated>2025-02-26T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[就像 steam 是買遊戲的遊戲，博客來是買書的遊戲...好，這譬喻有點不恰當，我想表達的其實是我買了一堆書都沒有看]]></summary>
+        <content type="html"><![CDATA[<p>就像 steam 是買遊戲的遊戲，博客來是買書的遊戲...好，這譬喻有點不恰當，我想表達的其實是我買了一堆書都沒有看<!-- -->😣<br>
+<!-- -->老實說，我至今到底買了哪些書沒看我也不太清楚了，有時候就是書店逛著逛著卡就刷下去了。買的時候都覺得好像可能會用到，但實際上好像根本就不會去讀，當擺設的實質意義好像遠大於書中的知識，比如那本被我拿來墊螢幕的<strong>JavaScript 大全</strong>以及被關著書櫃當造型的 <strong>CSS 大全</strong> <!-- -->😅</p>
+<p>說真的，我後來發現這種純教學得程式設計相關的書籍根本不太需要買，程式設計的知識更新太快了，一本出沒幾年的 vue 的書到現在其實有很多內容都算過時了，除非你完全不懂 vue 又剛好遇到那種稍微有點年紀的 vue 專案。對於這種純技術的工具書，網路資源其實更加方便，有很多影片和文件可以看，所以我以前買的這類書我要嘛送人要嘛就是關書櫃。  即使如此，我發現我還是超多本書沒讀。</p>
+<!-- -->
+<p>最近篩選了一下沒讀但我覺得可能值得一讀的書我分成幾個種類：</p>
+<ol>
+<li>技術經驗談：那些比較沒人系統整理的技術或網路資源較雜的知識。</li>
+<li>自我成長類：我也不知為啥，累積一堆。</li>
+<li>小說：身為三浦紫苑的粉絲，出新書不買是對她的不尊重 <!-- -->😃</li>
+</ol>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="技術經驗談">技術經驗談<a href="https://codefictionist.com/blog/2025-books-to-read#%E6%8A%80%E8%A1%93%E7%B6%93%E9%A9%97%E8%AB%87" class="hash-link" aria-label="Direct link to 技術經驗談" title="Direct link to 技術經驗談">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="演算法">演算法<a href="https://codefictionist.com/blog/2025-books-to-read#%E6%BC%94%E7%AE%97%E6%B3%95" class="hash-link" aria-label="Direct link to 演算法" title="Direct link to 演算法">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->演算法圖鑑</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Hello 算法</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->演算法學習手冊</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="前端開發">前端開發<a href="https://codefictionist.com/blog/2025-books-to-read#%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC" class="hash-link" aria-label="Direct link to 前端開發" title="Direct link to 前端開發">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->你所不知道的必學前端 debug 技巧</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->今晚來點 Web 前端效能優化大補帖</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->前端三十 - 從 HTML 到瀏覽器渲染的前端開發者必備心法</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="資安與其他規範">資安與其他規範<a href="https://codefictionist.com/blog/2025-books-to-read#%E8%B3%87%E5%AE%89%E8%88%87%E5%85%B6%E4%BB%96%E8%A6%8F%E7%AF%84" class="hash-link" aria-label="Direct link to 資安與其他規範" title="Direct link to 資安與其他規範">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->資安這條路 - 領航新手的 web security 指南</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Web 開發者一定要懂的駭客攻防術</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->程式設計守則</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="遊戲開發">遊戲開發<a href="https://codefictionist.com/blog/2025-books-to-read#%E9%81%8A%E6%88%B2%E9%96%8B%E7%99%BC" class="hash-link" aria-label="Direct link to 遊戲開發" title="Direct link to 遊戲開發">​</a></h3>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->遊戲設計藝術</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Unity 遊戲設計 - 程式基礎、操作秘訣、製作流程、關卡設計全攻略</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Visual C# - 2022 程式設計</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="自我成長類">自我成長類<a href="https://codefictionist.com/blog/2025-books-to-read#%E8%87%AA%E6%88%91%E6%88%90%E9%95%B7%E9%A1%9E" class="hash-link" aria-label="Direct link to 自我成長類" title="Direct link to 自我成長類">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->高手學習系列 (忘了有幾本，等我翻書櫃)</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->深度工作力</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->本質思考</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->這些話，為什麼這麼有哏</li>
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->別人怎麼對你，都因為你說的話</li>
+</ul>
+<hr>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="小說">小說<a href="https://codefictionist.com/blog/2025-books-to-read#%E5%B0%8F%E8%AA%AA" class="hash-link" aria-label="Direct link to 小說" title="Direct link to 小說">​</a></h2>
+<ul class="contains-task-list containsTaskList_mC6p">
+<li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->溫泉鄉青春曲</li>
+</ul>]]></content>
+        <author>
+            <name>Chung-Ying</name>
+            <uri>https://github.com/ChungYingHo</uri>
+        </author>
+        <category label="life" term="life"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[大年初一，開箱 4070s！]]></title>
         <id>https://codefictionist.com/blog/new-year-with-new-desktop</id>
@@ -211,7 +273,7 @@
 <li><a href="https://micro-oasis.com/posts/haworthia-cooperi/" target="_blank" rel="noopener noreferrer">多肉植物玉露好難種？掌握 3 照顧關鍵，懶人養出肥美玉露多肉！</a></li>
 <li><a href="https://duorou.tw/%E5%A7%AC%E7%8E%89%E9%9C%B2%E7%9A%84%E5%B8%B8%E8%A6%8B%E5%95%8F%E9%A1%8C%E4%B9%BE%E7%99%9F%E8%91%89%E5%AD%90%E7%99%BC%E7%81%B0%E5%BE%92%E9%95%B7/" target="_blank" rel="noopener noreferrer">姬玉露的常見問題：乾癟？葉子發灰？徒長？</a></li>
 </ol>
-<h3 class="anchor anchorWithStickyNavbar_LWe7" id="熊童子-1">熊童子<a href="https://codefictionist.com/blog/haworthia-fly-trap-planting#%E7%86%8A%E7%AB%A5%E5%AD%90-1" class="hash-link" aria-label="Direct link to 熊童子" title="Direct link to 熊童子">​</a></h3>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="熊�童子-1">熊童子<a href="https://codefictionist.com/blog/haworthia-fly-trap-planting#%E7%86%8A%E7%AB%A5%E5%AD%90-1" class="hash-link" aria-label="Direct link to 熊童子" title="Direct link to 熊童子">​</a></h3>
 <ol start="8">
 <li><a href="https://libknowledge.nmns.edu.tw/nmns/lib/PDF/104/334/3.pdf" target="_blank" rel="noopener noreferrer">毛絨可愛的熊童子</a></li>
 <li><a href="https://duorou.tw/%E7%86%8A%E7%AB%A5%E5%AD%90%E4%BB%8B%E7%B4%B9%E5%92%8C%E7%85%A7%E9%A1%A7%E6%8A%80%E5%B7%A7/" target="_blank" rel="noopener noreferrer">熊童子介紹和照顧技巧</a></li>
@@ -400,7 +462,7 @@
         <link href="https://codefictionist.com/blog/wordpress_experience"/>
         <updated>2023-12-25T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[用不到一週寫什麼心得]]></summary>
-        <content type="html"><![CDATA[<h3 class="anchor anchorWithStickyNavbar_LWe7" id="用不到一週寫什麼心得">用不到一週寫什麼心得<a href="https://codefictionist.com/blog/wordpress_experience#%E7%94%A8%E4%B8%8D%E5%88%B0%E4%B8%80%E9%80%B1%E5%AF%AB%E4%BB%80%E9%BA%BC%E5%BF%83%E5%BE%97" class="hash-link" aria-label="Direct link to 用不到一週寫什麼心得" title="Direct link to 用不到一週��寫什麼心得">​</a></h3>
+        <content type="html"><![CDATA[<h3 class="anchor anchorWithStickyNavbar_LWe7" id="用不到一週寫什麼心得">用不到一週寫什麼心得<a href="https://codefictionist.com/blog/wordpress_experience#%E7%94%A8%E4%B8%8D%EF%BF%BD%E5%88%B0%E4%B8%80%E9%80%B1%E5%AF%AB%E4%BB%80%E9%BA%BC%E5%BF%83%E5%BE%97" class="hash-link" aria-label="Direct link to 用不到一週寫什麼心得" title="Direct link to 用不到一週寫什麼心得">​</a></h3>
 <p>說是這樣說啦，但凡走過必留下痕跡嘛。<br>
 <!-- -->雖然用不到一週，但我每天下班可是搞這玩意兒搞到凌晨才睡覺，也能說是稍有心得啦。<br>
 <!-- -->所以就稍微寫篇小教學 + 吐槽心得文<!-- -->😏<!-- -->。</p>
