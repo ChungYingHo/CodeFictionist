@@ -73,11 +73,6 @@ const config = {
             label: "About Me",
           },
           {
-            to: "/bookList",
-            position: "left",
-            label: "Book List",
-          },
-          {
             type: "docSidebar",
             sidebarId: "programSidebar",
             position: "left",
