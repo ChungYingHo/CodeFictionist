@@ -68,6 +68,40 @@ tags: [初始環境建立, git]
 1. 有 2 條主要分支： main 與 develop，這兩條會長期存在。
 2. 有 3 條支援分支：release、hotfix、feature。
 
+```mermaid
+gitGraph
+   commit
+   commit
+   branch develop
+   checkout develop
+   commit
+   commit
+   branch release
+   checkout release
+   commit
+   commit
+   checkout main
+   merge release
+   commit
+   branch hotfix
+   checkout hotfix
+   commit
+   commit
+   checkout main
+   merge hotfix
+   commit
+   commit
+   checkout develop
+   commit
+   branch feature/feature-1
+   checkout feature/feature-1
+   commit
+   commit
+   checkout develop
+   merge feature/feature-1
+   commit
+```
+
 各 branch 專職如下：
 1. main：主要分支，正式上線的版本。
 2. develop：開發分支，統整所有開發中的程式碼。
@@ -80,20 +114,22 @@ tags: [初始環境建立, git]
 1. 只有 1 條主要分支：main branch。
 2. 以 pull request 為合併核心。
 
+```mermaid
+gitGraph
+   commit
+   commit
+   branch develop
+   checkout develop
+   commit
+   commit
+   checkout main
+   merge develop
+   commit
+   commit
+```
+
 簡單來說，就是各個開發者自己從 main branch 拉一條自己的分支出去，在開發完後發起 PR 請專案負責人 (或是其他開發者) 來審閱、討論發起 PR 的程式碼。  
 如果 PR 通過，即 merge 回 main branch，原本提交 PR 的分支即刪除。
-
-### GitLab flow
-特點：  
-1. 上游優先原則：即唯一主要分支 main branch 是所有分支的上游，只有上游允許的程式碼變化才可應用在下游分支。
-
-所以下游分支是什麼？現來簡單說一下 Gitlab flow 的運作流程：
-1. feature 分支開發完畢，merge 回 main branch。
-2. main branch 分出 production branch 和 stable branch，這些分支就會被視為下游。
-
-解釋一下什麼是 gitlab flow 的 production branch 和 stable branch：
-1. production：用在持續部署時，此分支的程式碼應是隨時可部署、經測試的穩定程式碼版本。
-2. stable：用在版本發佈時，為最新穩定釋放版本的分支。
 
 ---
 
