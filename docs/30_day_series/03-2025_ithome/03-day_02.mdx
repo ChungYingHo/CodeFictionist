@@ -1,0 +1,66 @@
+---
+title: Day02 - 誒逗，怎麼壓不過它的樣式呢？
+unlisted: true
+---
+
+前一篇提到說，現代 web 開發幾乎都會使用 UI framework 來加速開發，說真的，除非有特別設計，不然現今的 UI framework 普遍真的做得挺美觀的 (但某 B 開頭的那個真的一眼就看出來了)。  
+但偶爾，真的是偶爾，會有需要稍微調樣式的時候，然後就發現：誒！我的 CSS 設定怎麼無效呀！？  
+遇到這種問題，如果是小部份的修正我一律建議直接 `!important` 無腦壓過 UI framework 的 CSS 設定。
+
+誒好，看完上面實務的分享大概也知道這次的主題之一了：CSS 選擇器與權重。這也是一個初學 CSS 會碰到的知識，但可能剛學那時還都太年輕並未有真的領會就匆匆囫圇吞棗帶過，所以這篇一開始先來說說 CSS 選擇器。
+
+## CSS 選擇器
+這裡要講的 CSS 選擇器其實就是基礎上會先學的那四種：inline style、id、class、tag。  
+其他實務上有時會見到 `[attr="value"]`，ex: `[class="sub-title"]` 之類的，這通常不會出現在面試，大概了解一下不在這裡多講。
+
+首先我們要來看一個你一定看過、會覺得熟悉的東西 - `(0, 0, 0, 1)`。  
+嗯...如果開始沉思那我建議繼續看下去。  
+這四碼其實對應的就是前面提到的 inline style、id、class、tag，而 0 跟 1 分別代表此次使用了幾次這個選擇器。  
+我們舉個例子，以 `(0, 1, 1, 1)` 來說，CSS 的選擇器會長下面這樣，代表使用 inline 0 次、id 1 次、class 1 次、tag 1 次：
+
+```css
+#main-title .title h1 {
+  color: red;
+}
+```
+
+既然知道那四個數字對應了哪些選擇器，那我們來探討一個問題：`(1, 0, 0, 0)` 跟 `(0, 1, 2, 0)` 誰會贏得這場比賽？  
+公布答案之前我們先來說說 CSS 權重怎麼看。
+
+對於這四連碼，其實閱讀的方式謹記由左至右，並且左邊的存在無論數字多小，只要不是 0，那就都是左邊大。  
+因此對於右邊的選擇器來說，它每次都要看左邊選擇器的臉色，只有左邊為 0 時，右邊選擇器的樣式才會出現。
+如果說一定要一個理工一點的公式：
+
+> inline > id > class > tag
+
+所以綜上所述答案很顯然易見吧，就是 `(1, 0, 0, 0)`，inline style 永遠都是你大哥 (蛤？你說 important？那是大哥的大哥)。
+
+## 題外話：還記得關係選擇器嗎？
+這真的是題外話，主要是寫這篇時突然想到，乾脆一起複習一下。
+
+| 選擇器 | 說明 | 範例 |
+| --- | --- | --- |
+|`A B` | 選擇所有 A 裡面所有的 B | `div p` |
+|`A > B` | 只選擇直屬 A 下的的 B | `div > p` |
+|`A + B` | 選擇 A 的下一個 B (相鄰兄弟選擇器) | `div + p` |
+|`A ~ B` | 選擇 A 之後的所有 B (通用兄弟選擇器) | `div ~ p` |
+
+```html
+<div>
+  <p>...</p>   <!-- 會被 `div p` 和 `div > p` 選到 -->
+  <span>
+    <p>...</p>  <!-- 只會被 `div p` 選到，不會被 `div > p` 選到 -->
+  </span>
+</div>
+
+<h1>...</h1>
+<p>... </p>  <!-- 會被 `h1 + p` 選到 -->
+<p>... </p>  <!-- 會被 `h1 ~ p` 選到，但不會被 `h1 + p` 選到 -->
+```
+
+## CodePen
+<iframe height="600" width="100%" title="day02-css_selector" src="https://codepen.io/ChungYingHo/embed/VYwPNgJ?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/ChungYingHo/pen/VYwPNgJ">
+  day02-css_selector</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
+  on <a href="https://codepen.io">CodePen</a>.
+</iframe>

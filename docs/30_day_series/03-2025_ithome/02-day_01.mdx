@@ -1,16 +1,14 @@
 ---
-title: Day01 - 骨架遠比想像中的有學問
+title: Day01 - Web 骨架的樑與柱
 unlisted: true
 ---
 
 說道骨架都會想到原神裡稻妻那隻蛇神奧羅巴斯的超巨大蛇骨架 (x)。  
-HTML 是 web 開發初學者會碰的地個非程式語言的架構語言 (我在公三小)，但他對 web 的重要性相當於鋼筋水泥對於建築物那樣重要。  
+HTML 是 web 開發初學者會碰的第一個非程式語言的架構語言 (我在公三小)，但他對 web 的重要性相當於鋼筋水泥對於建築物那樣重要。  
 這裡不會去從頭開始說 HTML 到底該怎麼用，著重在那些面試時有機會會被問起的問題。  
 
 事實上，實務開發時通常都是 Vue 或 React (別再提 Angular 那個老東西了) 搭配合適的 UI 框架 (Quasar、NextUI...等) 之類的來進行開發，通常會把很多 HTML、CSS，甚至說，一些 JavaScript 的部分都交給了這些框架來處理。很常實務上就是直接使用框架提供的 component 來進行開發，說真的，我最常寫到的幾個 HTML element 大概是 `<div>`、`<span>`、`<p>` 這種非常單純定義區塊或文字的 element，很多時候，這裡我用 Quasar 舉例，都會為那些常見的 web 元素寫好一個 component，例如：`q-btn`、`q-input`...等。  
-但其實面試這裡最常被考的就是因為過於習慣框架開發而忽略的一些基本問題，所以以下就這幾點來聊聊：
-1. Block element 與 Inline element
-2. Semantic HTML
+但其實面試這裡最常被考的就是因為過於習慣框架開發而忽略的一些基本問題，所以咱們來聊聊 HTML 最基本的問題 - block and inline element。
 
 ## Block element 與 Inline element
 我之前曾經為了跳槽去面過高雄某軟體公司，當時筆試題目有一題我印象有些深刻：
@@ -38,6 +36,7 @@ Well，這個乍看之下是在考 CSS，如果思路真的往 CSS 那邊跑，�
 
 {/* ![](./assets/01-day_01-01.png) */}
 
+## CodePen
 <iframe height="600" width="100%" title="day01-HTML" src="https://codepen.io/ChungYingHo/embed/mydRMQJ?default-tab=html%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href="https://codepen.io/ChungYingHo/pen/mydRMQJ">
   day01-HTML</a> by ChungYingHo (<a href="https://codepen.io/ChungYingHo">@ChungYingHo</a>)
