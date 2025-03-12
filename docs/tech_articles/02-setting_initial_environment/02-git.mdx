@@ -57,7 +57,6 @@ git commit -m "Your commit message"
 ```git
 git status​
 ```
-
 ---
 
 ## 推到 GitHub 上
@@ -79,8 +78,9 @@ git clone https://github.com/{owner-name}/{project-name}.git
 
 ---
 
-## .gitignore
-關於那些不想讓 Git 紀錄的檔案，比如一大包的 `node_moules` 資料夾、含有私人隱私資訊 (比如資料庫連線字串) 的 `.env` 檔案，可以在專案下建立一個 `.gitignore` 檔案，裡面填入不要 Git 紀錄的檔案。
+## `.gitignore`
+關於那些不想讓 Git 紀錄的檔案，比如一大包的 `node_moules` 資料夾、含有私人隱私資訊 (比如資料庫連線字串) 的 `.env` 檔案，可以在專案下建立一個 `.gitignore` 檔案，裡面填入不要 Git 紀錄的檔案。  
+這裡要注意 `.gitignore` 務必優先於 Git 存在於專案中，不然如果先裝 Git，裝的當下其實 Git 就把整個檔案記住了，這時才設定 `.gitignore` 就得多做一些步驟把那些不想被紀錄但已經被紀錄的檔案移除。很多 env 變數都是這樣被不小心丟到雲端 repo 上的。
 
 :::tip
 如果你一開始忘記把 **.env** 加入 **.gitignore**，可以用以下指令移除：

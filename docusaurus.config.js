@@ -104,7 +104,7 @@ const config = {
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
-        additionalLanguages: ["csharp", 'dart'],
+        additionalLanguages: ["csharp", 'dart', 'powershell', 'scss'],
       },
     }),
   markdown: {

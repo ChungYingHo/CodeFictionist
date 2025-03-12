@@ -18,6 +18,8 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 其實 1、3、4 實務上滿常用到的，比較需要注意的是 2，用 grid 置中算是滿新鮮的方法。
 :::
 
+---
+
 ## 前置作業
 ```html
 <div class="parent flex">
@@ -52,7 +54,9 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 }
 ```
 
-## flex 置中
+---
+
+## `flex` 置中
 很基本的用法，這裡用 `align-items: center;` 和 `justify-content: center;` 來置中。
 ```css
 .flex {
@@ -62,7 +66,9 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 }
 ```
 
-## grid 置中
+---
+
+## `grid` 置中
 這裡用 `place-items: center;` 來置中。
 ```css
 .grid {
@@ -71,7 +77,9 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 }
 ```
 
-## margin + flex 置中
+---
+
+## `margin` + `flex` 置中
 因為 `margin: auto;` 會將元素水平置中，所以這裡用 `display: flex;` 來垂直置中。
 ```css
 .margin {
@@ -83,7 +91,9 @@ CSS 元素如何置中，這是一個很常見的問題，不只實務上常用�
 }
 ```
 
-## position + transform 置中
+---
+
+## `position` + `transform` 置中
 這裡用 `position: relative;` 和 `position: absolute;` 來置中。
 ```css
 .position {

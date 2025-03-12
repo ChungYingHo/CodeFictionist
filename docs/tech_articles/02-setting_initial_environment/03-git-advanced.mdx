@@ -1,5 +1,5 @@
 ---
-title: Git - 進階使用
+title: Git - 進階指令 & git flow
 tags: [初始環境建立, git]
 ---
 :::tip
@@ -136,18 +136,18 @@ gitGraph
 ## Git 踩雷紀錄
 ### GitLab 問題紀錄集錦
 * 如果 `git clone` 了一份專案，解除原先的遠端 repo 儲存後，要接到自己的遠端 repo 時出現錯誤 `! [remote rejected] main -> main (pre-receive hook declined) `。
-    1. 先刪除該專案本地的 git repo。
-    ```powershell
-    Remove-Item -Path .git -Recurse -Force
-    ```
-    2. 檢查是否刪除乾淨：
-    ```powershell
-    git status
-    ```
-    3. 重新安裝本地 git repo：
-    ```powershell
-    git init
-    ```
+  1. 先刪除該專案本地的 git repo。
+  ```powershell
+  Remove-Item -Path .git -Recurse -Force
+  ```
+  2. 檢查是否刪除乾淨：
+  ```powershell
+  git status
+  ```
+  3. 重新安裝本地 git repo：
+  ```powershell
+  git init
+  ```
 
 ## Reference
 1. [git workflow tutorial](https://github.com/xirong/my-git/blob/master/git-workflow-tutorial.md)

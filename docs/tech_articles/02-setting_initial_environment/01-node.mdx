@@ -19,16 +19,16 @@ Node.js 是一個 JavaScript 的執行環境，讓 JavaScript 可以跳脫瀏覽
     Mac 要安裝 Xcode Cli 才能安裝 nvm。可以到[這裡](https://github.com/nvm-sh/nvm)看 nvm 官網指令。  
     個人那天拿到一台 Mac 有短暫試過安裝 nvm，雖有成功安裝，但一直無法執行，所以以下只是紀錄。
     1. 先確認是否已經有 Xcode Cli。
-    ```bash
+    ```powershell
     xcode-select -p
     ```
     2. 如果沒有，則安裝：
-    ```bash
+    ```powershell
     xcode-select --install
     ```
     3. 安裝 nvm：
-    ```bash
-    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+    ```powershell
+    curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | powershell
     ```
     4. 重新開啟終端機，執行 `command -v nvm` 確認是否正確安裝。
   </TabItem>
@@ -36,7 +36,7 @@ Node.js 是一個 JavaScript 的執行環境，讓 JavaScript 可以跳脫瀏覽
 
 ### nvm 安裝之後
 接著按照下列步驟：
-```bash title="terminal"
+```powershell title="terminal"
 # 確定 nvm 是否正確安裝
 nvm version
 
@@ -70,8 +70,8 @@ node -v​
   </TabItem>
   <TabItem value="mac" label="Mac">
     Mac 其實我還沒真正試過。
-    ```bash
-    curl https://get.volta.sh | bash
+    ```powershell
+    curl https://get.volta.sh | powershell
     ```
   </TabItem>
 </Tabs>
@@ -84,8 +84,10 @@ Volta 沒有跟 nvm 一樣可以直接看 Node.js 現有推行的版本，所以
 2. 終端機執行下列命令：
 ```powershell
 volta install node@20.11.0
+
+# 或是直接安裝最新版
+volta install node
 ```
-或是可以直接 `volta install node` 直接安裝最新版。
 
 3. `node -v` 檢查是否正確安裝 Node.js。
 
