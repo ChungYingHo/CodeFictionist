@@ -1,0 +1,217 @@
+---
+title: Day09 - Call by Value or Call by Reference?
+unlisted: true
+---
+
+「Call by value」跟「Call by reference」一詞之差，概念卻差了十萬八千里。  
+說實在的，這是剛學 JavaScript 時通常不會碰到的知識領域，往往都是面試時被問到才赫然發現：哇，JavaScript 原來還有這種東西呀！  
+然後開始研究後，發現這個概念早早地就被應用在平常 JavaScript 開發中，這時會覺得，啊，我好像懂了。  
+但又繼續往下研究，又發現這兩個概念好像又沒那麼簡單，甚至有點抽象...。  
+坦白說，我寫這篇時也是看了幾位大神的文章試圖消化後才寫出來，結合普羅 JavaScript 開發者的觀點與我的角度來闡述一下我的理解。
+
+喔對了，這裡我要很強調地說，請至少開個 Replit 或自己的 IDE 實際就著我的範例跑一次會更容易理解一些。
+
+---
+
+## Call by value
+我們先來講講最沒問題的 Call by value。先看下面這道範例：
+
+```js
+let a = 1
+let b = a
+
+b = 2
+
+console.log(a) // 1
+console.log(b) // 2
+```
+
+我們可以很清楚地從結果看到，即使用了 `let b = a`，但當我更動了 `b` 的值時，`a` 並不會跟著改變，兩個變數是「獨立」的。  
+「獨立」，我挺喜歡這個詞的，他幾乎道盡 call by value 的精髓。  
+在 call by value 裡，`let b = a` 實際上在做的是這樣一件事：
+
+> 把 `a` 的值從 `a` 的記憶體位置「複製」給了 `b` 的記憶體位置
+
+所以實際上 `a` 跟 `b` 是各自擁有一個「獨立」的記憶體位置，各自儲存各自的值。  
+這有點像是你跟你好友各自擁有一棟房子，你好友懶得做設計，於是去你家抄了你剛設計好的裝潢，現在你們兩個的房子內裝是一樣的，但接下來他開始按照自己的想法去改裝，這些變動顯然不會去影響到你的房子，對吧？  
+大概就是這樣一個概念。
+
+而在 JavaScript 中，一切基礎型別，諸如 `number`、`string`、`boolean`，都是 call by value。
+
+---
+
+## Call by reference
+我們從上面 call by value 的結論可以知道 JavaScript 的基礎型別都是走 call by value 的路，那誰走 call by reference 就不言而喻了。  
+如擬所想，JavaScript 裡，一切物件型別，諸如 `object`、`array`，都是走 call by reference。  
+我們來從 object 的角度看一下 `let b = a` 這件事有了什麼天翻地覆的變化：
+
+```js
+let obj1 = {
+  name: "Jeremy",
+  age: 28,
+}
+
+let obj2 = obj1
+
+obj2.age = 29
+
+console.log(obj1) // { name: 'Jeremy', age: 29 }
+console.log(obj2) // { name: 'Jeremy', age: 29 }
+```
+
+別管變數名稱，我只是把 `a` 換成 `obj1`，`b` 換成 `obj2`，這純屬於一個個人撰寫 JavaScript 的習慣而已。  
+這裡的重點在於，同樣的邏輯 `let obj2 = obj1`，結果卻是當更動了 `obj2` 的 `age` 時，`obj1` 的 `age` 也跟著變了。  
+這時一定有人會跳出來說：「因為 JavaScript 的 object 裡，`let obj2 = obj1` 實際上是把 `obj1` 的記憶體位置指給了 `obj2` 呀！」  
+太好了！當你說出這句話，你就懂什麼是 JavaScript 的 call by reference 了。  
+這裡得出一個結論，在 call by reference 裡，`let b = a` 實際上是這樣一件事：
+
+> 把 `a` 變數的記憶體位置分享給了 `b` 變數
+
+瞧，call by value 是「獨立」，call by reference 是「分享」。  
+打個比方就是你開始和你好友合租一間房子 (大學生 or 研究所幾乎都會這樣幹)，你們共享同一間屋子的裝潢，誰對裝潢有了變動，都會影響到對方。  
+這就是 call by reference 的概念。
+
+---
+
+## 人生總是有各種例外
+講真，如果要面試的話，上面的概念基本已經足夠，我想也不會有面試官繼續往下刁 XD  
+我也建議準備面試看完上面就好，有空再往下看，不然我怕適得其反 www。  
+這裡要講的是 call by reference 抽象的地方，先說，只有 call by reference 啊，call by value 很乖沒有任何問題。
+
+已知物件型別走的是 call by reference 的路，概念是把 `a` 變數的記憶體位置分享給了 `b` 變數，兩者共享同一個記憶體位置，因此無論誰修改都是修改了同一個記憶體位置的值。但真的一直都是如此嗎？  
+看看這個例子：
+
+```js
+let obj1 = {
+  name: "Jeremy",
+  age: 28,
+}
+
+let obj2 = obj1
+
+obj2 = {
+  name: "Dolores",
+  age: 500,
+}
+
+console.log(obj1) // { name: 'Jeremy', age: 28 }
+console.log(obj2) // { name: 'Dolores', age: 500 }
+```
+
+嘿嘿，酷吧，按照 call by reference 的想法，你應該會覺得既然是 object，那 `let obj2 = obj1` 之後，`obj1` 跟 `obj2` 應該是共享同一個記憶體位置，所以我把 `obj2` 整個物件內容換掉時，`obj1` 也應該會跟著改變才對。  
+但結果卻是兩個 object 卻突然彼此「獨立」了出來，走上了 call by value 的路。  
+這就是為什麼我說 call by reference 是個挺抽象的概念。  
+看到這裡是不是有些霧煞煞的 XD  
+這就是 JavaScript 到底有沒有 call by reference 百家爭鳴的地方。  
+
+於是一論說 JavaScript 其實從頭到尾走的都是 call by value，只是物件型別平常的行為表現很像 call by reference。  
+這個論述的根據也是上面 call by reference 提到的，call by reference 是兩變數共享同一個記憶體位置，那當 `obj2 = {...}` 時，這時理應更動的是原記憶體位置的值，導致 `obj1` 也要跟著改變。但實際上是 `obj2` 指向了一個全新的記憶體位置，這明顯不符合 call by reference 的概念。  
+於是有人提出這樣的論述：「JavaScript 從頭到尾走的都是 call by value。`obj1` 跟 `obj2` 是共享同一個記憶體位置的**值**而不是位置。」
+
+接著出現了第三個名詞：**call by sharing**。它重新闡述了 JavaScript 物件型別的行為：
+1. `obj1` 跟 `obj2` 是共享同一個記憶體位置的值，而不是記憶體位置。
+2. 改變物件內部屬性時，所有指向該物件的變數都會受影響。ex: `obj2.age = 29`。
+3. 當把變數賦予一個全新的 object 時，這個變數就會指向一個全新的記憶體位置。ex: `obj2 = {...}`。
+
+什麼叫「把變數賦予一個全新的 object」？  
+就是像範例中的 `obj2 = {...}` 這樣直接用 object literal 來修改 object 的值。它實際行為不是更動原物件，而是在某新記憶位置存了一個新的值，然後把變數指向這個新的記憶位置。  
+以範例來說，當 `obj2 = {...}` 時，`obj2` 就搬家出來「獨立」了。  
+
+但我要說，比起說 JavaScript 是 call by value，我更喜歡這樣一個說法：
+
+> 物件型別平時絕大多數情況走的是 call by reference，但當遇到用 object literal 修改物件時，就會走 call by value 的路
+
+有些文章會用 method 來解釋這個 call by reference 轉為 call by value 的例外情況或是圖解釋 call by sharing，我覺得相當難懂，用 object literal 反倒一目瞭然。  
+我們來看一下 method 的例子：
+
+```js
+let obj1 = {
+  name: "Jeremy",
+  age: 28,
+}
+
+let obj2 = obj1
+
+function changeObj(obj) {
+  obj = {
+    name: "Dolores",
+    age: 500,
+  }
+
+  return obj
+}
+
+changeObj(obj2)
+
+console.log(obj1) // { name: 'Jeremy', age: 28 }
+console.log(obj2) // { name: 'Jeremy', age: 28 }
+```
+
+這裡很有趣的，`console.log(obj2)` 會聽到兩種答案，按照前面的概念，我猜多數人會說答案是 `{ name: 'Dolores', age: 500 }`，但實際上結果如範例所示，object 的值其實並沒有被改變。  
+但如果我們把 `changeObj(obj2)` 改成 `obj2 = changeObj(obj2)`，那結果就會是 `{ name: 'Dolores', age: 500 }` 了。
+
+```js
+let obj1 = {
+  name: "Jeremy",
+  age: 28,
+}
+
+let obj2 = obj1
+
+function changeObj(obj) {
+  obj = {
+    name: "Dolores",
+    age: 500,
+  }
+
+  return obj
+}
+// highlight-next-line
+obj2 = changeObj(obj2)
+
+console.log(obj1) // { name: 'Jeremy', age: 28 }
+console.log(obj2) // { name: 'Dolores', age: 500 }
+```
+
+但能說這裡使用 object literal 的方式來更動 object 就是 call by value 的概念就消失了嗎？其實不然。  
+`changeObj(obj2)` 這個 method 一執行，其實就已經在建立了一個新的記憶體位置存了 `{ name: 'Dolores', age: 500 }`，只是現在這個記憶體位置是由 method 內的變數 `obj` 所指向而已。  
+所以當我們把 `obj2 = changeObj(obj2)` 時，`obj2` 就指向了這個新的記憶體位置，換句話說，`obj2` 就這樣水靈靈的「搬家」了~  
+所以 object literal 的方式來更動 object 是 call by value 的概念還是有好好體現在 method 上的。
+
+最後我們再做一個試驗，如果把 method 更動 object 的方式改成不是 object literal 呢？
+
+```js
+let obj1 = {
+  name: "Jeremy",
+  age: 28,
+}
+
+let obj2 = obj1
+
+function changeObj(obj) {
+  obj.name = "Dolores"
+  obj.age = 500
+}
+
+changeObj(obj2)
+
+console.log(obj1) // { name: 'Dolores', age: 500 }
+console.log(obj2) // { name: 'Dolores', age: 500 }
+```
+
+瞧，結果又回到了 call by reference 的概念，`obj1` 跟 `obj2` 一起更動了。
+
+---
+
+## Conclusion
+看到這裡的，我希望不要被前一節的內容給搞暈了 XD  
+說真的 JavaScript 很多抽象的地方，不只 call by value 跟 call by reference」一詞之差，概念卻差了十萬八千里。
+
+如果你是為了面試的，我會建議你看前兩節，記一下 call by value 跟 call by reference 的概念就好。  
+你只要記得兩個概念：
+1. Call by value：把 `a` 的值從 `a` 的記憶體位置「複製」給了 `b` 的記憶體位置，兩變數是「獨立」的。一切基礎型別都是走 call by value。
+2. Call by reference：把 `a` 變數的記憶體位置分享給了 `b` 變數，兩變數是「共享」一個記憶體位置的，因此無論誰更動了值，另一個變數都會受到影響。一切物件型別都是走 call by reference。
+
+除非面試官真的很想討論技術，或是你面的是 senior，那我覺得才有機會討論到 call by reference 的那個例外狀況。  
+那，所以 JavaScript 到底有沒有 call by reference？還是用 call by sharing 替代 call by reference？亦或是通通走 call by value？  
+Well，我覺得其實都對，戰國時期百家爭鳴，有哪一家真的完全正確的呢？
