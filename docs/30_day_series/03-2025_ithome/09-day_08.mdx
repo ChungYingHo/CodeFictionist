@@ -1,0 +1,167 @@
+---
+title: Day08 - 面試很愛考的閉包 (Closure) 到底是怎麼一回事？
+unlisted: true
+---
+
+其實我第一次接觸閉包 (Closure) 這個概念其實並不是在 JavaScript，而是那個時候被當時任職公司要求學 Flutter 時在 Dart 裡碰到的。  
+之後會再看到閉包這個辭彙，講真，真的是在面試時時被問。  
+
+MDN 其實有一篇專門解釋閉包的[文章](https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Guide/Closures)，但是呢，你總不可能把 MDN 整篇文章都背給面試官聽吧？ (是說要是背得出我覺得也是挺厲害的 www)  
+之前我在 Dart 也寫過[閉包的紀錄](https://codefictionist.com/docs/tech_articles/language/Dart/dart_syntax#closure-%E9%96%89%E5%8C%85)：
+
+> 當定義一個函數時，如果在函數內部引用了外部的變量，那麼這個函數就是一個閉包。
+
+那時為了形象一點解釋這樣一句話，我舉了一個例子：
+
+> 想像一個盒子（函數），這個盒子裡面有一些東西（變量）。現在，把這個盒子放到了另一個盒子裡（另一個函數的作用域）。當我們把這個盒子拿出來時，裡面的東西仍然存在，並且可以使用。 閉包就像是這個被放在另一個盒子中的盒子。它可以捕獲（記住）其定義範圍之外的變量，並在以後的任何時候使用這些變量。這樣，即使函數已經返回，這些變量的狀態仍然可以被保留下來。
+
+現在看起來還是有點抽象，趁著這次機會，來重新闡述一下 JavaScript 中的閉包。
+
+---
+
+## 閉包，閉起來的一包
+把 Closure 翻譯成閉包也是挺形象的哈 www  
+那個「閉」暗示了閉包把變數關在函式作用域中的行為。  
+閉包很有趣的概念有兩點：
+1. 會有一個 b method 存在於 a method 內部並被 return 出來。甚至 b method 內部還可以有 c method...
+2. a method 作用域的變數如果 b method 有引用到，那麼這個變數就會被 b method 給牢牢記住，因為這種行為很像把變數就這樣牢牢鎖住，所以我才說 「閉」這個字用得很形象。
+
+坦白說我覺得閉包用講的很難理解，得照著實際例子看一次才知道：
+
+```js
+function countNumber (a) {
+  function addNumber (b) {
+    return a + b
+  }
+
+  return addNumber
+}
+
+const addNumberWithOne = countNumber(1)
+const addNumberWithTen = countNumber(10)
+
+console.log(addNumberWithOne(2)) // 3
+console.log(addNumberWithTen(2)) // 12
+```
+
+從上面的例子我們來逐步拆解說明閉包：
+1. 首先我們有一個 `countNumber` method，他是我們最外層的函式，接受一個參數 `a`，這時如果參數 `a` 又有在 `countNumber` 內部被使用，那 `a` 就會作為 `countNumber` 函式作用域中的變數活著 (是說真的有人會傳了參數不用嗎)。  
+2. 接著在 `countNumber` method 內部，我們又宣告了一個 `addNumber` method，這個 method 接收一個參數 `b`，並使用 `countNumber` method 的變數 `a` 與自己的參數 `b` 進行運算。  
+3. 最後 `countNumber` method 把 `addNumber` method 給 return 了出來。
+
+閉包的關鍵點在於第二點跟第三點。  
+先看第二點，「`addNumber` method 使用了 `countNumber` method 的變數 `a` 與自己的參數 `b` 進行運算」，這個行為就是 `addNumber` 用了它的函式作用域以外的變數，這時它會牢牢把這個它作用域以外的變數給記住。  
+再來看第三點，「`countNumber` method 把 `addNumber` method 給 return 出來」，這時 `addNumber` 會一直存在記憶體中 (只要還有變數引用它)，並且可以在之後的任何時候被調用。
+
+So，我們看完 `countNumber` method 內在做的事，現在來看如何讓這個「閉包」發揮作用。  
+可以看到我宣告了一個變數 `const addNumberWithOne = countNumber(1)`，我們來結合上面的三步驟來說明它發生了什麼：
+1. 已知 `countNumber` method 接受一個參數 `a`，這時我們傳入 `1`，所以 `a` 就是 `1`。
+2. 已知 `countNumber` method 內的 `addNumber` method 會使用到 `a`，此時 `a` = `1`，所以 `addNumber` 現在把 `a` = `1` 給記住了。
+3. 最後 `countNumber` method 把 `addNumber` method 給 return 出來，讓 `addNumberWithOne` 這個變數引用，現在 `addNumberWithOne` 其實調用的就是 `a` = `1` 的 `addNumber` method。  
+因此當 `addNumberWithOne(2)` 時，`addNumber` method 會使用 `a` = `1` 與 `b` = `2` 進行運算，得到 `3`。
+
+同理，我們用 `const addNumberWithTen = countNumber(10)` 再說明一次：
+1. 這次 `countNumber` 的變數 `a` = `10`。
+2. `addNumber` method 會使用到 `a`，此時 `a` = `10`，所以 `addNumber` 現在把 `a` = `10` 給記住了。
+3. `countNumber` 把 `addNumber` 給 return 出來，讓 `addNumberWithTen` 這個變數引用，現在 `addNumberWithTen` 其實調用的就是 `a` = `10` 的 `addNumber` method。
+所以當 `addNumberWithTen(2)` 時，`addNumber` method 會使用 `a` = `10` 與 `b` = `2` 進行運算，得到 `12`。
+
+---
+
+## 閉包的使用情境
+接著我們來談談閉包的使用情境。
+
+### 私有變數
+一樣先來看範例：
+
+```js
+function counter() {
+  let count = 0
+
+  function increment() {
+    count++
+  }
+
+  function getCount() {
+    return count
+  }
+
+  return {
+    increment,
+    getCount
+  }
+}
+
+const value = counter()
+value.increment()
+value.increment()
+value.increment()
+console.log(value.getCount()) // 3
+```
+
+創建私有變數其實是閉包最直觀的使用情境。記得前面說的「當定義一個函數時，如果在函數內部引用了外部的變量，那麼這個函數就是一個閉包」嗎？  
+此時 `increment` 與 `getCount` method 都使用了他們函式作用域外的變數 `count`，所以他們就是閉包。  
+同時因為 `count` 是宣告在 `counter` method 內部，所以 `count` 就變成了私有變數，外部是無法直接存取到 `count` 的。
+
+### 柯里化 (Currying)
+誒，別說，我以前問 senior 什麼是柯里化，他很疑惑地問我哪裡聽的，可見這不是一個常見的概念。  
+但是齁，我還真的被考過過柯里化 www  
+但柯里化說穿了本質上就是閉包的概念衍伸應用。
+
+先說啊，柯里化用的閉包「記住變數」的特性。柯里化的目的其實是要把一個接受多個參數的函式，轉換成一連串只接受一個參數的函式。  
+有夠抽象的，乾脆看例子，這個例子是最前面閉包那個例子的改編衍伸版：
+
+```js
+function countNumber(a) {
+  return function(b) {
+    return function(c) {
+      return a + b + c
+    }
+  }
+}
+
+const result = countNumber(1)(2)(3)  // 1 + 2 + 3 = 6
+console.log(result) // 6
+```
+
+上面這行為其實就是每次傳一個參數進去，內部的函式就會記住這個參數，並且等到所有參數都傳完後再一次性計算。  
+那個記住的動作就是閉包的特性。
+
+話說會不會有人問如果不傳 `c` 會怎樣？  
+答：會報錯。  
+或是如果寫 `countNumber(1)(2)()`，那此時因為 `c` 是 `undefined`，所以會得到 `NaN`。  
+統一回答這時不想它報錯或回傳 `NaN`，可以在一開始就預設參數的值，ex: `return function(c = 0) { ... }`。
+
+啊對，柯里化實務上真的很少很少用，瞧，senior 都不知道了，但就是莫名其妙竟然讓我面試遇到 www
+
+### lazy evaluation (延遲計算)
+我想直接先丟範例：
+
+```js
+function sayHi () {
+  console.log( 'Hello World!' )
+}
+
+function lazyLoad () {
+  let isLoaded = false
+
+  return function () {
+    if (!isLoaded) {
+      sayHi()
+      isLoaded = true
+    } else {
+      console.log('Already loaded')
+    }
+  }
+}
+
+const load = lazyLoad()
+
+load() // Hello World!
+load() // Already loaded
+load() // Already loaded
+```
+
+延遲計算的精髓就是「只有在需要的時候才執行，並且只執行一次」，通常會用在避免重複運算的情境。  
+以上述的範例來看，執行了 `load()` 一次後，`isLoaded` 就變成 `true` 了，所以之後再執行 `load()` 時就會直接印出 `Already loaded`，不會再執行 `sayHi()`。
+
